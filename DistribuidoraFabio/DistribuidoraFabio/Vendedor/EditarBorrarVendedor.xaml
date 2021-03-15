@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Vendedor.EditarBorrarVendedor"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="HISTORIAL" Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20">
+                <StackLayout>
+                    <Entry x:Name="idEntry" Placeholder="id" IsVisible="False"/>
+                    <Entry x:Name="nombreEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" VerticalOptions="Center"/>
+                    <Entry x:Name="telefonoEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" VerticalOptions="Center" Keyboard="Numeric"/>
+                    <Entry x:Name="direccionEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" VerticalOptions="Center"/>
+                    <Entry x:Name="numero_cuentaEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta" VerticalOptions="Center"/>
+                    <Entry x:Name="cedulaEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de identidad" VerticalOptions="Center"/>
+                </StackLayout>
+                <Button x:Name="btnEditarVendedor" Text="Editar" Clicked="BtnEditarVendedor_Clicked"/>
+                <Button x:Name="btnBorrarVendedor" Text="Borrar" Clicked="BtnBorrarVendedor_Clicked"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

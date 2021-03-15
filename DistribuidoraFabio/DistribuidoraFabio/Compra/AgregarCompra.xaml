@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Compra.AgregarCompra"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout x:Name="stkCompra" Padding="10">
+                <StackLayout Orientation="Horizontal">
+                    <Picker x:Name="proveedorPicker" Title="Proveedor"
+                            ItemsSource="{Binding nombre}" ItemDisplayBinding="{Binding nombre}" SelectedItem="{Binding nombre}"
+                            SelectedIndexChanged="ProveedorPicker_SelectedIndexChanged_1" WidthRequest="150"/>
+                    <Entry x:Name="numero_facturaCompraEntry" Placeholder="Numero de factura" Keyboard="Numeric" WidthRequest="180"/>
+                    <DatePicker x:Name="fechaCompraEntry" MaximumDate="12/31/2030" MinimumDate="01/01/2019" WidthRequest="120"/>
+                </StackLayout>
+                <StackLayout x:Name="stkProductos" Padding="10">
+                    <Label HorizontalOptions="Start" Text="Agregar Producto" TextColor="#95B0B7" FontSize="14"/>
+                    <Frame HasShadow="True" CornerRadius="10" Padding="0" Margin="0" BorderColor="DarkGray">
+                        <StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Picker x:Name="picker_TP" Title="Tipo producto" HorizontalOptions="FillAndExpand" VerticalOptions="Center" 
+                                            SelectedIndexChanged="picker_TP_SelectedIndexChanged"
+                                            ItemsSource="{Binding nombre_tipo_producto}" ItemDisplayBinding="{Binding nombre_tipo_producto}" 
+                                            SelectedItem="{Binding nombre_tipo_producto}"/>
+                                <Picker x:Name="picker_Producto" Title="Producto" HorizontalOptions="FillAndExpand" VerticalOptions="Center"
+                                            SelectedIndexChanged="picker_Producto_SelectedIndexChanged"
+                                            ItemsSource="{Binding display_text_nombre}" ItemDisplayBinding="{Binding display_text_nombre}" 
+                                            SelectedItem="{Binding display_text_nombre}"/>
+                                <Entry x:Name="txtPrecio" Placeholder="Precio" TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="Center"
+                                           />
+                                <Entry x:Name="txtStock" TextColor="Black" Placeholder="Stock" VerticalOptions="Center" HorizontalOptions="FillAndExpand" IsReadOnly="True"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Entry x:Name="txtCantidad" Placeholder="Cantidad" HorizontalOptions="FillAndExpand" VerticalOptions="Center"
+                                           Keyboard="Numeric"/>
+                                <Entry x:Name="txtDescuento" Placeholder="Descuento" HorizontalOptions="FillAndExpand" VerticalOptions="Center"
+                                        Keyboard="Numeric" Completed="txtDescuento_Completed"/>
+                                <Entry x:Name="txtSubTotal" Placeholder="Sub total" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                                <Label x:Name="txtStockValorado" IsVisible="false"/>
+                                <Label x:Name="txtPromedio" IsVisible="false"/>
+                                <Button x:Name="agregarAlista" Text="Agregar" Padding="0" Margin="0" FontSize="12" VerticalOptions="EndAndExpand" 
+                                            HorizontalOptions="EndAndExpand" BackgroundColor="Green" TextColor="White" Clicked="agregarAlista_Clicked"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <StackLayout>
+                    <ListView x:Name="listProductos" HorizontalOptions="FillAndExpand" HeightRequest="150" VerticalScrollBarVisibility="Always" 
+                                  ItemTapped="listProductos_ItemTapped">
+                        <ListView.Header>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Lista productos" TextColor="#95B0B7"/>
+                            </StackLayout>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid Padding="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="Black" LineBreakMode="TailTruncation">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Prod: "/>
+                                                    <Span Text="{Binding nombre_producto}"/>
+                                                    <Span Text="   Cant: "/>
+                                                    <Span Text="{Binding cantidad}"/>
+                                                    <Span Text="   Desc: "/>
+                                                    <Span Text="{Binding descuento}"/>
+                                                    <Span Text="   Subtotal: "/>
+                                                    <Span Text="{Binding sub_total, StringFormat=' {0:0.00}'}"/>
+                                                    <Span Text=" Bs."/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+                <Entry x:Name="saldo_CompraEntry" Placeholder="Credito" Keyboard="Numeric" Text="0" IsVisible="False"/>
+                <Entry x:Name="totalCompraEntry" Keyboard="Numeric" Placeholder="Total" />
+                <Button x:Name="btnCompraGuardar" Text="Guardar" Clicked="btnCompraGuardar_Clicked"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Inventario.Kardex"
+             xmlns:dg="clr-namespace:Xamarin.Forms.DataGrid;assembly=Xamarin.Forms.DataGrid"
+             Visual="Material">
+    <ContentPage.Content>
+        <ScrollView Orientation="Both">
+            <dg:DataGrid ItemsSource="{Binding InventariosKardex}" SelectionEnabled="True"
+               RowHeight="70" HeaderHeight="50" BorderColor="#CCCCCC" HeaderBackground="#E0E6F8"
+               PullToRefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+                <x:Arguments>
+                    <ListViewCachingStrategy>RetainElement</ListViewCachingStrategy>
+                </x:Arguments>
+                <dg:DataGrid.HeaderFontSize>
+                    <OnIdiom  x:TypeArguments="x:Double">
+                        <OnIdiom.Tablet>15</OnIdiom.Tablet>
+                        <OnIdiom.Phone>13</OnIdiom.Phone>
+                    </OnIdiom>
+                </dg:DataGrid.HeaderFontSize>
+                <dg:DataGrid.Columns>
+                    <dg:DataGridColumn Title="Producto" PropertyName="display_text_nombre" Width="2*"/>
+                    <dg:DataGridColumn Title="Fecha" PropertyName="fecha_inv" StringFormat="{}{0:dd/MM/yyyy}"/>
+                    <dg:DataGridColumn Title="Factura" PropertyName="numero_factura" />
+                    <dg:DataGridColumn Title="Detalle" PropertyName="detalle" />
+                    <dg:DataGridColumn Title="Precio Compra" PropertyName="precio_compra" />
+                    <dg:DataGridColumn Title="Unidades" PropertyName="unidades" />
+                    <dg:DataGridColumn Title="Entrada Fisica" PropertyName="entrada_fisica" StringFormat="{}{0:0}"/>
+                    <dg:DataGridColumn Title="Salida Fisica" PropertyName="salida_fisica" StringFormat="{}{0:0}"/>
+                    <dg:DataGridColumn Title="Saldo Fisica" PropertyName="saldo_fisica" StringFormat="{}{0:0}"/>
+                    <dg:DataGridColumn Title="Entrada Valorado" PropertyName="entrada_valorado" StringFormat="{}{0:0.00}"/>
+                    <dg:DataGridColumn Title="Salida Valorado" PropertyName="salida_valorado" StringFormat="{}{0:0.00}"/>
+                    <dg:DataGridColumn Title="Saldo Valorado" PropertyName="saldo_valorado" StringFormat="{}{0:0.00}"/>
+                    <dg:DataGridColumn Title="Promedio" PropertyName="promedio"/>
+                </dg:DataGrid.Columns>
+                <dg:DataGrid.RowsBackgroundColorPalette>
+                    <dg:PaletteCollection>
+                        <Color>#F2F2F2</Color>
+                        <Color>#FFFFFF</Color>
+                    </dg:PaletteCollection>
+                </dg:DataGrid.RowsBackgroundColorPalette>
+            </dg:DataGrid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

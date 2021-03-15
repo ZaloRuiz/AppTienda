@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Producto.ListaProducto"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Agregar" Clicked="ToolbarItem_Clicked" />
+        <ToolbarItem Text="Tipos de producto" Clicked="ToolbarItemTP_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ListView x:Name="listaProd" ItemTapped="OnItemSelected" SeparatorColor="#95B0B7" RowHeight="60">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <Grid Padding="10" RowSpacing="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"></RowDefinition>
+                            <RowDefinition Height="30"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Producto: "/>
+                                    <Span Text="{Binding nombre_producto}"/>
+                                    <Span Text="   -   Stock: "/>
+                                    <Span Text="{Binding stock}"/>
+                                    
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Grid.Row="1" Grid.Column="0" FontSize="13" TextColor="#4DCCE8" Text="{Binding nombre_tipo_producto}"/>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

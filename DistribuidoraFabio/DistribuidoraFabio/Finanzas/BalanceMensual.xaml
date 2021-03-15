@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Finanzas.BalanceMensual"
+             Visual="Material"
+             BackgroundColor="#324A51"
+             xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <Grid Padding="5" RowSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
+                        <Label Text="MARZO 2021" TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="10"/>
+                    </StackLayout>
+                    <StackLayout Grid.Row="1" Grid.Column="0" Padding="5">
+                        <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout>
+                                    <Label Text="INGRESOS / EGRESOS" FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                        <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="Blue"/>
+                                        <Label x:Name="txtCostosF" TextColor="White" FontSize="16" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                        <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="Red"/>
+                                        <Label x:Name="txtCostosV" TextColor="White" FontSize="16" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                        <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="Green"/>
+                                        <Label x:Name="txtIngresos" TextColor="White" FontSize="16" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                </StackLayout>
+                                <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <microcharts:ChartView x:Name="grafico1" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Grid.Row="2" Grid.Column="0" Padding="5">
+                        <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout>
+                                    <Label Text="COSTOS" FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                        <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="Blue"/>
+                                        <Label x:Name="txtCostosF2" TextColor="White" FontSize="16" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                        <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="Red"/>
+                                        <Label x:Name="txtCostosV2" TextColor="White" FontSize="16" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                </StackLayout>
+                                <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <microcharts:ChartView x:Name="grafico2" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </Grid>
+                <Grid Padding="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
+                        <Label Text="INGRESOS" TextColor="White" HorizontalOptions="Center"/>
+                        <Label Text="1650 Bs." TextColor="Green" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                        <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <StackLayout Padding="5">
+                                <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 300bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 400bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 550bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 02/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 100bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 02/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 200bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Grid.Row="0" Grid.Column="1" Padding="5">
+                        <Label Text="EGRESOS" TextColor="White" HorizontalOptions="Center"/>
+                        <Label Text="1830 Bs." TextColor="Red" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                        <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <StackLayout Padding="5">
+                                <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 400bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Pago de alquiler" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 100bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Pasaje a Cobija" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 02/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 250bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Pasaje a Santa Cruz" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 03/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 300bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Gasolina" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 03/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 180bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Compra de botellas" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="Fecha: 03/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Monto: 600bs" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <Label Text="Alquiler camion La Paz - Cobija" TextColor="White" HorizontalTextAlignment="Start"/>
+                                <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

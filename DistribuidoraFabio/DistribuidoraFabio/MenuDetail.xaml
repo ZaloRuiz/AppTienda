@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.MenuDetail"
+             xmlns:xfcounterlabelcontrol="clr-namespace:YN.XFCounterLabelControl;assembly=YN.XFCounterLabelControl"
+             Title="Detail"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ScrollView>
+        <StackLayout Padding="10">
+            <StackLayout Orientation="Horizontal" Padding="0, 10, 0, 10">
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Ventas diarias" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80" HasShadow="True">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="123" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Ventas semanales" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80" HasShadow="True">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="1234" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Ventas mensuales" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80" HasShadow="True">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="12345" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Ventas anuales" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80" HasShadow="True">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="123456" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Padding="0, 10, 0, 10">
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Compras diarias" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="123" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Compras semanales" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="1234" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Compras mensuales" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="12345" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Compras anuales" TextColor="White" HorizontalTextAlignment="Start"/>
+                    <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" HeightRequest="80" WidthRequest="80">
+                        <xfcounterlabelcontrol:CounterLabelControl AnimationDuration="2000" CounterType="Integer" StartValue="0" TargetValue="123456" TextColor="White"
+                                                                   FontSize="Large" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </Frame>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Padding="20">
+                <Button Text="MAS DATOS" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" CornerRadius="5" Padding="10" TextColor="White"
+                        FontSize="Large" BackgroundColor="#098203"/>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

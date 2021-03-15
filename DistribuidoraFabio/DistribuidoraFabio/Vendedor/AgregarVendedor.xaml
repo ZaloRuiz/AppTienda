@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Vendedor.AgregarVendedor"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20">
+                <StackLayout>
+                    <Entry x:Name="nombreVendedorEntry" Placeholder="Nombre" HorizontalOptions="FillAndExpand"/>
+                    <Entry x:Name="telefonoVendedorEntry" Placeholder="Telefono" HorizontalOptions="FillAndExpand" Keyboard="Numeric"/>
+                    <Entry x:Name="direccionVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion"/>
+                    <Entry x:Name="numero_cuentaVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta"  Keyboard="Numeric"/>
+                    <Entry x:Name="cedula_identidadVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de Identidad"/>
+                </StackLayout>
+                <Button x:Name="btnGuardarVendedor" Text="Guadar" Clicked="BtnGuardarVendedor_Clicked"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

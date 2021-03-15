@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Finanzas.IndexFinanzas"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="#324A51">
+                <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Balance Anual" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_3"/>
+                </Frame>
+            </StackLayout>
+            <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="#324A51">
+                <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Balance Mensual" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked"/>
+                </Frame>
+            </StackLayout>
+            <StackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="#324A51">
+                <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Costos Fijos" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_2"/>
+                </Frame>
+            </StackLayout>
+            <StackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="#324A51">
+                <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Costos Variables" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_1"/>
+                </Frame>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

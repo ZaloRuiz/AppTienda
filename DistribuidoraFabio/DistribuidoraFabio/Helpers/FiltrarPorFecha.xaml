@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Helpers.FiltrarPorFecha"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation
+              PositionOut="Bottom"/>
+    </pages:PopupPage.Animation>
+    <Grid HorizontalOptions="CenterAndExpand">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Frame CornerRadius="5" Padding="5" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                   HeightRequest="300" WidthRequest="300" BackgroundColor="White" HasShadow="True" Grid.Column="0" Grid.Row="0" Margin="10">
+            <StackLayout HorizontalOptions="CenterAndExpand">
+                <StackLayout Padding="0, 10, 0, 30">
+                    <Label Text="FILTRAR POR FECHA" TextColor="Black" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                </StackLayout>
+                <StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="DESDE: " TextColor="Black" VerticalOptions="Center"/>
+                        <DatePicker x:Name="entryF_inicio" TextColor="Black" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="HASTA: " TextColor="Black" VerticalOptions="Center"/>
+                        <DatePicker x:Name="entryF_final" TextColor="Black" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
+                    </StackLayout>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Padding="0, 0, 0, 20">
+                    <Button x:Name="btnCancelar" Text="CANCELAR" TextColor="Red" BackgroundColor="White" HorizontalOptions="FillAndExpand" Clicked="btnCancelar_Clicked"/>
+                    <Button x:Name="btnFiltrar" Text="FILTRAR" TextColor="Green" BackgroundColor="White" HorizontalOptions="FillAndExpand" Clicked="btnFiltrar_Clicked"/>
+                </StackLayout>
+            </StackLayout>
+        </Frame>
+    </Grid>
+</pages:PopupPage>

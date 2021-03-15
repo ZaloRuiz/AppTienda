@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Reportes.R_DetalleVenta"
+             xmlns:dg="clr-namespace:Xamarin.Forms.DataGrid;assembly=Xamarin.Forms.DataGrid"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="toolbarFiltro" Text="Filtrar por fecha" Clicked="toolbarFiltro_Clicked"/>
+        <ToolbarItem x:Name="toolbarExcel" Command="{Binding ExportToExcelCommand}" Text="Export to Excel"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView Orientation="Both">
+            <dg:DataGrid ItemsSource="{Binding ReportesDVs}" SelectionEnabled="True"
+            RowHeight="70" HeaderHeight="50" BorderColor="#CCCCCC" HeaderBackground="#E0E6F8"
+            PullToRefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+                <x:Arguments>
+                    <ListViewCachingStrategy>RetainElement</ListViewCachingStrategy>
+                </x:Arguments>
+                <dg:DataGrid.HeaderFontSize>
+                    <OnIdiom  x:TypeArguments="x:Double">
+                        <OnIdiom.Tablet>15</OnIdiom.Tablet>
+                        <OnIdiom.Phone>13</OnIdiom.Phone>
+                    </OnIdiom>
+                </dg:DataGrid.HeaderFontSize>
+                <dg:DataGrid.Columns>
+                    <dg:DataGridColumn Title="Id" PropertyName="id_venta"/>
+                    <dg:DataGridColumn Title="Nombre Vendedor" PropertyName="nombre" />
+                    <dg:DataGridColumn Title="Fecha" PropertyName="fecha" StringFormat="{}{0:dd/MM/yyyy}"/>
+                    <dg:DataGridColumn Title="Codigo Cliente" PropertyName="codigo_c" />
+                    <dg:DataGridColumn Title="Nombre Cliente" PropertyName="nombre_cliente" />
+                    <dg:DataGridColumn Title="Razon Social" PropertyName="razon_social" />
+                    <dg:DataGridColumn Title="Nit" PropertyName="nit" StringFormat="{}{0:0}"/>
+                    <dg:DataGridColumn Title="Telefono" PropertyName="telefono" StringFormat="{}{0:0}"/>
+                    <dg:DataGridColumn Title="Direccion Cliente" PropertyName="direccion_cliente"/>
+                    <dg:DataGridColumn Title="Geolocalizacion" PropertyName="geolocalizacion"/>
+                    <dg:DataGridColumn Title="Nombre Producto" PropertyName="nombre_producto"/>
+                    <dg:DataGridColumn Title="Precio Producto" PropertyName="precio_producto" StringFormat="{}{0:0.00}"/>
+                    <dg:DataGridColumn Title="Cantidad" PropertyName="cantidad" StringFormat="{}{0:0}"/>
+                    <dg:DataGridColumn Title="Sub Total" PropertyName="sub_total" StringFormat="{}{0:0.00}"/>
+                    <dg:DataGridColumn Title="Envases" PropertyName="envases" StringFormat="{}{0:0}"/>
+                    <dg:DataGridColumn Title="Tipo Venta" PropertyName="tipo_venta"/>
+                    <dg:DataGridColumn Title="Estado" PropertyName="estado"/>
+                </dg:DataGrid.Columns>
+                <dg:DataGrid.RowsBackgroundColorPalette>
+                    <dg:PaletteCollection>
+                        <Color>#F2F2F2</Color>
+                        <Color>#FFFFFF</Color>
+                    </dg:PaletteCollection>
+                </dg:DataGrid.RowsBackgroundColorPalette>
+            </dg:DataGrid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

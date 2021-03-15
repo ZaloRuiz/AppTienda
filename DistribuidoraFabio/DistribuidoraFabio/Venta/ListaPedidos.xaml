@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Venta.ListaPedidos"
+             xmlns:state="clr-namespace:Xamarin.Forms.StateSquid;assembly=Xamarin.Forms.StateSquid"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    
+  <!--Pages can be added as references or inline-->
+    <ContentPage Title="Entregados">
+        <ContentPage.ToolbarItems>
+            <ToolbarItem x:Name="toolbar" Text="Agregar Venta" Clicked="ToolbarItem_Clicked"/>
+        </ContentPage.ToolbarItems>
+        <ListView x:Name="listaEntregados" ItemTapped="OnItemSelectedE" SeparatorColor="#95B0B7" ItemsSource="{Binding ListaPedidosEnt}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="15">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Cliente: "/>
+                                        <Span Text="{Binding nombre_cliente}"/>
+                                        <Span Text="   -   Factura: "/>
+                                        <Span Text="{Binding numero_factura}"/>
+                                        <Span Text="   -   Total: "/>
+                                        <Span Text="{Binding total, StringFormat=' {0:0.00}'}"/>
+                                        <Span Text=" Bs."/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage>
+    <ContentPage Title="Pendientes">
+        <ContentPage.ToolbarItems>
+            <ToolbarItem x:Name="toolbarP" Text="Agregar Venta" Clicked="ToolbarItemP_Clicked"/>
+        </ContentPage.ToolbarItems>
+        <ListView x:Name="listaPendientes" ItemTapped="OnItemSelectedP" SeparatorColor="#95B0B7" ItemsSource="{Binding ListaPedidosPen}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Cliente: "/>
+                                        <Span Text="{Binding nombre_cliente}"/>
+                                        <Span Text="   -   Factura: "/>
+                                        <Span Text="{Binding numero_factura}"/>
+                                        <Span Text="   -   Total: "/>
+                                        <Span Text="{Binding total, StringFormat=' {0:0.00}'}"/>
+                                        <Span Text=" Bs."/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage>
+    <ContentPage Title="Cancelados">
+        <ContentPage.ToolbarItems>
+            <ToolbarItem x:Name="toolbarC" Text="Agregar Venta" Clicked="ToolbarItemC_Clicked"/>
+        </ContentPage.ToolbarItems>
+        <ListView x:Name="listaCancelados" ItemTapped="OnItemSelectedC" SeparatorColor="#95B0B7" ItemsSource="{Binding ListaPedidosCanc}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Cliente: "/>
+                                        <Span Text="{Binding nombre_cliente}"/>
+                                        <Span Text="   -   Factura: "/>
+                                        <Span Text="{Binding numero_factura}"/>
+                                        <Span Text="   -   Total: "/>
+                                        <Span Text="{Binding total, StringFormat=' {0:0.00}'}"/>
+                                        <Span Text=" Bs."/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage>
+</TabbedPage>

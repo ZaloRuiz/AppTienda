@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Venta.MostrarVentaPendiente"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="toolbarComp" Text="Completar pedido" Clicked="ToolbarItemComp_Clicked"/>
+        <ToolbarItem x:Name="toolbarCanc" Text="Cancelar pedido" Clicked="toolbarCanc_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="180"></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackLayout x:Name="stkPrimero" Grid.Row="0"/>
+                <StackLayout x:Name="stkSegundo" Grid.Row="1" Padding="10"/>
+                <StackLayout x:Name="stkTercero" Grid.Row="2"/>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Proveedor.AgregarProveedor"
+             Visual="Material"
+             BackgroundColor="#324A51">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20">
+                <StackLayout>
+                    <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" />
+                    <Entry x:Name="direccionPEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion"/>
+                    <Entry x:Name="contactoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Contacto"/>
+                    <Entry x:Name="telefonoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" Keyboard="Numeric"/>
+                    <Button x:Name="btnVentaGuardar" Text="Guardar" Clicked="BtnGuardarPro_Clicked"/>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
