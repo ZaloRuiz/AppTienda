@@ -18,16 +18,18 @@ namespace DistribuidoraFabio.Finanzas
 		public ListaCostos()
 		{
 			InitializeComponent();
+			pickerMes.ItemsSource = new List<string> { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Noviembre", "Diciembre" }; 
+			pickerYear.ItemsSource = new List<string> { "2021", "2022", "2023" };
 		}
 		protected async override void OnAppearing()
 		{
 			base.OnAppearing();
 
-			HttpClient client = new HttpClient();
-			var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostos.php");
-			var dataCostos = JsonConvert.DeserializeObject<List<Costos>>(response);
+			//HttpClient client = new HttpClient();
+			//var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostos.php");
+			//var dataCostos = JsonConvert.DeserializeObject<List<Costos>>(response);
 
-			listCostos.ItemsSource = dataCostos;
+			//listCostos.ItemsSource = dataCostos;
 		}
 	}
 }

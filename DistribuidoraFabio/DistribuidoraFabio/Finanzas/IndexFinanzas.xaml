@@ -29,13 +29,13 @@
             <StackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="#324A51">
                 <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" Padding="20" HasShadow="True"
                         HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                    <Button Text="Costos Fijos" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_2"/>
+                    <Button Text="Costos" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_2"/>
                 </Frame>
             </StackLayout>
             <StackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="#324A51">
                 <Frame BackgroundColor="Transparent" Opacity="0.5" CornerRadius="10" Padding="20" HasShadow="True"
                         HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                    <Button Text="Costos Variables" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_1"/>
+                    <Button Text="Deudas" BackgroundColor="#40616B" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_1"/>
                 </Frame>
             </StackLayout>
         </Grid>

@@ -20,6 +20,10 @@ namespace DistribuidoraFabio.Finanzas
 		private decimal _costo_fijo;
 		private decimal _costo_variable;
 		private decimal _ingresos = 1650;
+		private decimal _vend1 = 2457;
+		private decimal _vend2 = 4457;
+		private decimal _vend3 = 6457;
+		private decimal _vend4 = 8457;
 		public BalanceMensual()
 		{
 			InitializeComponent();
@@ -79,6 +83,49 @@ namespace DistribuidoraFabio.Finanzas
 					},
 			};
 			grafico2.Chart = new DonutChart() { Entries = entries2, BackgroundColor = SKColor.Parse("#40616B"), GraphPosition = GraphPosition.AutoFill};
+			
+			float _top_vendedor1 = (float)_vend1;
+			float _top_vendedor2 = (float)_vend2;
+			float _top_vendedor3 = (float)_vend3;
+			float _top_vendedor4 = (float)_vend4;
+			var entriesVendedores = new[]
+			{
+				new ChartEntry(_top_vendedor1)
+				{
+					Color = SKColors.OrangeRed,
+					TextColor = SKColors.OrangeRed,
+					Label = "Vendedor 1",
+					ValueLabel = _top_vendedor1.ToString(),
+					ValueLabelColor = SKColors.OrangeRed
+				},
+				new ChartEntry(_top_vendedor2)
+				{
+					Color = SKColors.Yellow,
+					TextColor = SKColors.Yellow,
+					Label = "Vendedor 2",
+					ValueLabel = _top_vendedor2.ToString(),
+					ValueLabelColor = SKColors.Yellow
+				},
+				new ChartEntry(_top_vendedor3)
+				{
+					Color = SKColors.DarkSeaGreen,
+					TextColor = SKColors.DarkSeaGreen,
+					Label = "Vendedor 3",
+					ValueLabel = _top_vendedor3.ToString(),
+					ValueLabelColor = SKColors.DarkSeaGreen
+				},
+				new ChartEntry(_top_vendedor4)
+				{
+					Color = SKColors.BlueViolet,
+					TextColor = SKColors.BlueViolet,
+					Label = "Vendedor 4",
+					ValueLabel = _top_vendedor4.ToString(),
+					ValueLabelColor = SKColors.BlueViolet
+				},
+			};
+
+			grafVendedores.Chart = new BarChart() { Entries = entriesVendedores, BackgroundColor = SKColor.Parse("#40616B"), LabelTextSize = 30, 
+			LabelOrientation = Orientation.Horizontal, ValueLabelOrientation = Orientation.Horizontal, LabelColor = SKColors.White, };
 		}
 	}
 }

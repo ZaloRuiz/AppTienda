@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms" 
              x:Class="DistribuidoraFabio.Finanzas.BalanceAnual"
              Visual="Material"
              BackgroundColor="#324A51">
@@ -13,7 +14,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"></RowDefinition>
                     <RowDefinition Height="400"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="400"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
                     <Label Text="2021" TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="10"/>
@@ -25,6 +26,13 @@
                             <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                 <microcharts:ChartView x:Name="grafico1" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                             </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="2" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout x:Name="stkGrafico" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            
                         </StackLayout>
                     </Frame>
                 </StackLayout>

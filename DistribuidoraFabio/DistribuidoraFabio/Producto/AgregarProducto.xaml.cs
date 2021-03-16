@@ -61,6 +61,10 @@ namespace DistribuidoraFabio.Producto
                 await DisplayAlert("ERROR", err.ToString(), "OK");
 			}
         }
+        private void stockProductoEntry_Completed(object sender, EventArgs e)
+        {
+            stockValoradoProductoEntry.Text = (Convert.ToDecimal(stockProductoEntry.Text)*Convert.ToDecimal(precioventaEntry.Text)).ToString();
+        }
         private async void BtnGuardarPr_Clicked(object sender, EventArgs e)
         {
             try
@@ -97,5 +101,7 @@ namespace DistribuidoraFabio.Producto
                 await DisplayAlert("ERROR", error.ToString(), "OK");
             }
         }
-    }
+
+		
+	}
 }
