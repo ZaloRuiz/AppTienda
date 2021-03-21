@@ -2,12 +2,11 @@
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Venta.ListaPedidos"
-             xmlns:state="clr-namespace:Xamarin.Forms.StateSquid;assembly=Xamarin.Forms.StateSquid"
              Visual="Material"
              BackgroundColor="#324A51">
     
   <!--Pages can be added as references or inline-->
-    <ContentPage Title="Entregados">
+    <ContentPage Title="Entregados" Visual="Material">
         <ContentPage.ToolbarItems>
             <ToolbarItem x:Name="toolbar" Text="Agregar Venta" Clicked="ToolbarItem_Clicked"/>
         </ContentPage.ToolbarItems>
@@ -41,7 +40,7 @@
             </ListView.ItemTemplate>
         </ListView>
     </ContentPage>
-    <ContentPage Title="Pendientes">
+    <ContentPage Title="Pendientes" Visual="Material">
         <ContentPage.ToolbarItems>
             <ToolbarItem x:Name="toolbarP" Text="Agregar Venta" Clicked="ToolbarItemP_Clicked"/>
         </ContentPage.ToolbarItems>
@@ -75,7 +74,7 @@
             </ListView.ItemTemplate>
         </ListView>
     </ContentPage>
-    <ContentPage Title="Cancelados">
+    <ContentPage Title="Cancelados" Visual="Material">
         <ContentPage.ToolbarItems>
             <ToolbarItem x:Name="toolbarC" Text="Agregar Venta" Clicked="ToolbarItemC_Clicked"/>
         </ContentPage.ToolbarItems>

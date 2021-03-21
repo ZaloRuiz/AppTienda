@@ -9,11 +9,11 @@
             <StackLayout Padding="20">
                 <Entry x:Name="nombreProdEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
                 <Entry x:Name="idTProdEntry" HorizontalOptions="FillAndExpand" Placeholder="Tipo Producto"/>
-                <Entry x:Name="stockEntry" HorizontalOptions="FillAndExpand" Placeholder="Stock"/>
+                <Entry x:Name="stockEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Stock"/>
                 <Entry x:Name="stockValoradoEntry" HorizontalOptions="FillAndExpand" Placeholder="Stock Valorado"/>
-                <Entry x:Name="promedioEntry" HorizontalOptions="FillAndExpand" Placeholder="Precio Promedio"/>
+                <Entry x:Name="promedioEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Precio Promedio"/>
                 <Entry x:Name="precioventaEntry" HorizontalOptions="FillAndExpand" Placeholder="Precio Venta" Keyboard="Numeric"/>
-                <Entry x:Name="alertaEntry" HorizontalOptions="FillAndExpand" Placeholder="Alerta"/>
+                <Entry x:Name="alertaEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Alerta"/>
                 <StackLayout>
                     <Button x:Name="btnEditarProd" Text="Editar" Clicked="BtnEditarProd_Clicked" />
                     <Button x:Name="btnBorrarProd" Text="Borrar" Clicked="BtnBorrarProd_Clicked" />

@@ -17,79 +17,139 @@ namespace DistribuidoraFabio.Vendedor
 	public partial class EditarBorrarVendedor : ContentPage
 	{
         private int IdVendedor;
-        public EditarBorrarVendedor(int id_vendedor, string nombre, int telefono, string direccion, string numero_cuenta, string cedula_identidad)
+        public EditarBorrarVendedor(int id_vendedor, string nombre, int telefono, string direccion, string numero_cuenta, string cedula_identidad,
+			string usuario, string password)
 		{
 			InitializeComponent();
             IdVendedor = id_vendedor;
-			idEntry.Text = id_vendedor.ToString();
 			nombreEntry.Text = nombre;
 			telefonoEntry.Text = telefono.ToString();
 			direccionEntry.Text = direccion;
 			numero_cuentaEntry.Text = numero_cuenta;
 			cedulaEntry.Text = cedula_identidad;
+			usuarioEntry.Text = usuario;
+			passwordEntry.Text = password;
 		}
         private async void BtnEditarVendedor_Clicked(object sender, EventArgs e)
         {
-            Vendedores vendedores = new Vendedores()
-            {
-                id_vendedor = Convert.ToInt32(idEntry.Text),
-                nombre = nombreEntry.Text,
-                telefono = Convert.ToInt32(telefonoEntry.Text),
-                direccion = direccionEntry.Text,
-                numero_cuenta = numero_cuentaEntry.Text,
-                cedula_identidad = cedulaEntry.Text
-            };
+			if (!string.IsNullOrWhiteSpace(nombreEntry.Text) || (!string.IsNullOrEmpty(nombreEntry.Text)))
+			{
+				if (!string.IsNullOrWhiteSpace(telefonoEntry.Text) || (!string.IsNullOrEmpty(telefonoEntry.Text)))
+				{
+					if (!string.IsNullOrWhiteSpace(direccionEntry.Text) || (!string.IsNullOrEmpty(direccionEntry.Text)))
+					{
+						if (!string.IsNullOrWhiteSpace(numero_cuentaEntry.Text) || (!string.IsNullOrEmpty(numero_cuentaEntry.Text)))
+						{
+							if (!string.IsNullOrWhiteSpace(cedulaEntry.Text) || (!string.IsNullOrEmpty(cedulaEntry.Text)))
+							{
+								if (!string.IsNullOrWhiteSpace(usuarioEntry.Text) || (!string.IsNullOrEmpty(usuarioEntry.Text)))
+								{
+									if (!string.IsNullOrWhiteSpace(passwordEntry.Text) || (!string.IsNullOrEmpty(passwordEntry.Text)))
+									{
+										try
+										{
+											Vendedores vendedores = new Vendedores()
+											{
+												id_vendedor = IdVendedor,
+												nombre = nombreEntry.Text,
+												telefono = Convert.ToInt32(telefonoEntry.Text),
+												direccion = direccionEntry.Text,
+												numero_cuenta = numero_cuentaEntry.Text,
+												cedula_identidad = cedulaEntry.Text,
+												usuario = usuarioEntry.Text,
+												password = passwordEntry.Text
+											};
 
-            var json = JsonConvert.SerializeObject(vendedores);
+											var json = JsonConvert.SerializeObject(vendedores);
+											var content = new StringContent(json, Encoding.UTF8, "application/json");
+											HttpClient client = new HttpClient();
+											var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/vendedores/editarVendedor.php", content);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpClient client = new HttpClient();
-
-            var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/vendedores/editarVendedor.php", content);
-
-            if (result.StatusCode == HttpStatusCode.OK)
-            {
-                await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-                await Navigation.PopAsync();
-            }
-            else
-            {
-                await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
-                await Navigation.PopAsync();
-            }
+											if (result.StatusCode == HttpStatusCode.OK)
+											{
+												await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
+												await Navigation.PopAsync();
+											}
+											else
+											{
+												await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+												await Navigation.PopAsync();
+											}
+										}
+										catch (Exception err)
+										{
+											await DisplayAlert("Error", err.ToString(), "OK");
+										}
+									}
+									else
+									{
+										await DisplayAlert("Campo vacio", "El campo de Contraseña esta vacio", "Ok");
+									}
+								}
+								else
+								{
+									await DisplayAlert("Campo vacio", "El campo de Usuario esta vacio", "Ok");
+								}
+							}
+							else
+							{
+								await DisplayAlert("Campo vacio", "El campo de Cedula de identidad esta vacio", "Ok");
+							}
+						}
+						else
+						{
+							await DisplayAlert("Campo vacio", "El campo de Numero de cuenta esta vacio", "Ok");
+						}
+					}
+					else
+					{
+						await DisplayAlert("Campo vacio", "El campo de Direccion esta vacio", "Ok");
+					}
+				}
+				else
+				{
+					await DisplayAlert("Campo vacio", "El campo de Telefono esta vacio", "Ok");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+			}
         }
-
         private async void BtnBorrarVendedor_Clicked(object sender, EventArgs e)
         {
-            Vendedores vendedores = new Vendedores()
-            {
-                id_vendedor = Convert.ToInt32(idEntry.Text),
-                nombre = nombreEntry.Text,
-                telefono = Convert.ToInt32(telefonoEntry.Text),
-                direccion = direccionEntry.Text,
-                numero_cuenta = numero_cuentaEntry.Text,
-                cedula_identidad = cedulaEntry.Text
-            };
+			try
+			{
+				Vendedores vendedores = new Vendedores()
+				{
+					id_vendedor = IdVendedor,
+					nombre = nombreEntry.Text,
+					telefono = Convert.ToInt32(telefonoEntry.Text),
+					direccion = direccionEntry.Text,
+					numero_cuenta = numero_cuentaEntry.Text,
+					cedula_identidad = cedulaEntry.Text
+				};
 
-            var json = JsonConvert.SerializeObject(vendedores);
+				var json = JsonConvert.SerializeObject(vendedores);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+				HttpClient client = new HttpClient();
+				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/vendedores/borrarVendedor.php", content);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpClient client = new HttpClient();
-
-            var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/vendedores/borrarVendedor.php", content);
-
-            if (result.StatusCode == HttpStatusCode.Created)
-            {
-                await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
-                await Navigation.PopAsync();
-            }
-            else
-            {
-                await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
-                await Navigation.PopAsync();
-            }
+				if (result.StatusCode == HttpStatusCode.OK)
+				{
+					await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
+					await Navigation.PopAsync();
+				}
+				else
+				{
+					await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+					await Navigation.PopAsync();
+				}
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("Error", err.ToString(), "OK");
+			}
         }
 
         private void ToolbarItem_Clicked(object sender, EventArgs e)

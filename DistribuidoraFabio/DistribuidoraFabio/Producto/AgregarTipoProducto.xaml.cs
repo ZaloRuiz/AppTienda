@@ -22,34 +22,40 @@ namespace DistribuidoraFabio.Producto
 		}
         private async void BtnGuardarTP_Clicked(object sender, EventArgs e)
         {
-            try
-			{
-                Tipo_producto tipo_Producto = new Tipo_producto()
+            if (!string.IsNullOrWhiteSpace(nombreTpEntry.Text) || (!string.IsNullOrEmpty(nombreTpEntry.Text)))
+            {
+                try
                 {
-                    id_tipoproducto = Convert.ToInt32(idproductoentry.Text),
-                    nombre_tipo_producto = nombreTpEntry.Text
-                };
+                    Tipo_producto tipo_Producto = new Tipo_producto()
+                    {
+                        nombre_tipo_producto = nombreTpEntry.Text
+                    };
 
-                var json = JsonConvert.SerializeObject(tipo_Producto);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpClient client = new HttpClient();
-                var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/agregarTipoproducto.php", content);
+                    var json = JsonConvert.SerializeObject(tipo_Producto);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpClient client = new HttpClient();
+                    var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/agregarTipoproducto.php", content);
 
-                if (result.StatusCode == HttpStatusCode.Created)
-                {
-                    await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-                    await Navigation.PopAsync();
+                    if (result.StatusCode == HttpStatusCode.OK)
+                    {
+                        await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
+                        await Navigation.PopAsync();
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+                        await Navigation.PopAsync();
+                    }
                 }
-                else
+                catch (Exception err)
                 {
-                    await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
-                    await Navigation.PopAsync();
+                    await DisplayAlert("Error", err.ToString(), "OK");
                 }
             }
-            catch(Exception err)
-			{
-                await DisplayAlert("ERROR", err.ToString(), "OK");
-			}
+            else
+            {
+                await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+            }
         }
     }
 }

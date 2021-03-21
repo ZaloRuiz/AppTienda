@@ -34,8 +34,6 @@ namespace DistribuidoraFabio.Venta
         public MostrarVenta(int id_venta, DateTime fecha, int numero_factura, string nombre_cliente, string nombre_vendedor, string tipo_venta, 
 			decimal saldo, decimal total, DateTime fecha_entrega, string estado, string observacion)
 		{
-            string BusyReason = "Cargando...";
-            PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
             InitializeComponent();
 			facturacomp = numero_factura;
             _id_venta = id_venta;
@@ -58,10 +56,7 @@ namespace DistribuidoraFabio.Venta
             }
 			
 			MostraDatosVentaInicial();
-		
-			PopupNavigation.Instance.PopAsync();
         }
-   
 		private async void MostraDatosVentaInicial()
 		{
 			try
@@ -345,8 +340,6 @@ namespace DistribuidoraFabio.Venta
 				enttotal.TextColor = Color.FromHex("#95B0B7");
 				enttotal.HorizontalOptions = LayoutOptions.FillAndExpand;
 				stack5.Children.Add(enttotal);
-				////
-
 			}
 			catch (Exception err)
 			{

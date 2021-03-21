@@ -7,13 +7,13 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
-                <Entry x:Name="idEntry" Text="id" IsVisible="False"/>
                 <Picker x:Name="tpPicker" Title="Tipo de producto"
                 ItemsSource="{Binding nombre_tipo_producto}" ItemDisplayBinding="{Binding nombre_tipo_producto}" SelectedItem="{Binding nombre_tipo_producto, Mode=TwoWay}"
                 SelectedIndexChanged="TpPicker_SelectedIndexChanged" HorizontalOptions="FillAndExpand"/>
                 <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
-                <Entry x:Name="precioventaEntry"  HorizontalOptions="FillAndExpand" Placeholder="Precio Venta" Keyboard="Numeric"/>
-                <Entry x:Name="stockProductoEntry" Placeholder="Stock" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Completed="stockProductoEntry_Completed"/>
+                <Entry x:Name="precioventaEntry" HorizontalOptions="FillAndExpand" Placeholder="Precio Venta" Keyboard="Numeric"/>
+                <Entry x:Name="stockProductoEntry" Placeholder="Stock" Keyboard="Numeric" HorizontalOptions="FillAndExpand" 
+                       Completed="stockProductoEntry_Completed"/>
                 <Entry x:Name="stockValoradoProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Saldo Valorado" Keyboard="Numeric"/>
                 <Entry x:Name="promedioProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Promedio" Keyboard="Numeric"/>
                 <Entry x:Name="alertaProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Alerta" Keyboard="Numeric"/>

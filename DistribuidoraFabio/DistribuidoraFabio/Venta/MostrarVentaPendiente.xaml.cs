@@ -20,6 +20,7 @@ namespace DistribuidoraFabio.Venta
 	public partial class MostrarVentaPendiente : ContentPage
 	{
 		ObservableCollection<DetalleVentaNombre> detalleVenta_lista = new ObservableCollection<DetalleVentaNombre>();
+		ObservableCollection<DetalleVenta> _detalleVentaComp = new ObservableCollection<DetalleVenta>();
 		public ObservableCollection<DetalleVentaNombre> DetallesVentas { get { return detalleVenta_lista; } }
 		private int facturacomp = 0;
 		private int _id_venta = 0;
@@ -40,8 +41,6 @@ namespace DistribuidoraFabio.Venta
 			decimal saldo, decimal total, DateTime fecha_entrega, string estado, string observacion)
 		{
 			InitializeComponent();
-			string BusyReason = "Cargando...";
-			PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
 			facturacomp = numero_factura;
 			_id_venta = id_venta;
 			_fecha = fecha;
@@ -63,61 +62,8 @@ namespace DistribuidoraFabio.Venta
 			{
 				_tipo_venta = tipo_venta;
 			}
-			//GetDataCliente();
-			//GetDataVendedor();
 			MostraDatosVentaInicial();
-			//MostrarDetalleVenta();
-			//MostraDatosVentaFinal();
-			PopupNavigation.Instance.PopAsync();
 		}
-		//private async void GetDataCliente()
-		//{
-		//	try
-		//	{
-		//		HttpClient client = new HttpClient();
-		//		var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/clientes/listaCliente.php");
-		//		var clientes = JsonConvert.DeserializeObject<List<Models.Cliente>>(response).ToList();
-		//		foreach (var item in clientes)
-		//		{
-		//			if (item.id_cliente == _cliente)
-		//			{
-		//				_nombreCliente = item.nombre_cliente;
-		//			}
-		//			else
-		//			{
-		//				_nombreCliente = item.id_cliente.ToString();
-		//			}
-		//		}
-		//	}
-		//	catch (Exception err)
-		//	{
-		//		await DisplayAlert("ERROR", err.ToString(), "OK");
-		//	}
-		//}
-		//private async void GetDataVendedor()
-		//{
-		//	try
-		//	{
-		//		HttpClient client = new HttpClient();
-		//		var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/vendedores/listaVendedores.php");
-		//		var vendedores = JsonConvert.DeserializeObject<List<Vendedores>>(response).ToList();
-		//		foreach (var item in vendedores)
-		//		{
-		//			if (item.id_vendedor == _vendedor)
-		//			{
-		//				_nombreVendedor = item.nombre;
-		//			}
-		//			else
-		//			{
-		//				_nombreVendedor = item.id_vendedor.ToString();
-		//			}
-		//		}
-		//	}
-		//	catch (Exception error)
-		//	{
-		//		await DisplayAlert("Erro", error.ToString(), "OK");
-		//	}
-		//}
 		private async void MostraDatosVentaInicial()
 		{
 			try
@@ -195,7 +141,6 @@ namespace DistribuidoraFabio.Venta
 			{
 				await DisplayAlert("ERROR", err.ToString(), "OK");
 			}
-			//daniel 2
 			try
 			{
 				DetalleVenta _detaVenta = new DetalleVenta()
@@ -309,7 +254,6 @@ namespace DistribuidoraFabio.Venta
 			{
 				await DisplayAlert("ERROR", err.ToString(), "OK");
 			}
-			//daniel
 			try
 			{
 				await Task.Delay(1000);
@@ -410,14 +354,41 @@ namespace DistribuidoraFabio.Venta
 			{
 				await DisplayAlert("ERROR", err.ToString(), "OK");
 			}
-
 		}
-		
 		private async void ToolbarItemComp_Clicked(object sender, EventArgs e)
 		{
+			
+
+
 			string _resultObs = await DisplayPromptAsync("Pedido entregado", "Comentarios:");
 			try
 			{
+				DetalleVenta _detaVenta = new DetalleVenta()
+				{
+					factura = _numero_factura
+				};
+				var jsonDV = JsonConvert.SerializeObject(_detaVenta);
+				var contentDV = new StringContent(jsonDV, Encoding.UTF8, "application/json");
+				HttpClient clientDV = new HttpClient();
+				var resultDV = await clientDV.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaDetalleVentaPrevio.php", contentDV);
+
+				var jsonR = await resultDV.Content.ReadAsStringAsync();
+				var dv_lista = JsonConvert.DeserializeObject<List<DetalleVenta_previo>>(jsonR);
+				foreach (var item in dv_lista)
+				{
+					Models.Producto producto = new Models.Producto()
+					{
+						id_producto = item.id_producto,
+						stock = item.stock - item.cantidad,
+						stock_valorado = item.stock_valorado - (item.cantidad * item.promedio),
+						promedio = item.stock_valorado / item.stock
+					};
+					var json3 = JsonConvert.SerializeObject(producto);
+					var content3 = new StringContent(json3, Encoding.UTF8, "application/json");
+					HttpClient client3 = new HttpClient();
+					var result3 = await client3.PostAsync("https://dmrbolivia.com/api_distribuidora/productos/editarProducto.php", content3);
+				}
+
 				Ventas ventas = new Ventas()
 				{
 					id_venta = _id_venta,

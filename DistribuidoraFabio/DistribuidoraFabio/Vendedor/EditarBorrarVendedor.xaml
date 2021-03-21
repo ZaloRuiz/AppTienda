@@ -11,12 +11,13 @@
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout>
-                    <Entry x:Name="idEntry" Placeholder="id" IsVisible="False"/>
                     <Entry x:Name="nombreEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" VerticalOptions="Center"/>
                     <Entry x:Name="telefonoEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" VerticalOptions="Center" Keyboard="Numeric"/>
                     <Entry x:Name="direccionEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" VerticalOptions="Center"/>
                     <Entry x:Name="numero_cuentaEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta" VerticalOptions="Center"/>
                     <Entry x:Name="cedulaEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de identidad" VerticalOptions="Center"/>
+                    <Entry x:Name="usuarioEntry" HorizontalOptions="FillAndExpand" Placeholder="Usuario" VerticalOptions="Center"/>
+                    <Entry x:Name="passwordEntry" HorizontalOptions="FillAndExpand" Placeholder="Contraseña" VerticalOptions="Center"/>
                 </StackLayout>
                 <Button x:Name="btnEditarVendedor" Text="Editar" Clicked="BtnEditarVendedor_Clicked"/>
                 <Button x:Name="btnBorrarVendedor" Text="Borrar" Clicked="BtnBorrarVendedor_Clicked"/>

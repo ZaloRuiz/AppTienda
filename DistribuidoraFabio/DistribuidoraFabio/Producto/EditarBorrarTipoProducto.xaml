@@ -8,7 +8,6 @@
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout>
-                    <Entry Text="idproducto" IsVisible="False" x:Name="idproductosentry"/>
                     <Entry x:Name="nombreTpEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
                 </StackLayout>
                 <Button x:Name="btnEditarTP" Text="Editar" Clicked="BtnEditarTP_Clicked"/>

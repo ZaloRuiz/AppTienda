@@ -10,7 +10,6 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
-                <Entry x:Name="idClienteEntry" Text="Id" IsVisible="False"/>
                 <Entry x:Name="codigoEntry" HorizontalOptions="FillAndExpand" Placeholder="Codigo" IsEnabled="False"/>
                 <Entry x:Name="nombreClienteEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
                 <Entry x:Name="telefonoClienteEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" Keyboard="Numeric"/>

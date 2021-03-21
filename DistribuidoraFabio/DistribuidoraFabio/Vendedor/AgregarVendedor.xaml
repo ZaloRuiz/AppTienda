@@ -13,6 +13,8 @@
                     <Entry x:Name="direccionVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion"/>
                     <Entry x:Name="numero_cuentaVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta"  Keyboard="Numeric"/>
                     <Entry x:Name="cedula_identidadVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de Identidad"/>
+                    <Entry x:Name="usuarioEntry" HorizontalOptions="FillAndExpand" Placeholder="Usuario"/>
+                    <Entry x:Name="passwordEntry" HorizontalOptions="FillAndExpand" Placeholder="Contraseña"/>
                 </StackLayout>
                 <Button x:Name="btnGuardarVendedor" Text="Guadar" Clicked="BtnGuardarVendedor_Clicked"/>
             </StackLayout>

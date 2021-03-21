@@ -14,14 +14,14 @@
             <ColumnDefinition Width="240"/>
         </Grid.ColumnDefinitions>
         <Frame CornerRadius="5" Padding="5" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
-                   HeightRequest="150" WidthRequest="240" BackgroundColor="Transparent" BorderColor="Transparent" Opacity="1" HasShadow="True" Grid.Column="0" Grid.Row="0" Margin="10">
+                   HeightRequest="150" WidthRequest="240" BackgroundColor="#324a51" BorderColor="#324a51" Opacity="0.9" HasShadow="True" Grid.Column="0" Grid.Row="0" Margin="10">
             <Grid BackgroundColor="Transparent" HeightRequest="120" WidthRequest="240" HorizontalOptions="CenterAndExpand">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/> 
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="75"/>
+                    <RowDefinition Height="75"/>
                 </Grid.RowDefinitions>
                 <ActivityIndicator Color="#4DCCE8" Scale="1" Grid.Column="0"
                                    Grid.Row="0" IsVisible="True" IsRunning="True" IsEnabled="True" x:Name="BusyAI" HorizontalOptions="CenterAndExpand"/>

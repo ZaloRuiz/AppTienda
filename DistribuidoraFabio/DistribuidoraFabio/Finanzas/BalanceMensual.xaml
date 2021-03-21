@@ -13,13 +13,23 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="150"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
                         <Label Text="MARZO 2021" TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="10"/>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                            <StackLayout HorizontalOptions="CenterAndExpand">
+                                <Label Text="INGRESOS" TextColor="White" HorizontalOptions="Center"/>
+                                <Label Text="1650 Bs." TextColor="Green" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                            </StackLayout>
+                            <StackLayout HorizontalOptions="CenterAndExpand">
+                                <Label Text="EGRESOS" TextColor="White" HorizontalOptions="Center"/>
+                                <Label Text="1830 Bs." TextColor="Red" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                            </StackLayout>
+                        </StackLayout>
                     </StackLayout>
                     <StackLayout Grid.Row="1" Grid.Column="0" Padding="5">
                         <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -62,16 +72,6 @@
                                 <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                     <microcharts:ChartView x:Name="grafico2" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                                 </StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <StackLayout>
-                                        <Label Text="INGRESOS" TextColor="White" HorizontalOptions="Center"/>
-                                        <Label Text="1650 Bs." TextColor="Green" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
-                                    </StackLayout>
-                                    <StackLayout>
-                                        <Label Text="EGRESOS" TextColor="White" HorizontalOptions="Center"/>
-                                        <Label Text="1830 Bs." TextColor="Red" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
-                                    </StackLayout>
-                                </StackLayout>
                             </StackLayout>
                         </Frame>
                     </StackLayout>
@@ -111,6 +111,7 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="300"></RowDefinition>
+                        <RowDefinition Height="300"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
                         <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
@@ -128,7 +129,31 @@
                         HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                             <StackLayout Padding="5">
                                 <Label Text="Top clientes" TextColor="White" HorizontalTextAlignment="Center"/>
-                                
+                                <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <microcharts:ChartView x:Name="grafClientes" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Grid.Row="1" Grid.Column="0" Padding="5">
+                        <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <StackLayout Padding="5">
+                                <Label Text="Productos mas vendidos" TextColor="White" HorizontalTextAlignment="Center"/>
+                                <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <microcharts:ChartView x:Name="grafP_MasVendidos" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Grid.Row="1" Grid.Column="1" Padding="5">
+                        <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <StackLayout Padding="5">
+                                <Label Text="Productos en almacen" TextColor="White" HorizontalTextAlignment="Center"/>
+                                <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <microcharts:ChartView x:Name="grafP_almacen" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                </StackLayout>
                             </StackLayout>
                         </Frame>
                     </StackLayout>

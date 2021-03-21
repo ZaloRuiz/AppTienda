@@ -22,44 +22,85 @@ namespace DistribuidoraFabio.Cliente
 		}
         private async void BtnGuardarCliente_Clicked(object sender, EventArgs e)
         {
-			try
+			if (!string.IsNullOrWhiteSpace(nombreEntry.Text) || (!string.IsNullOrEmpty(nombreEntry.Text)))
 			{
-				Models.Cliente cliente = new Models.Cliente()
+				if (!string.IsNullOrWhiteSpace(telefonoEntry.Text) || (!string.IsNullOrEmpty(telefonoEntry.Text)))
 				{
-					nombre_cliente = nombreEntry.Text,
-					ubicacion_latitud = ubicacionLatitudEntry.Text,
-					ubicacion_longitud = ubicacionLongitudEntry.Text,
-					telefono = Convert.ToInt32(telefonoEntry.Text),
-					direccion_cliente = direccionEntry.Text,
-					razon_social = razEntry.Text,
-					nit = Convert.ToInt32(nitEntry.Text)
-				};
+					if (!string.IsNullOrWhiteSpace(direccionEntry.Text) || (!string.IsNullOrEmpty(direccionEntry.Text)))
+					{
+						if (!string.IsNullOrWhiteSpace(ubconfirmacionEntry.Text) || (!string.IsNullOrEmpty(ubconfirmacionEntry.Text)))
+						{
+							if (!string.IsNullOrWhiteSpace(razEntry.Text) || (!string.IsNullOrEmpty(razEntry.Text)))
+							{
+								if (!string.IsNullOrWhiteSpace(nitEntry.Text) || (!string.IsNullOrEmpty(nitEntry.Text)))
+								{
+									try
+									{
+										Models.Cliente cliente = new Models.Cliente()
+										{
+											nombre_cliente = nombreEntry.Text,
+											ubicacion_latitud = ubicacionLatitudEntry.Text,
+											ubicacion_longitud = ubicacionLongitudEntry.Text,
+											telefono = Convert.ToInt32(telefonoEntry.Text),
+											direccion_cliente = direccionEntry.Text,
+											razon_social = razEntry.Text,
+											nit = Convert.ToInt32(nitEntry.Text)
+										};
 
-				var json = JsonConvert.SerializeObject(cliente);
+										var json = JsonConvert.SerializeObject(cliente);
 
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
+										var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-				HttpClient client = new HttpClient();
+										HttpClient client = new HttpClient();
 
-				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/clientes/agregarCliente.php", content);
+										var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/clientes/agregarCliente.php", content);
 
-				if (result.StatusCode == HttpStatusCode.OK)
-				{
-					await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-					await Navigation.PopAsync();
+										if (result.StatusCode == HttpStatusCode.OK)
+										{
+											await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
+											await Navigation.PopAsync();
+										}
+										else
+										{
+											await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+											await Navigation.PopAsync();
+										}
+									}
+									catch (Exception err)
+									{
+										await DisplayAlert("Error", err.ToString(), "OK");
+									}
+								}
+								else
+								{
+									await DisplayAlert("Campo vacio", "El campo de Nit esta vacio", "Ok");
+								}
+							}
+							else
+							{
+								await DisplayAlert("Campo vacio", "El campo de Razon social esta vacio", "Ok");
+							}
+						}
+						else
+						{
+							await DisplayAlert("Campo vacio", "El campo de Ubicacion esta vacio", "Ok");
+						}
+					}
+					else
+					{
+						await DisplayAlert("Campo vacio", "El campo de Direccion esta vacio", "Ok");
+					}
 				}
 				else
 				{
-					await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
-					await Navigation.PopAsync();
+					await DisplayAlert("Campo vacio", "El campo de Telefono esta vacio", "Ok");
 				}
 			}
-			catch(Exception err)
+			else
 			{
-				await DisplayAlert("ERROR", err.ToString(), "OK");
+				await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
 			}
 		}
-
         async void BtnUbicacion_Clicked(object sender, EventArgs e)
         {
             try
@@ -75,15 +116,15 @@ namespace DistribuidoraFabio.Cliente
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                await DisplayAlert("Faild", fnsEx.Message, "OK");
+                await DisplayAlert("Error", fnsEx.Message, "OK");
             }
             catch (PermissionException pEx)
             {
-                await DisplayAlert("Faild", pEx.Message, "OK");
+                await DisplayAlert("Error", pEx.Message, "OK");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Faild", ex.Message, "OK");
+                await DisplayAlert("Error", ex.Message, "OK");
             }
         }
     }

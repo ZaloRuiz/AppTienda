@@ -38,7 +38,7 @@ namespace DistribuidoraFabio.Vendedor
         {
             var detalles = e.Item as Vendedores;
             await Navigation.PushAsync(new EditarBorrarVendedor(detalles.id_vendedor, detalles.nombre,
-                detalles.telefono, detalles.direccion, detalles.numero_cuenta, detalles.cedula_identidad));
+                detalles.telefono, detalles.direccion, detalles.numero_cuenta, detalles.cedula_identidad, detalles.usuario, detalles.password));
         }
     }
 }
