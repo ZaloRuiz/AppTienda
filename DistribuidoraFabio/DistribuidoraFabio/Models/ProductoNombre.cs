@@ -9,7 +9,7 @@ namespace DistribuidoraFabio.Models
         public int id_producto { get; set; }
         public string nombre_producto { get; set; }
         public string nombre_tipo_producto { get; set; }
-        public decimal stock { get; set; }
+        public int stock { get; set; }
         public decimal stock_valorado { get; set; }
         public decimal promedio { get; set; }
         public decimal precio_venta { get; set; }

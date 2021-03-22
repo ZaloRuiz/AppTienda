@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +24,20 @@ namespace DistribuidoraFabio
 		protected async override void OnAppearing()
 		{
 			base.OnAppearing();
-			try
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				
+				try
+				{
+
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
 			}
-			catch(Exception err)
+			else
 			{
-				await DisplayAlert("AVISO", err.ToString(), "OK");
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 	}

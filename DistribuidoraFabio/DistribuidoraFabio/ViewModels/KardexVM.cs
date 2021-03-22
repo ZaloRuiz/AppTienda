@@ -22,8 +22,7 @@ namespace DistribuidoraFabio.ViewModels
 		}
 		private bool _isRefreshing;
 		private int id_del_producto;
-		private string NombreProdCompleto;
-		ObservableCollection<Models.InventarioNombre> inventario_list = new ObservableCollection<Models.InventarioNombre>();
+		ObservableCollection<InventarioNombre> inventario_list = new ObservableCollection<InventarioNombre>();
 		public ObservableCollection<Models.InventarioNombre> InventariosKardex
 		{
 			get { return inventario_list; }
@@ -55,9 +54,9 @@ namespace DistribuidoraFabio.ViewModels
 			await Task.Delay(2000);
 			IsRefreshing = false;
 		}
-		public KardexVM(int id_producto)
+		public KardexVM(int Id_producto)
 		{
-			id_del_producto = id_producto;
+			id_del_producto = Id_producto;
 			inventario_list = new ObservableCollection<Models.InventarioNombre>();
 			GetKardex();
 			RefreshCommand = new Command(CmdRefresh);

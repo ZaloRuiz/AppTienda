@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DistribuidoraFabio.Helpers;
 using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -27,14 +28,28 @@ namespace DistribuidoraFabio.Compra
 		protected async override void OnAppearing()
 		{
 			base.OnAppearing();
-			string BusyReason = "Cargando...";
-			await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
-			HttpClient client = new HttpClient();
-			var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/compras/listaCompraNombre.php");
-			var compras = JsonConvert.DeserializeObject<List<ComprasNombre>>(response);
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				try
+				{
+					string BusyReason = "Cargando...";
+					await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+					HttpClient client = new HttpClient();
+					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/compras/listaCompraNombre.php");
+					var compras = JsonConvert.DeserializeObject<List<ComprasNombre>>(response);
 
-			listaCompra.ItemsSource = compras;
-			await PopupNavigation.Instance.PopAsync();
+					listaCompra.ItemsSource = compras;
+					await PopupNavigation.Instance.PopAsync();
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
 		}
 		private async void OnItemSelected(object sender, ItemTappedEventArgs e)
 		{

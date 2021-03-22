@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +25,29 @@ namespace DistribuidoraFabio.Producto
         protected async override void OnAppearing()
         {
             base.OnAppearing();
+            if (CrossConnectivity.Current.IsConnected)
+            {
+                try
+                {
+                    HttpClient client = new HttpClient();
+                    var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
+                    var tipoproductos = JsonConvert.DeserializeObject<List<Models.Tipo_producto>>(response);
 
-            HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
-            var tipoproductos = JsonConvert.DeserializeObject<List<Models.Tipo_producto>>(response);
-
-            foreach(var item in tipoproductos)
-			{
-                TP_prods.Add(item);
-			}
-            tpPicker.ItemsSource = TP_prods;
+                    foreach (var item in tipoproductos)
+                    {
+                        TP_prods.Add(item);
+                    }
+                    tpPicker.ItemsSource = TP_prods;
+                }
+                catch (Exception err)
+                {
+                    await DisplayAlert("Error", err.ToString(), "OK");
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+            }
         }
         private string pickTP;
         private int pickedID_TP;
@@ -87,7 +101,7 @@ namespace DistribuidoraFabio.Producto
                                             {
                                                 nombre_producto = nombrePEntry.Text,
                                                 id_tipo_producto = pickedID_TP,
-                                                stock = Convert.ToDecimal(stockProductoEntry.Text),
+                                                stock = Convert.ToInt32(stockProductoEntry.Text),
                                                 stock_valorado = Convert.ToDecimal(stockValoradoProductoEntry.Text),
                                                 promedio = Convert.ToDecimal(promedioProductoEntry.Text),
                                                 precio_venta = Convert.ToDecimal(precioventaEntry.Text),

@@ -68,7 +68,6 @@ namespace DistribuidoraFabio.Producto
                 Tipo_producto tipo_Producto = new Tipo_producto()
                 {
                     id_tipoproducto = Id_TipoProducto,
-                    nombre_tipo_producto = nombreTpEntry.Text
                 };
 
                 var json = JsonConvert.SerializeObject(tipo_Producto);

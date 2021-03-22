@@ -1,4 +1,5 @@
 ﻿using Microcharts;
+using Plugin.Connectivity;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -32,22 +33,25 @@ namespace DistribuidoraFabio.Finanzas
 		protected async override void OnAppearing()
 		{
 			base.OnAppearing();
-			
-			float _enero = (float)_v_enero;
-			float _febrero = (float)_v_febrero;
-			float _marzo = (float)_v_marzo;
-			float _abril = (float)_v_abril;
-			float _mayo = (float)_v_mayo;
-			float _junio = (float)_v_junio;
-			float _julio = (float)_v_julio;
-			float _agosto = (float)_v_agosto;
-			float _septiembre = (float)_v_septiembre;
-			float _octubre = (float)_v_octubre;
-			float _noviembre = (float)_v_noviembre;
-			float _diciembre = (float)_v_diciembre;
-
-			var entries = new[]
+			if (CrossConnectivity.Current.IsConnected)
 			{
+				try
+				{
+					float _enero = (float)_v_enero;
+					float _febrero = (float)_v_febrero;
+					float _marzo = (float)_v_marzo;
+					float _abril = (float)_v_abril;
+					float _mayo = (float)_v_mayo;
+					float _junio = (float)_v_junio;
+					float _julio = (float)_v_julio;
+					float _agosto = (float)_v_agosto;
+					float _septiembre = (float)_v_septiembre;
+					float _octubre = (float)_v_octubre;
+					float _noviembre = (float)_v_noviembre;
+					float _diciembre = (float)_v_diciembre;
+
+					var entries = new[]
+					{
 				new ChartEntry(_enero)
 					{
 						Color = SKColor.Parse("#000FFF"),
@@ -145,8 +149,25 @@ namespace DistribuidoraFabio.Finanzas
 						ValueLabelColor = SKColors.White,
 					}
 			};
-			grafico1.Chart = new BarChart() { Entries = entries, BackgroundColor = SKColor.Parse("#40616B"), LabelColor = SKColors.White, LabelTextSize = 30,
-			LabelOrientation = Orientation.Horizontal, ValueLabelOrientation = Orientation.Horizontal, };
+					grafico1.Chart = new BarChart()
+					{
+						Entries = entries,
+						BackgroundColor = SKColor.Parse("#40616B"),
+						LabelColor = SKColors.White,
+						LabelTextSize = 30,
+						LabelOrientation = Orientation.Horizontal,
+						ValueLabelOrientation = Orientation.Horizontal,
+					};
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
 		}
 	}
 }

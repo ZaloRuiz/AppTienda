@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Helpers;
 using DistribuidoraFabio.ViewModels;
+using Plugin.Connectivity;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
@@ -20,24 +21,36 @@ namespace DistribuidoraFabio.Reportes
 		public R_DetalleVenta()
 		{
 			InitializeComponent();
-			
 		}
-		protected override void OnAppearing()
+		protected async override void OnAppearing()
 		{
-			_fechaInicio = App._fechaInicioFiltro;
-			_fechaFinal = App._fechaFinalFiltro;
-			BindingContext = new R_DetalleVentaVM(_fechaInicio, _fechaFinal);
-			MessagingCenter.Subscribe<FiltrarPorFecha>(this, "Hi", (sender) =>
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				Navigation.PopAsync();
-				_fechaInicio = App._fechaInicioFiltro;
-				_fechaFinal = App._fechaFinalFiltro;
-				BindingContext = new R_DetalleVentaVM(_fechaInicio, _fechaFinal);
-			});
+				try
+				{
+					_fechaInicio = App._fechaInicioFiltro;
+					_fechaFinal = App._fechaFinalFiltro;
+					BindingContext = new R_DetalleVentaVM(_fechaInicio, _fechaFinal);
+					MessagingCenter.Subscribe<FiltrarPorFecha>(this, "Hi", (sender) =>
+					{
+						Navigation.PopAsync();
+						_fechaInicio = App._fechaInicioFiltro;
+						_fechaFinal = App._fechaFinalFiltro;
+						BindingContext = new R_DetalleVentaVM(_fechaInicio, _fechaFinal);
+					});
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
 		}
 		private async void toolbarFiltro_Clicked(object sender, EventArgs e)
 		{
-			//Rg.Plugins.Popup
 			await PopupNavigation.Instance.PushAsync(new FiltrarPorFecha());
 		}
 	}

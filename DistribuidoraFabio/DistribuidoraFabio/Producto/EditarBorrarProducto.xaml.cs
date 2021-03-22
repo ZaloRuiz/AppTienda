@@ -18,7 +18,7 @@ namespace DistribuidoraFabio.Producto
 	{
         private int IdProd;
         private int IdTipProd;
-		public EditarBorrarProducto(int id_producto, string nombre_producto, string nombre_tipo_producto, decimal stock,
+		public EditarBorrarProducto(int id_producto, string nombre_producto, string nombre_tipo_producto, int stock,
 			decimal stock_valorado, decimal promedio, decimal precio_venta, decimal producto_alerta)
 		{
 			InitializeComponent();
@@ -69,7 +69,7 @@ namespace DistribuidoraFabio.Producto
 												id_producto = IdProd,
 												nombre_producto = nombreProdEntry.Text,
 												id_tipo_producto = IdTipProd,
-												stock = Convert.ToDecimal(stockEntry.Text),
+												stock = Convert.ToInt32(stockEntry.Text),
 												stock_valorado = Convert.ToDecimal(stockValoradoEntry.Text),
 												promedio = Convert.ToDecimal(promedioEntry.Text),
 												precio_venta = Convert.ToDecimal(precioventaEntry.Text),

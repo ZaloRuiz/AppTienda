@@ -56,7 +56,7 @@ namespace DistribuidoraFabio.Cliente
             listaClienteH.ItemsSource = Items;
         }
 
-        private async void ListaClienteH_ItemTapped(object sender, ItemTappedEventArgs e)
+        private void ListaClienteH_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             var detalles = e.Item as Ventas;
             //await Navigation.PushAsync(new Venta.MostrarVenta(detalles.id_venta, detalles.fecha, detalles.hora, detalles.numero_factura, detalles.cliente,

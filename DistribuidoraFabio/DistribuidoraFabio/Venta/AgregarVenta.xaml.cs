@@ -2,6 +2,7 @@
 using DistribuidoraFabio.Models;
 using dotMorten.Xamarin.Forms;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
@@ -32,17 +33,31 @@ namespace DistribuidoraFabio.Venta
         public AgregarVenta()
         {
             InitializeComponent();
-            App._detalleVData.Clear();
-            tipoVentaEntry.ItemsSource = new List<string> { "Contado", "Credito" };
-            estadoEntry.ItemsSource = new List<string> { "Entregado", "Pendiente"};
-            GetDataCliente();
-            GetDataVendedor();
-            GetProductos();
         }
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
-            listProductos.ItemsSource = App._detalleVData;
             base.OnAppearing();
+            if (CrossConnectivity.Current.IsConnected)
+            {
+                try
+                {
+                    App._detalleVData.Clear();
+                    tipoVentaEntry.ItemsSource = new List<string> { "Contado", "Credito" };
+                    estadoEntry.ItemsSource = new List<string> { "Entregado", "Pendiente" };
+                    GetDataCliente();
+                    GetDataVendedor();
+                    GetProductos();
+                    listProductos.ItemsSource = App._detalleVData;
+                }
+                catch (Exception err)
+                {
+                    await DisplayAlert("Error", err.ToString(), "OK");
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+            }
         }
         private async void GetDataCliente()
         {
@@ -260,7 +275,7 @@ namespace DistribuidoraFabio.Venta
         decimal descuentoSelected = 0;
         decimal precioFinalSelected = 0;
         decimal subTotalSelected = 0;
-        decimal stockSelected = 0;
+        int stockSelected = 0;
         decimal stockValoradoSelected = 0;
         decimal promedioSelected = 0;
         int envaseSelected = 0;
@@ -271,7 +286,7 @@ namespace DistribuidoraFabio.Venta
                 precioSelected = Convert.ToDecimal(txtPrecio.Text);
                 //cantidaSelected = Convert.ToInt32(txtCantidad.Text);
                 descuentoSelected = Convert.ToDecimal(txtDescuento.Text);
-                stockSelected = Convert.ToDecimal(txtStock.Text);
+                stockSelected = Convert.ToInt32(txtStock.Text);
                 stockValoradoSelected = Convert.ToDecimal(txtStockValorado.Text);
                 promedioSelected = Convert.ToDecimal(txtPromedio.Text);
                 precioFinalSelected = precioSelected - descuentoSelected;
@@ -291,7 +306,7 @@ namespace DistribuidoraFabio.Venta
                 precioSelected = Convert.ToDecimal(txtPrecio.Text);
                 cantidaSelected = Convert.ToInt32(txtCantidad.Text);
                 descuentoSelected = Convert.ToDecimal(txtDescuento.Text);
-                stockSelected = Convert.ToDecimal(txtStock.Text);
+                stockSelected = Convert.ToInt32(txtStock.Text);
                 stockValoradoSelected = Convert.ToDecimal(txtStockValorado.Text);
                 promedioSelected = Convert.ToDecimal(txtPromedio.Text);
                 precioFinalSelected = precioSelected - descuentoSelected;

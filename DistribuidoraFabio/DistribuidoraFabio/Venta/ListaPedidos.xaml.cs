@@ -2,6 +2,7 @@
 using DistribuidoraFabio.Models;
 using DistribuidoraFabio.ViewModels;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,25 @@ namespace DistribuidoraFabio.Venta
 		public ListaPedidos()
 		{
 			InitializeComponent();
-			
 		}
         protected async override void OnAppearing()
         {
 			base.OnAppearing();
-			this.BindingContext = new ListaPedidosVM();
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				try
+				{
+					this.BindingContext = new ListaPedidosVM();
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
 		}
         private void ToolbarItem_Clicked(object sender, EventArgs e)
 		{

@@ -1,6 +1,7 @@
 ﻿using DistribuidoraFabio.Models;
 using Microcharts;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -43,48 +44,52 @@ namespace DistribuidoraFabio.Finanzas
 		protected async override void OnAppearing()
 		{
 			base.OnAppearing();
-			HttpClient client = new HttpClient();
-			var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostos.php");
-			var dataCostos = JsonConvert.DeserializeObject<List<Costos>>(response);
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				try
+				{
+					HttpClient client = new HttpClient();
+					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostos.php");
+					var dataCostos = JsonConvert.DeserializeObject<List<Costos>>(response);
 
-			foreach (var item in dataCostos)
-			{
-				if (item.tipo_costo == "Fijo")
-				{
-					_costo_fijo = _costo_fijo + item.monto;
-				}
-				else if (item.tipo_costo == "Variable")
-				{
-					_costo_variable = _costo_variable + item.monto;
-				}
-			}
-			float _C_Fijo = (float)_costo_fijo;
-			float _C_Variable = (float)_costo_variable;
-			float _C_Ingresos = (float)_ingresos;
-			txtCostosF.Text = "Costos fijos: " + _costo_fijo.ToString() + " Bs.";
-			txtCostosV.Text = "Costos variables: " + _costo_variable.ToString() + " Bs.";
-			txtIngresos.Text = "Ingresos: " + _ingresos.ToString() + " Bs.";
-			var entries = new[]
-			{
+					foreach (var item in dataCostos)
+					{
+						if (item.tipo_costo == "Fijo")
+						{
+							_costo_fijo = _costo_fijo + item.monto;
+						}
+						else if (item.tipo_costo == "Variable")
+						{
+							_costo_variable = _costo_variable + item.monto;
+						}
+					}
+					float _C_Fijo = (float)_costo_fijo;
+					float _C_Variable = (float)_costo_variable;
+					float _C_Ingresos = (float)_ingresos;
+					txtCostosF.Text = "Costos fijos: " + _costo_fijo.ToString() + " Bs.";
+					txtCostosV.Text = "Costos variables: " + _costo_variable.ToString() + " Bs.";
+					txtIngresos.Text = "Ingresos: " + _ingresos.ToString() + " Bs.";
+					var entries = new[]
+					{
 				new ChartEntry(_C_Fijo)
 					{
 						Color = SKColor.Parse("#000FFF"),
-                    },
+					},
 				new ChartEntry(_C_Variable)
 					{
 						Color = SKColor.Parse("#FF0000"),
-                    },
+					},
 				new ChartEntry(_C_Ingresos)
 					{
 						Color = SKColor.Parse("#059B00"),
-                    },
+					},
 			};
-			grafico1.Chart = new DonutChart() { Entries = entries, BackgroundColor = SKColor.Parse("#40616B"), GraphPosition = GraphPosition.AutoFill};
+					grafico1.Chart = new DonutChart() { Entries = entries, BackgroundColor = SKColor.Parse("#40616B"), GraphPosition = GraphPosition.AutoFill };
 
-			txtCostosF2.Text = "Costos fijos: " + _costo_fijo.ToString() + " Bs.";
-			txtCostosV2.Text = "Costos variables: " + _costo_variable.ToString() + " Bs.";
-			var entries2 = new[]
-			{
+					txtCostosF2.Text = "Costos fijos: " + _costo_fijo.ToString() + " Bs.";
+					txtCostosV2.Text = "Costos variables: " + _costo_variable.ToString() + " Bs.";
+					var entries2 = new[]
+					{
 				new ChartEntry(_C_Fijo)
 					{
 						Color = SKColor.Parse("#000FFF"),
@@ -94,14 +99,14 @@ namespace DistribuidoraFabio.Finanzas
 						Color = SKColor.Parse("#FF0000"),
 					},
 			};
-			grafico2.Chart = new DonutChart() { Entries = entries2, BackgroundColor = SKColor.Parse("#40616B"), GraphPosition = GraphPosition.AutoFill};
-			
-			float _top_vendedor1 = (float)_vend1;
-			float _top_vendedor2 = (float)_vend2;
-			float _top_vendedor3 = (float)_vend3;
-			float _top_vendedor4 = (float)_vend4;
-			var entriesVendedores = new[]
-			{
+					grafico2.Chart = new DonutChart() { Entries = entries2, BackgroundColor = SKColor.Parse("#40616B"), GraphPosition = GraphPosition.AutoFill };
+
+					float _top_vendedor1 = (float)_vend1;
+					float _top_vendedor2 = (float)_vend2;
+					float _top_vendedor3 = (float)_vend3;
+					float _top_vendedor4 = (float)_vend4;
+					var entriesVendedores = new[]
+					{
 				new ChartEntry(_top_vendedor1)
 				{
 					Color = SKColors.OrangeRed,
@@ -136,15 +141,22 @@ namespace DistribuidoraFabio.Finanzas
 				},
 			};
 
-			grafVendedores.Chart = new BarChart() { Entries = entriesVendedores, BackgroundColor = SKColor.Parse("#40616B"), LabelTextSize = 30, 
-			LabelOrientation = Orientation.Horizontal, ValueLabelOrientation = Orientation.Horizontal, LabelColor = SKColors.White, };
+					grafVendedores.Chart = new BarChart()
+					{
+						Entries = entriesVendedores,
+						BackgroundColor = SKColor.Parse("#40616B"),
+						LabelTextSize = 30,
+						LabelOrientation = Orientation.Horizontal,
+						ValueLabelOrientation = Orientation.Horizontal,
+						LabelColor = SKColors.White,
+					};
 
-			float _top_cliente1 = (float)_cliente1;
-			float _top_cliente2 = (float)_cliente2;
-			float _top_cliente3 = (float)_cliente3;
-			float _top_cliente4 = (float)_cliente4;
-			var entriesCliente = new[]
-			{
+					float _top_cliente1 = (float)_cliente1;
+					float _top_cliente2 = (float)_cliente2;
+					float _top_cliente3 = (float)_cliente3;
+					float _top_cliente4 = (float)_cliente4;
+					var entriesCliente = new[]
+					{
 				new ChartEntry(_top_cliente1)
 				{
 					Color = SKColors.OrangeRed,
@@ -178,15 +190,22 @@ namespace DistribuidoraFabio.Finanzas
 					ValueLabelColor = SKColors.BlueViolet
 				},
 			};
-			grafClientes.Chart = new BarChart() { Entries = entriesCliente, BackgroundColor = SKColor.Parse("#40616B"), LabelTextSize = 30, 
-			LabelOrientation = Orientation.Horizontal, ValueLabelOrientation = Orientation.Horizontal, LabelColor = SKColors.White, };
+					grafClientes.Chart = new BarChart()
+					{
+						Entries = entriesCliente,
+						BackgroundColor = SKColor.Parse("#40616B"),
+						LabelTextSize = 30,
+						LabelOrientation = Orientation.Horizontal,
+						ValueLabelOrientation = Orientation.Horizontal,
+						LabelColor = SKColors.White,
+					};
 
-			float _top_producto1 = (float)_producto1;
-			float _top_producto2 = (float)_producto2;
-			float _top_producto3 = (float)_producto3;
-			float _top_producto4 = (float)_producto4;
-			var entriesProductos = new[]
-			{
+					float _top_producto1 = (float)_producto1;
+					float _top_producto2 = (float)_producto2;
+					float _top_producto3 = (float)_producto3;
+					float _top_producto4 = (float)_producto4;
+					var entriesProductos = new[]
+					{
 				new ChartEntry(_top_producto1)
 				{
 					Color = SKColors.DarkOrange,
@@ -220,22 +239,22 @@ namespace DistribuidoraFabio.Finanzas
 					ValueLabelColor = SKColors.ForestGreen
 				},
 			};
-			grafP_MasVendidos.Chart = new BarChart()
-			{
-				Entries = entriesProductos,
-				BackgroundColor = SKColor.Parse("#40616B"),
-				LabelTextSize = 30,
-				LabelOrientation = Orientation.Horizontal,
-				ValueLabelOrientation = Orientation.Horizontal,
-				LabelColor = SKColors.White,
-			};
+					grafP_MasVendidos.Chart = new BarChart()
+					{
+						Entries = entriesProductos,
+						BackgroundColor = SKColor.Parse("#40616B"),
+						LabelTextSize = 30,
+						LabelOrientation = Orientation.Horizontal,
+						ValueLabelOrientation = Orientation.Horizontal,
+						LabelColor = SKColors.White,
+					};
 
-			float _top_invent1 = (float)_p_inventario1;
-			float _top_invent2 = (float)_p_inventario2;
-			float _top_invent3 = (float)_p_inventario3;
-			float _top_invent4 = (float)_p_inventario4;
-			var entriesInventario = new[]
-			{
+					float _top_invent1 = (float)_p_inventario1;
+					float _top_invent2 = (float)_p_inventario2;
+					float _top_invent3 = (float)_p_inventario3;
+					float _top_invent4 = (float)_p_inventario4;
+					var entriesInventario = new[]
+					{
 				new ChartEntry(_top_invent1)
 				{
 					Color = SKColors.LawnGreen,
@@ -269,15 +288,25 @@ namespace DistribuidoraFabio.Finanzas
 					ValueLabelColor = SKColors.Brown
 				},
 			};
-			grafP_almacen.Chart = new BarChart()
+					grafP_almacen.Chart = new BarChart()
+					{
+						Entries = entriesInventario,
+						BackgroundColor = SKColor.Parse("#40616B"),
+						LabelTextSize = 30,
+						LabelOrientation = Orientation.Horizontal,
+						ValueLabelOrientation = Orientation.Horizontal,
+						LabelColor = SKColors.White,
+					};
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
+			}
+			else
 			{
-				Entries = entriesInventario,
-				BackgroundColor = SKColor.Parse("#40616B"),
-				LabelTextSize = 30,
-				LabelOrientation = Orientation.Horizontal,
-				ValueLabelOrientation = Orientation.Horizontal,
-				LabelColor = SKColors.White,
-			};
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +24,29 @@ namespace DistribuidoraFabio.Producto
         {
             Navigation.PushAsync(new AgregarTipoProducto());
         }
-
         protected async override void OnAppearing()
         {
             base.OnAppearing();
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				try
+				{
+					HttpClient client = new HttpClient();
+					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
+					var tipoproductos = JsonConvert.DeserializeObject<List<Tipo_producto>>(response);
 
-            HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
-            var tipoproductos = JsonConvert.DeserializeObject<List<Tipo_producto>>(response);
-
-            listaTipoP.ItemsSource = tipoproductos;
+					listaTipoP.ItemsSource = tipoproductos;
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
         }
-
         private async void OnItemSelected(object sender, ItemTappedEventArgs e)
         {
             var detalle = e.Item as Tipo_producto;

@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +28,26 @@ namespace DistribuidoraFabio.Vendedor
         protected async override void OnAppearing()
         {
             base.OnAppearing();
-            HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/vendedores/listaVendedores.php");
-            var vendedores = JsonConvert.DeserializeObject<List<Vendedores>>(response);
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				try
+				{
+					HttpClient client = new HttpClient();
+					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/vendedores/listaVendedores.php");
+					var vendedores = JsonConvert.DeserializeObject<List<Vendedores>>(response);
 
-            listaVendedor.ItemsSource = vendedores;
+					listaVendedor.ItemsSource = vendedores;
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", err.ToString(), "OK");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
         }
-
         private async void OnItemSelected(object sender, ItemTappedEventArgs e)
         {
             var detalles = e.Item as Vendedores;

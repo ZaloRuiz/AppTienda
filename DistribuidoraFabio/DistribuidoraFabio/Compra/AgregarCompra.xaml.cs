@@ -177,7 +177,7 @@ namespace DistribuidoraFabio.Compra
 		decimal descuentoSelected = 0;
 		decimal precioFinalSelected = 0;
 		decimal subTotalSelected = 0;
-		decimal stockSelected = 0;
+		int stockSelected = 0;
 		decimal stockValoradoSelected = 0;
 		decimal promedioSelected = 0;
 		private async void txtDescuento_Completed(object sender, EventArgs e)
@@ -187,7 +187,7 @@ namespace DistribuidoraFabio.Compra
 				precioSelected = Convert.ToDecimal(txtPrecio.Text);
 				cantidaSelected = Convert.ToInt32(txtCantidad.Text);
 				descuentoSelected = Convert.ToDecimal(txtDescuento.Text);
-				stockSelected = Convert.ToDecimal(txtStock.Text);
+				stockSelected = Convert.ToInt32(txtStock.Text);
 				stockValoradoSelected = Convert.ToDecimal(txtStockValorado.Text);
 				promedioSelected = Convert.ToDecimal(txtPromedio.Text);
 				precioFinalSelected = precioSelected - descuentoSelected;
