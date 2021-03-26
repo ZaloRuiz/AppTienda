@@ -361,9 +361,6 @@ namespace DistribuidoraFabio.Venta
 		}
 		private async void ToolbarItemComp_Clicked(object sender, EventArgs e)
 		{
-			
-
-
 			string _resultObs = await DisplayPromptAsync("Pedido entregado", "Comentarios:");
 			try
 			{
@@ -408,7 +405,6 @@ namespace DistribuidoraFabio.Venta
 				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarEstadoVenta.php", content);
 				if (result.StatusCode == HttpStatusCode.OK)
 				{
-					//await PopupNavigation.Instance.PopAsync();
 					await DisplayAlert("OK", "Se agrego correctamente", "OK");
 					await Navigation.PopAsync();
 				}

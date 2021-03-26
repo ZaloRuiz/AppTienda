@@ -11,7 +11,7 @@
                 <Entry x:Name="telefonoEntry" HorizontalOptions="FillAndExpand" TextColor="Black" Placeholder="Telefono" Keyboard="Numeric"/>
                 <Entry x:Name="direccionEntry" HorizontalOptions="FillAndExpand" TextColor="Black" Placeholder="Direccion"/>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                    <Entry x:Name="ubconfirmacionEntry" WidthRequest="300" Placeholder="Ubicacion" TextColor="Black" HorizontalOptions="FillAndExpand"/>
+                    <Entry x:Name="ubconfirmacionEntry" WidthRequest="300" Placeholder="Ubicacion" IsReadOnly="True" TextColor="Black" HorizontalOptions="FillAndExpand"/>
                     <Entry x:Name="ubicacionLatitudEntry" IsVisible="False"/>
                     <Entry x:Name="ubicacionLongitudEntry" IsVisible="False"/>
                     <Button x:Name="btnUbicacion" HorizontalOptions="FillAndExpand" Text="Obtener ubicacion" Clicked="BtnUbicacion_Clicked"/>

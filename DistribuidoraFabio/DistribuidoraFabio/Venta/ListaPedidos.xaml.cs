@@ -34,6 +34,7 @@ namespace DistribuidoraFabio.Venta
 				try
 				{
 					this.BindingContext = new ListaPedidosVM();
+					AvisoModificar();
 				}
 				catch (Exception err)
 				{
@@ -43,6 +44,29 @@ namespace DistribuidoraFabio.Venta
 			else
 			{
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
+		}
+		private async void AvisoModificar()
+		{
+			HttpClient client = new HttpClient();
+			var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaEditarVentaPendiente.php");
+			var lista_e_v = JsonConvert.DeserializeObject<List<Editar_Venta>>(response);
+			if(lista_e_v.Count != 0)
+			{
+				ToolbarItem _item_aviso = new ToolbarItem
+				{
+					Text = "Editar Venta",
+					IconImageSource = ImageSource.FromFile("icon_advertencia.png"),
+					Order = ToolbarItemOrder.Primary,
+					Priority = 0
+				};
+				this.ToolbarItems.Add(_item_aviso);
+				_item_aviso.Clicked += OnItemAvisoClicked;
+			}
+			void OnItemAvisoClicked(object sender, EventArgs e)
+			{
+				ToolbarItem item = (ToolbarItem)sender;
+				DisplayAlert("Aviso", lista_e_v.Count.ToString() + " Venta(s) por modificar", "OK");
 			}
 		}
         private void ToolbarItem_Clicked(object sender, EventArgs e)
