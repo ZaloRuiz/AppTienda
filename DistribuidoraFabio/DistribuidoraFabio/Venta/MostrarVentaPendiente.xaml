@@ -7,6 +7,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="toolbarComp" Text="Completar pedido" Clicked="ToolbarItemComp_Clicked"/>
         <ToolbarItem x:Name="toolbarCanc" Text="Cancelar pedido" Clicked="toolbarCanc_Clicked"/>
+        <ToolbarItem x:Name="toolbar" Text="Editar" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>

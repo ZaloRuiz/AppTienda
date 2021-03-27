@@ -4,6 +4,9 @@
              x:Class="DistribuidoraFabio.Venta.MostrarVenta"
              Visual="Material"
              BackgroundColor="#324A51">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="toolbar" Text="Editar" Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
             <Grid Padding="10">

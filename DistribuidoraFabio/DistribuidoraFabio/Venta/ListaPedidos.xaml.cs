@@ -25,6 +25,7 @@ namespace DistribuidoraFabio.Venta
 		public ListaPedidos()
 		{
 			InitializeComponent();
+			AvisoModificar();
 		}
         protected async override void OnAppearing()
         {
@@ -33,8 +34,10 @@ namespace DistribuidoraFabio.Venta
 			{
 				try
 				{
+					string BusyReason = "Cargando...";
+					await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
 					this.BindingContext = new ListaPedidosVM();
-					AvisoModificar();
+					await PopupNavigation.Instance.PopAsync();
 				}
 				catch (Exception err)
 				{
@@ -63,10 +66,31 @@ namespace DistribuidoraFabio.Venta
 				this.ToolbarItems.Add(_item_aviso);
 				_item_aviso.Clicked += OnItemAvisoClicked;
 			}
-			void OnItemAvisoClicked(object sender, EventArgs e)
+			async void OnItemAvisoClicked(object sender, EventArgs e)
 			{
 				ToolbarItem item = (ToolbarItem)sender;
-				DisplayAlert("Aviso", lista_e_v.Count.ToString() + " Venta(s) por modificar", "OK");
+				var actionSheet = await DisplayActionSheet("Aviso", "Ir a modificar", "Cancelar", "Existen ventas por modificar");
+
+				switch (actionSheet)
+				{
+					case "Ir a modificar":
+
+						// Do Something when 'Cancel' Button is pressed
+						await Navigation.PushAsync(new ListaVentaAEditar());
+						break;
+
+					case "Cancelar":
+
+						// Do Something when 'Destruction' Button is pressed
+						
+						break;
+
+					case "Existen ventas por modificar":
+
+						// Do Something when 'Button1' Button is pressed
+						await Navigation.PushAsync(new ListaVentaAEditar());
+						break;
+				}
 			}
 		}
         private void ToolbarItem_Clicked(object sender, EventArgs e)

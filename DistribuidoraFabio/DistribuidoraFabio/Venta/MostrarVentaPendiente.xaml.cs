@@ -457,5 +457,10 @@ namespace DistribuidoraFabio.Venta
 				await Navigation.PopAsync();
 			}
 		}
+		private async void ToolbarItem_Clicked(object sender, EventArgs e)
+		{
+			await Navigation.PushAsync(new EditarBorrarVenta(_id_venta, _fecha, _numero_factura, _cliente, _vendedor, _tipo_venta, _saldo, _total,
+				_fecha_entrega, _estado, _observacion));
+		}
 	}
 }

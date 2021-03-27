@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Venta.EditarBorrarVenta"
+             Visual="Material"
+             BackgroundColor="#324A51"
+             Title="Editar - Borrar venta">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <StackLayout>
+                    <Grid Padding="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="140"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="220"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackLayout x:Name="stkDatos" Grid.Row="0"/>
+                        <StackLayout x:Name="stkPrd" Grid.Row="1" Padding="10"/>
+                        <StackLayout x:Name="stkFinal" Grid.Row="2"/>
+                    </Grid>
+                </StackLayout>
+                <Button x:Name="btnEditar" Text="Editar"/>
+                <Button x:Name="btnBorrar" Text="Borrar"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

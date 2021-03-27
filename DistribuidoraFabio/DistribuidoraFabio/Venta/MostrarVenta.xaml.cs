@@ -32,6 +32,7 @@ namespace DistribuidoraFabio.Venta
         private string _estado;
         private DateTime _fecha_entrega;
         private string _observacion;
+		private decimal _saldo;
         public MostrarVenta(int id_venta, DateTime fecha, int numero_factura, string nombre_cliente, string nombre_vendedor, string tipo_venta, 
 			decimal saldo, decimal total, DateTime fecha_entrega, string estado, string observacion)
 		{
@@ -47,6 +48,7 @@ namespace DistribuidoraFabio.Venta
             _estado = estado;
             _fecha_entrega = fecha_entrega;
             _observacion = observacion;
+			_saldo = saldo;
             if(_tipo_venta == "Credito")
 			{
                 _tipo_venta = tipo_venta + " Saldo: " + saldo.ToString("#.##") + " Bs.";
@@ -352,6 +354,11 @@ namespace DistribuidoraFabio.Venta
 			{
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
+		}
+		private async void ToolbarItem_Clicked(object sender, EventArgs e)
+		{
+			await Navigation.PushAsync(new EditarBorrarVenta(_id_venta, _fecha, _numero_factura, _cliente, _vendedor, _tipo_venta, _saldo, _total, 
+				_fecha_entrega, _estado, _observacion));
 		}
 	}
 }
