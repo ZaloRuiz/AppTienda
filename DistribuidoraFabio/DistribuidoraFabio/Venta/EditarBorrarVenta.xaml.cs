@@ -27,6 +27,7 @@ namespace DistribuidoraFabio.Venta
         private DateTime _fecha_entrega_edit;
         private string _observacion_edit;
         private int IdVenta;
+        int numProd = 0;
         public EditarBorrarVenta(int _id_venta, DateTime _fecha, int _numero_factura, string _cliente, string _nombre_vendedor, string _tipo_venta,
             decimal _saldo, decimal _total, DateTime _fecha_entrega, string _estado, string _observacion)
 		{
@@ -46,7 +47,6 @@ namespace DistribuidoraFabio.Venta
         }
         private async void EditarVenta()
         {
-            int numProd = 0;
             try
             {
                 StackLayout stk1 = new StackLayout();
@@ -54,7 +54,7 @@ namespace DistribuidoraFabio.Venta
                 stkDatos.Children.Add(stk1);
                 Entry entFac = new Entry();
                 entFac.Text = _numero_factura_edit.ToString();
-                entFac.Placeholder = "FACTURA";
+                entFac.Placeholder = "Factura";
                 entFac.FontSize = 18;
                 entFac.TextColor = Color.FromHex("#000000");
                 entFac.HorizontalOptions = LayoutOptions.FillAndExpand;
@@ -234,7 +234,14 @@ namespace DistribuidoraFabio.Venta
             {
                 await DisplayAlert("ERROR", err.ToString(), "OK");
             }
-
         }
-    }
+		private void btnEditar_Clicked(object sender, EventArgs e)
+		{
+
+		}
+		private void btnBorrar_Clicked(object sender, EventArgs e)
+		{
+
+		}
+	}
 }

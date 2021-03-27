@@ -17,14 +17,21 @@
                                 <RowDefinition Height="40"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="170"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="Factura: "/>
-                                        <Span Text="{Binding numero_factura}"/>
-                                        <Span Text="   -   Total: "/>
+                                        <Span Text="Fecha: "/>
+                                        <Span Text="{Binding fecha_compra, StringFormat='{}{0:dd/MM/yyyy}'}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Total: "/>
                                         <Span Text="{Binding total, StringFormat=' {0:0.00}'}"/>
                                         <Span Text=" Bs."/>
                                     </FormattedString>

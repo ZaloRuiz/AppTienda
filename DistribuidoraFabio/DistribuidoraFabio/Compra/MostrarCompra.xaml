@@ -4,6 +4,9 @@
              x:Class="DistribuidoraFabio.Compra.MostrarCompra"
              Visual="Material"
              BackgroundColor="#324A51">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="toolbar" Text="Editar" Clicked="toolbar_Clicked"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
             <Grid Padding="10">
@@ -11,9 +14,9 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="150"></RowDefinition>
+                    <RowDefinition Height="100"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="180"></RowDefinition>
+                    <RowDefinition Height="100"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackLayout x:Name="stkDatos" Grid.Row="0"/>
                 <StackLayout x:Name="stkPrd" Grid.Row="1" Padding="10"/>
