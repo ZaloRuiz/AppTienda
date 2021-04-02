@@ -3,21 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Producto.AgregarProducto"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Agregar producto">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
-                <Picker x:Name="tpPicker" Title="Tipo de producto"
-                ItemsSource="{Binding nombre_tipo_producto}" ItemDisplayBinding="{Binding nombre_tipo_producto}" SelectedItem="{Binding nombre_tipo_producto, Mode=TwoWay}"
-                SelectedIndexChanged="TpPicker_SelectedIndexChanged" HorizontalOptions="FillAndExpand"/>
-                <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
-                <Entry x:Name="precioventaEntry" HorizontalOptions="FillAndExpand" Placeholder="Precio Venta" Keyboard="Numeric"/>
-                <Entry x:Name="stockProductoEntry" Placeholder="Stock" Keyboard="Numeric" HorizontalOptions="FillAndExpand" 
-                       Completed="stockProductoEntry_Completed"/>
-                <Entry x:Name="stockValoradoProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Saldo Valorado" Keyboard="Numeric"/>
-                <Entry x:Name="promedioProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Promedio" Keyboard="Numeric"/>
-                <Entry x:Name="alertaProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Alerta" Keyboard="Numeric"/>
-                <Button Text="Guardar" x:Name="btnGuardarPr" Clicked="BtnGuardarPr_Clicked"/>
+                <StackLayout Orientation="Horizontal">
+                    <Picker x:Name="tpPicker" Title="Tipo de producto" TitleColor="#465B70" ItemsSource="{Binding nombre_tipo_producto}" BackgroundColor="White"
+                            ItemDisplayBinding="{Binding nombre_tipo_producto}" SelectedItem="{Binding nombre_tipo_producto, Mode=TwoWay}"
+                            SelectedIndexChanged="TpPicker_SelectedIndexChanged" HorizontalOptions="FillAndExpand" FontSize="14" TextColor="Black"/>
+                    <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" BackgroundColor="White" FontSize="14"
+                           TextColor="Black" PlaceholderColor="#465B70"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="precioventaEntry" HorizontalOptions="FillAndExpand" Placeholder="Precio Venta" PlaceholderColor="#465B70" FontSize="14" 
+                           Keyboard="Numeric" TextColor="Black" BackgroundColor="White"/>
+                    <Entry x:Name="stockProductoEntry" Placeholder="Stock" Keyboard="Numeric" HorizontalOptions="FillAndExpand" FontSize="14"
+                       Completed="stockProductoEntry_Completed" PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White"/>
+                    <Entry x:Name="stockValoradoProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Saldo Valorado" Keyboard="Numeric" FontSize="14"
+                           PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="promedioProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Promedio" Keyboard="Numeric" TextColor="Black"
+                           FontSize="14" PlaceholderColor="#465B70" BackgroundColor="White"/>
+                    <Entry x:Name="alertaProductoEntry" HorizontalOptions="FillAndExpand" Placeholder="Alerta" Keyboard="Numeric" TextColor="Black"
+                           FontSize="14" PlaceholderColor="#465B70" BackgroundColor="White"/>
+                </StackLayout>
+                <Button Text="Guardar" x:Name="btnGuardarPr" HeightRequest="40" Clicked="BtnGuardarPr_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

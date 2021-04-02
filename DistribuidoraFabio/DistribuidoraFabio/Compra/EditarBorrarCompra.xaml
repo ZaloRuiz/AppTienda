@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Compra.EditarBorrarCompra"
              Visual="Material"
-             BackgroundColor="#324A51"
+             BackgroundColor="White"
              Title="Editar - Borrar compra">
     <ContentPage.Content>
         <ScrollView>

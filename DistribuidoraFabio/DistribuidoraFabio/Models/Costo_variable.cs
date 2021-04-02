@@ -6,12 +6,13 @@ namespace DistribuidoraFabio.Models
 {
     public class Costo_variable
     {
-        public int id_costo_variable { get; set; }
-        public string nombre { get; set; }
-        public decimal monto { get; set; }
-        public DateTime fecha { get; set; }
-        public int mes { get; set; }
-        public int gestion { get; set; }
-        public string descripcion { get; set; }
+        public int id_cv { get; set; }
+        public string nombre_cv { get; set; }
+        public decimal monto_cv { get; set; }
+        public DateTime fecha_cv { get; set; }
+        public int mes_cv { get; set; }
+        public int gestion_cv { get; set; }
+        public string descripcion_cv { get; set; }
+        public string tipo_gasto_cv { get; set; }
     }
 }

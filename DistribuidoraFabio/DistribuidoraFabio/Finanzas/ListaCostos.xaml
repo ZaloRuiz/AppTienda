@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Finanzas.ListaCostos"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="toolbarCF" Text="Agregar Costo fijo" Order="Secondary" Priority="0" Clicked ="toolbarCF_Clicked"/>
+        <ToolbarItem x:Name="toolbarCV" Text="Agregar Costo variable" Order="Secondary" Priority="1" Clicked="toolbarCV_Clicked"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
             <Grid Padding="5">
@@ -16,68 +20,32 @@
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
-                    <Label Text="MARZO 2021" TextColor="White" FontSize="25" VerticalOptions="Center" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                    <Label x:Name="txtTitulo" TextColor="#40616B" FontSize="25" VerticalOptions="Center" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
                 </StackLayout>
                 <StackLayout Grid.Row="0" Grid.Column="1" Padding="5" Orientation="Horizontal">
                     <Picker x:Name="pickerMes" HorizontalOptions="FillAndExpand" VerticalOptions="Center" TextColor="Black" BackgroundColor="White"
-                            Title="Mes" TitleColor="#4dcce8"/>
+                            Title="Mes" TitleColor="#40616B" FontSize="14" SelectedIndexChanged="pickerMes_SelectedIndexChanged"/>
                     <Picker x:Name="pickerYear" HorizontalOptions="FillAndExpand" VerticalOptions="Center" TextColor="Black" BackgroundColor="White"
-                            Title="Año" TitleColor="#4dcce8"/>
+                            Title="Año" TitleColor="#40616B" FontSize="14" SelectedIndexChanged="pickerYear_SelectedIndexChanged"/>
+                    <Button x:Name="btnBuscar" HorizontalOptions="Fill" Text="IR" VerticalOptions="CenterAndExpand" FontSize="14" Clicked="btnBuscar_Clicked"/>
                 </StackLayout>
                 <StackLayout Grid.Row="1" Grid.Column="0" Padding="5">
-                    <Label Text="FIJOS" TextColor="White" HorizontalOptions="Center"/>
-                    <Label Text="1650 Bs." TextColor="White" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
-                    <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
+                    <Label Text="FIJOS" TextColor="#40616B" HorizontalOptions="Center"/>
+                    <Label x:Name="txtTotalCF" TextColor="#40616B" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                    <Frame BackgroundColor="#fafafd" CornerRadius="10" Padding="5" HasShadow="True"
                         HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                        <StackLayout Padding="5">
-                            <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 300bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 400bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 550bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 02/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 100bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 02/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 200bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                        <StackLayout x:Name="stkCF" Padding="5">
+                            
                         </StackLayout>
                     </Frame>
                 </StackLayout>
                 <StackLayout Grid.Row="1" Grid.Column="1" Padding="5">
-                    <Label Text="VARIABLES" TextColor="White" HorizontalOptions="Center"/>
-                    <Label Text="1830 Bs." TextColor="White" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
-                    <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
+                    <Label Text="VARIABLES" TextColor="#40616B" HorizontalOptions="Center"/>
+                    <Label x:Name="txtTotalCV" TextColor="#40616B" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                    <Frame BackgroundColor="#fafafd" CornerRadius="10" Padding="5" HasShadow="True"
                         HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                        <StackLayout Padding="5">
-                            <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 400bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Pago de alquiler" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 01/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 100bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Pasaje a Cobija" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 02/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 250bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Pasaje a Santa Cruz" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 03/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 300bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Gasolina" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 03/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 180bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Compra de botellas" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="Fecha: 03/03/2021" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Monto: 600bs" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <Label Text="Alquiler camion La Paz - Cobija" TextColor="White" HorizontalTextAlignment="Start"/>
-                            <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                        <StackLayout x:Name="stkCV" Padding="5">
+                            
                         </StackLayout>
                     </Frame>
                 </StackLayout>

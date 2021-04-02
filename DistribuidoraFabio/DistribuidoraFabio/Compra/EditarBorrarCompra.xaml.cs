@@ -49,7 +49,7 @@ namespace DistribuidoraFabio.Compra
 					entfactura.Placeholder = "Factura";
 					entfactura.Text = _numero_factura_edit.ToString();
 					entfactura.FontSize = 18;
-					entfactura.TextColor = Color.FromHex("#4DCCE8");
+					entfactura.TextColor = Color.FromHex("#465B70");
 					entfactura.HorizontalOptions = LayoutOptions.FillAndExpand;
 					stk1.Children.Add(entfactura);
 
@@ -65,7 +65,7 @@ namespace DistribuidoraFabio.Compra
 					entProv.Placeholder = "Proveedor";
 					entProv.Text = _proveedor_edit;
 					entProv.FontSize = 18;
-					entProv.TextColor = Color.FromHex("#4DCCE8");
+					entProv.TextColor = Color.FromHex("#465B70");
 					entProv.HorizontalOptions = LayoutOptions.FillAndExpand;
 					stk1.Children.Add(entProv);
 				}
@@ -92,7 +92,7 @@ namespace DistribuidoraFabio.Compra
 					{
 						BoxView boxViewI = new BoxView();
 						boxViewI.HeightRequest = 1;
-						boxViewI.BackgroundColor = Color.FromHex("#95B0B7");
+						boxViewI.BackgroundColor = Color.FromHex("#465B70");
 						stkPrd.Children.Add(boxViewI);
 
 						numProd = numProd + 1;
@@ -104,7 +104,7 @@ namespace DistribuidoraFabio.Compra
 						entNomProd.Placeholder = "Producto " + numProd.ToString();
 						entNomProd.Text = item.nombre_producto;
 						entNomProd.FontSize = 18;
-						entNomProd.TextColor = Color.FromHex("#4DCCE8");
+						entNomProd.TextColor = Color.FromHex("#465B70");
 						entNomProd.HorizontalOptions = LayoutOptions.FillAndExpand;
 						stkP1.Children.Add(entNomProd);
 
@@ -112,7 +112,7 @@ namespace DistribuidoraFabio.Compra
 						entCant.Placeholder = "Cantidad";
 						entCant.Text = item.cantidad_compra.ToString();
 						entCant.FontSize = 18;
-						entCant.TextColor = Color.FromHex("#4DCCE8");
+						entCant.TextColor = Color.FromHex("#465B70");
 						entCant.HorizontalOptions = LayoutOptions.FillAndExpand;
 						stkP1.Children.Add(entCant);
 
@@ -124,7 +124,7 @@ namespace DistribuidoraFabio.Compra
 						entPrec.Placeholder = "Precio";
 						entPrec.Text = item.precio_producto.ToString("#.##") + " Bs.";
 						entPrec.FontSize = 18;
-						entPrec.TextColor = Color.FromHex("#4DCCE8");
+						entPrec.TextColor = Color.FromHex("#465B70");
 						entPrec.HorizontalOptions = LayoutOptions.FillAndExpand;
 						stkP3.Children.Add(entPrec);
 
@@ -132,7 +132,7 @@ namespace DistribuidoraFabio.Compra
 						entdesc.Placeholder = "Descuento";
 						entdesc.Text = item.descuento_producto.ToString("#.##") + " Bs.";
 						entdesc.FontSize = 18;
-						entdesc.TextColor = Color.FromHex("#4DCCE8");
+						entdesc.TextColor = Color.FromHex("#465B70");
 						entdesc.HorizontalOptions = LayoutOptions.FillAndExpand;
 						stkP3.Children.Add(entdesc);
 						if (item.descuento_producto == 0)
@@ -144,7 +144,7 @@ namespace DistribuidoraFabio.Compra
 						entSubT.Placeholder = "Sub Total";
 						entSubT.Text = item.sub_total.ToString("#.##") + " Bs.";
 						entSubT.FontSize = 18;
-						entSubT.TextColor = Color.FromHex("#4DCCE8");
+						entSubT.TextColor = Color.FromHex("#465B70");
 						entSubT.HorizontalOptions = LayoutOptions.FillAndExpand;
 						stkP3.Children.Add(entSubT);
 					}
@@ -159,7 +159,7 @@ namespace DistribuidoraFabio.Compra
 					////Datos finales
 					BoxView boxViewI = new BoxView();
 					boxViewI.HeightRequest = 1;
-					boxViewI.BackgroundColor = Color.FromHex("#95B0B7");
+					boxViewI.BackgroundColor = Color.FromHex("#465B70");
 					stkFinal.Children.Add(boxViewI);
 
 					StackLayout stack1 = new StackLayout();
@@ -170,7 +170,7 @@ namespace DistribuidoraFabio.Compra
 					entSaldo.Placeholder = "Saldo";
 					entSaldo.Text = _saldo_edit.ToString("#.##") + " Bs.";
 					entSaldo.FontSize = 18;
-					entSaldo.TextColor = Color.FromHex("#4DCCE8");
+					entSaldo.TextColor = Color.FromHex("#465B70");
 					entSaldo.HorizontalOptions = LayoutOptions.FillAndExpand;
 					stack1.Children.Add(entSaldo);
 					if (_saldo_edit == 0)
@@ -182,7 +182,7 @@ namespace DistribuidoraFabio.Compra
 					entTotal.Placeholder = "Total";
 					entTotal.Text = _total_edit.ToString("#.##") + " Bs.";
 					entTotal.FontSize = 18;
-					entTotal.TextColor = Color.FromHex("#4DCCE8");
+					entTotal.TextColor = Color.FromHex("#465B70");
 					entTotal.HorizontalOptions = LayoutOptions.FillAndExpand;
 					stack1.Children.Add(entTotal);
 				}

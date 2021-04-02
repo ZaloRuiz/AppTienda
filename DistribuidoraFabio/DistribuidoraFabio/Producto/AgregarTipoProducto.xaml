@@ -3,14 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Producto.AgregarTipoProducto"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Agregar tipo de producto">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout>
-                    <Entry x:Name="nombreTpEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
+                    <Entry x:Name="nombreTpEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" PlaceholderColor="#465B70" FontSize="14"
+                           TextColor="Black" BackgroundColor="White"/>
                 </StackLayout>
-                <Button x:Name="btnGuardarTP" Text="Guardar" Clicked="BtnGuardarTP_Clicked"/>
+                <Button x:Name="btnGuardarTP" Text="Guardar" HeightRequest="40" Clicked="BtnGuardarTP_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

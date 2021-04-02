@@ -3,16 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Proveedor.AgregarProveedor"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="white"
+             Title="Agregar proovedor">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout>
-                    <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" />
-                    <Entry x:Name="direccionPEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion"/>
-                    <Entry x:Name="contactoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Contacto"/>
-                    <Entry x:Name="telefonoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" Keyboard="Numeric"/>
-                    <Button x:Name="btnVentaGuardar" Text="Guardar" Clicked="BtnGuardarPro_Clicked"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="direccionPEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="contactoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Contacto" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="telefonoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" Keyboard="Numeric" PlaceholderColor="#465B70" 
+                           TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
+                    <Button x:Name="btnVentaGuardar" Text="Guardar" HeightRequest="40" Clicked="BtnGuardarPro_Clicked"/>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

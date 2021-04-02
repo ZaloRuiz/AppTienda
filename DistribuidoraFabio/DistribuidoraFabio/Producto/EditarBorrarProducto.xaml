@@ -3,20 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Producto.EditarBorrarProducto"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Editar / Borrar producto">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
-                <Entry x:Name="nombreProdEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
-                <Entry x:Name="idTProdEntry" HorizontalOptions="FillAndExpand" Placeholder="Tipo Producto"/>
-                <Entry x:Name="stockEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Stock"/>
-                <Entry x:Name="stockValoradoEntry" HorizontalOptions="FillAndExpand" Placeholder="Stock Valorado"/>
-                <Entry x:Name="promedioEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Precio Promedio"/>
-                <Entry x:Name="precioventaEntry" HorizontalOptions="FillAndExpand" Placeholder="Precio Venta" Keyboard="Numeric"/>
-                <Entry x:Name="alertaEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Alerta"/>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="nombreProdEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                    <Entry x:Name="idTProdEntry" HorizontalOptions="FillAndExpand" Placeholder="Tipo Producto" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="stockEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Stock" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                    <Entry x:Name="stockValoradoEntry" HorizontalOptions="FillAndExpand" Placeholder="Stock Valorado" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                    <Entry x:Name="promedioEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Precio Promedio" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="precioventaEntry" HorizontalOptions="FillAndExpand" Placeholder="Precio Venta" Keyboard="Numeric" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                    <Entry x:Name="alertaEntry" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Placeholder="Alerta" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                </StackLayout>
                 <StackLayout>
-                    <Button x:Name="btnEditarProd" Text="Editar" Clicked="BtnEditarProd_Clicked" />
-                    <Button x:Name="btnBorrarProd" Text="Borrar" Clicked="BtnBorrarProd_Clicked" />
+                    <Button x:Name="btnEditarProd" Text="Editar" HeightRequest="40" Clicked="BtnEditarProd_Clicked" />
+                    <Button x:Name="btnBorrarProd" Text="Borrar" HeightRequest="40" Clicked="BtnBorrarProd_Clicked" />
                 </StackLayout>
             </StackLayout>
         </ScrollView>

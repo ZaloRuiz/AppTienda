@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Finanzas.ListaCostoFijo"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White">
     <ContentPage.Content>
         <ScrollView>
-            <ListView x:Name="listCostoFijo" SeparatorColor="#95B0B7" RowHeight="60">
+            <ListView x:Name="listCostoFijo" SeparatorColor="#465B70" RowHeight="60">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -16,18 +16,35 @@
                                     <RowDefinition Height="30"></RowDefinition>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="270"></ColumnDefinition>
+                                    <ColumnDefinition Width="180"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                                <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{Binding nombre}"/>
-                                            <Span Text="   -   Monto: "/>
-                                            <Span Text="{Binding monto}"/>
+                                            <Span Text="Nombre: "/>
+                                            <Span Text="{Binding nombre_cf}"/>
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
-                                <Label Grid.Row="1" Grid.Column="0" FontSize="13" TextColor="#4DCCE8" Text="{Binding DisplayFecha}"/>
+                                <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Fecha: "/>
+                                            <Span Text="{Binding fecha_cf, StringFormat='{}{0:dd-MM-yyyy}'}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Grid.Row="0" Grid.Column="2" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Monto: "/>
+                                            <Span Text="{Binding monto_cf}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="0" FontSize="13" TextColor="#465B70" Text="{Binding DisplayFecha}"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

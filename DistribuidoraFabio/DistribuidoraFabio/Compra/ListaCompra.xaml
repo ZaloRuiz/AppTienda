@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Compra.ListaCompra"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Lista de compras">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="toolbar" Text="Agregar Compra" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ListView x:Name="listaCompra" ItemTapped="OnItemSelected" SeparatorColor="#95B0B7">
+        <ListView x:Name="listaCompra" ItemTapped="OnItemSelected" SeparatorColor="#465B70">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -20,7 +21,7 @@
                                 <ColumnDefinition Width="170"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="Fecha: "/>
@@ -28,7 +29,7 @@
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-                            <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                            <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="Total: "/>

@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Cliente.ListaCliente"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="#ffffff"
+             Title="Clientes">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Agregar" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ListView x:Name="listaCliente" ItemTapped="OnItemSelected" SeparatorColor="#95B0B7">
+        <ListView x:Name="listaCliente" ItemTapped="OnItemSelected" SeparatorColor="#465B70">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -17,15 +18,30 @@
                                 <RowDefinition Height="50"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="250"></ColumnDefinition>
+                                <ColumnDefinition Width="220"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#95B0B7" LineBreakMode="TailTruncation">
+                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
                                 <Label.FormattedText>
                                     <FormattedString>
+                                        <Span Text="Razon Social: "/>
+                                        <Span Text="{Binding razon_social}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Nombre: "/>
                                         <Span Text="{Binding nombre_cliente}"/>
-                                        <Span Text="  -  "/>
-                                        <Span Text="{Binding codigo_c}"/>
-                                        <Span Text="   -   Telefono: "/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Grid.Row="0" Grid.Column="2" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Telefono: "/>
                                         <Span Text="{Binding telefono}"/>
                                     </FormattedString>
                                 </Label.FormattedText>

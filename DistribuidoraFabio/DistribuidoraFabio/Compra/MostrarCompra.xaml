@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Compra.MostrarCompra"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="#ffffff"
+             Title="Mostrar compra">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="toolbar" Text="Editar" Clicked="toolbar_Clicked"/>
     </ContentPage.ToolbarItems>

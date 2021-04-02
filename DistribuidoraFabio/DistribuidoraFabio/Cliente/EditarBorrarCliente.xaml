@@ -3,28 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Cliente.EditarBorrarCliente"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="#ffffff"
+             Title="Editar / Borrar cliente">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Historial" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
-                <Entry x:Name="codigoEntry" HorizontalOptions="FillAndExpand" Placeholder="Codigo" IsEnabled="False"/>
-                <Entry x:Name="nombreClienteEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
-                <Entry x:Name="telefonoClienteEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" Keyboard="Numeric"/>
-                <Entry x:Name="direccionEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion"/>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="codigoEntry" HorizontalOptions="FillAndExpand" Placeholder="Codigo" PlaceholderColor="#465B70" IsEnabled="False" FontSize="14" BackgroundColor="White"/>
+                    <Entry x:Name="nombreClienteEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" PlaceholderColor="#465B70" FontSize="14" BackgroundColor="White"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="telefonoClienteEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" PlaceholderColor="#465B70" Keyboard="Numeric" FontSize="14" BackgroundColor="White"/>
+                    <Entry x:Name="direccionEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" PlaceholderColor="#465B70" FontSize="14" BackgroundColor="White"/>
+                </StackLayout>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                    <Entry x:Name="ubconfirmacionEntry" WidthRequest="200" Placeholder="Ubicacion" Text="Ubicacion" HorizontalOptions="FillAndExpand"/>
+                    <Entry x:Name="ubconfirmacionEntry" WidthRequest="200" Placeholder="Ubicacion" Text="Ubicacion" PlaceholderColor="#465B70" HorizontalOptions="FillAndExpand"
+                           FontSize="14" BackgroundColor="White"/>
                     <Entry x:Name="ubicacionLatitudEntry" IsVisible="False"/>
                     <Entry x:Name="ubicacionLongitudEntry" IsVisible="False"/>
-                    <Button x:Name="btnVerUbicacion" HorizontalOptions="FillAndExpand" Text="Ver ubicacion" Clicked="BtnVerUbicacion_Clicked"/>
-                    <Button x:Name="btnObtenerUbicacion" HorizontalOptions="FillAndExpand" Text="Obtener ubicacion" Clicked="BtnObtenerUbicacion_Clicked"/>
+                    <Button x:Name="btnVerUbicacion" HorizontalOptions="FillAndExpand" FontSize="14" Text="Ver ubicacion" Clicked="BtnVerUbicacion_Clicked"/>
+                    <Button x:Name="btnObtenerUbicacion" HorizontalOptions="FillAndExpand" FontSize="14" Text="Obtener ubicacion" Clicked="BtnObtenerUbicacion_Clicked"/>
                 </StackLayout>
-                <Entry x:Name="razonEntry" HorizontalOptions="FillAndExpand" Placeholder="Razon Social"/>
-                <Entry x:Name="nitClienteEntry" HorizontalOptions="FillAndExpand" Placeholder="NIT" Keyboard="Numeric"/>
-                <Button x:Name="btnEditarCliente" Text="Editar" Clicked="BtnEditarCliente_Clicked"/>
-                <Button x:Name="btnBorrarCliente" Text="Borrar" Clicked="BtnBorrarCliente_Clicked"/>
+                <StackLayout Orientation="Horizontal">
+                    <Entry x:Name="razonEntry" HorizontalOptions="FillAndExpand" PlaceholderColor="#465B70" Placeholder="Razon Social" FontSize="14" BackgroundColor="White"/>
+                    <Entry x:Name="nitClienteEntry" HorizontalOptions="FillAndExpand" PlaceholderColor="#465B70" Placeholder="NIT" Keyboard="Numeric" FontSize="14" BackgroundColor="White"/>
+                </StackLayout>
+                <Button x:Name="btnEditarCliente" Text="Editar" Clicked="BtnEditarCliente_Clicked" HeightRequest="40"/>
+                <Button x:Name="btnBorrarCliente" Text="Borrar" Clicked="BtnBorrarCliente_Clicked" HeightRequest="40"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

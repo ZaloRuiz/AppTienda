@@ -3,15 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Producto.ListaTipoProducto"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="#ffffff"
+             Title="Lista de tipos de productos">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Agregar" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ListView x:Name="listaTipoP" ItemTapped="OnItemSelected" SeparatorColor="#95B0B7">
+        <ListView x:Name="listaTipoP" ItemTapped="OnItemSelected" SeparatorColor="#465B70">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding nombre_tipo_producto}" TextColor="#95B0B7"/>
+                    <ViewCell>
+                        <Grid Padding="10, 0, 0, 0" RowSpacing="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#000000" VerticalOptions="CenterAndExpand" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding nombre_tipo_producto}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

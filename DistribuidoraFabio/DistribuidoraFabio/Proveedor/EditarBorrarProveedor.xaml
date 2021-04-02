@@ -3,20 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Proveedor.EditarBorrarProveedor"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Editar / Borrar proveedor">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout Orientation="Horizontal">
                     <Entry x:Name="idProvEntry" Text="Id" IsVisible="False"/>
-                    <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
-                    <Entry x:Name="direccionPEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion"/>
-                    <Entry x:Name="contactoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Contacto"/>
-                    <Entry x:Name="telefonoPEntry" HorizontalOptions="FillAndExpand" Keyboard="Numeric" Placeholder="Telefono"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="nombrePEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="direccionPEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="contactoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Contacto" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="telefonoPEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" Keyboard="Numeric" PlaceholderColor="#465B70" 
+                           TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
                 </StackLayout>
                 <StackLayout>
-                    <Button x:Name="BtneditarProveedor" Text="Editar" Clicked="BtneditarProveedor_Clicked"/>
-                    <Button x:Name="BtnborrarProveedor" Text="Borrar" Clicked="BtnborrarProveedor_Clicked"/>
+                    <Button x:Name="BtneditarProveedor" Text="Editar" HeightRequest="40" Clicked="BtneditarProveedor_Clicked"/>
+                    <Button x:Name="BtnborrarProveedor" Text="Borrar" HeightRequest="40" Clicked="BtnborrarProveedor_Clicked"/>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

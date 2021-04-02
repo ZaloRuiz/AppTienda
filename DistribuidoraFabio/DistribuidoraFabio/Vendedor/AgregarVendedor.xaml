@@ -3,20 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Vendedor.AgregarVendedor"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Agregar vendedor">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout>
-                    <Entry x:Name="nombreVendedorEntry" Placeholder="Nombre" HorizontalOptions="FillAndExpand"/>
-                    <Entry x:Name="telefonoVendedorEntry" Placeholder="Telefono" HorizontalOptions="FillAndExpand" Keyboard="Numeric"/>
-                    <Entry x:Name="direccionVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion"/>
-                    <Entry x:Name="numero_cuentaVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta"  Keyboard="Numeric"/>
-                    <Entry x:Name="cedula_identidadVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de Identidad"/>
-                    <Entry x:Name="usuarioEntry" HorizontalOptions="FillAndExpand" Placeholder="Usuario"/>
-                    <Entry x:Name="passwordEntry" HorizontalOptions="FillAndExpand" Placeholder="Contraseña"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="nombreVendedorEntry" Placeholder="Nombre" HorizontalOptions="FillAndExpand" PlaceholderColor="#465B70" 
+                               TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="telefonoVendedorEntry" Placeholder="Telefono" HorizontalOptions="FillAndExpand" Keyboard="Numeric" 
+                               PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="cedula_identidadVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de Identidad" 
+                               PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="direccionVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" PlaceholderColor="#465B70" 
+                               TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="numero_cuentaVendedorEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta"  Keyboard="Numeric" 
+                               PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="usuarioEntry" HorizontalOptions="FillAndExpand" Placeholder="Usuario" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="passwordEntry" HorizontalOptions="FillAndExpand" Placeholder="Contraseña" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
                 </StackLayout>
-                <Button x:Name="btnGuardarVendedor" Text="Guadar" Clicked="BtnGuardarVendedor_Clicked"/>
+                <Button x:Name="btnGuardarVendedor" Text="Guadar" HeightRequest="40" Clicked="BtnGuardarVendedor_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

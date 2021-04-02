@@ -3,15 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Producto.EditarBorrarTipoProducto"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Editar / Borrar tipo de producto">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout>
-                    <Entry x:Name="nombreTpEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre"/>
+                    <Entry x:Name="nombreTpEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" PlaceholderColor="#465B70" TextColor="Black"
+                       FontSize="14" BackgroundColor="White"/>
                 </StackLayout>
-                <Button x:Name="btnEditarTP" Text="Editar" Clicked="BtnEditarTP_Clicked"/>
-                <Button x:Name="btnBorrarTP" Text="Borrar" Clicked="BtnBorrarTP_Clicked"/>
+                <Button x:Name="btnEditarTP" Text="Editar" HeightRequest="40" Clicked="BtnEditarTP_Clicked"/>
+                <Button x:Name="btnBorrarTP" Text="Borrar" HeightRequest="40" Clicked="BtnBorrarTP_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

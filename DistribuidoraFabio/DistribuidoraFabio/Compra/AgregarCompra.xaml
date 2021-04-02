@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Compra.AgregarCompra"
              Visual="Material"
-             BackgroundColor="White">
+             BackgroundColor="White"
+             Title="Agregar compra">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout x:Name="stkCompra" Padding="10">

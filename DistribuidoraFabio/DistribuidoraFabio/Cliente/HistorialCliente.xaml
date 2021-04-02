@@ -3,12 +3,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Cliente.HistorialCliente"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="#ffffff"
+             Title="Historial del cliente">
     <ContentPage.Content>
-        <ListView x:Name="listaClienteH" ItemTapped="ListaClienteH_ItemTapped" SeparatorColor="#95B0B7">
+        <ListView x:Name="listaClienteH" ItemTapped="ListaClienteH_ItemTapped" SeparatorColor="#465B70">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding numero_factura}" TextColor="#95B0B7" Detail="{Binding fecha, StringFormat='{}{0:dd-MM-yyyy}'}" DetailColor="#4DCCE8"/>
+                    <ViewCell>
+                        <Grid Padding="15">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"></ColumnDefinition>
+                                <ColumnDefinition Width="200"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Codigo: "/>
+                                        <Span Text="{Binding id_venta}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Factura: "/>
+                                        <Span Text="{Binding numero_factura}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Grid.Row="0" Grid.Column="2" FontSize="Medium" TextColor="#000000" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Total: "/>
+                                        <Span Text="{Binding total, StringFormat=' {0:0.00}'}"/>
+                                        <Span Text=" Bs."/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

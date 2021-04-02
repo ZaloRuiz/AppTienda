@@ -4,7 +4,8 @@
              x:Class="DistribuidoraFabio.Inventario.InventarioGeneral"
              xmlns:dg="clr-namespace:Xamarin.Forms.DataGrid;assembly=Xamarin.Forms.DataGrid"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="#ffffff"
+             Title="Inventario">
     <ContentPage.Content>
         <dg:DataGrid ItemsSource="{Binding ListaDeProducto}" SelectionEnabled="True" SelectedItem="{Binding SelectedProducto}"
                RowHeight="70" HeaderHeight="50" BorderColor="#CCCCCC" HeaderBackground="#E0E6F8"

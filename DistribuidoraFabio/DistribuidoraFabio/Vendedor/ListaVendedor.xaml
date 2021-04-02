@@ -3,15 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Vendedor.ListaVendedor"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Lista de vendedores">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Agregar" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ListView x:Name="listaVendedor" ItemTapped="OnItemSelected" SeparatorColor="#95B0B7">
+        <ListView x:Name="listaVendedor" ItemTapped="OnItemSelected" SeparatorColor="#465B70">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding nombre}" TextColor="#95B0B7" Detail="{Binding telefono}" DetailColor="#4DCCE8"/>
+                    <TextCell Text="{Binding nombre}" TextColor="#000000" Detail="{Binding telefono}" DetailColor="#465B70"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

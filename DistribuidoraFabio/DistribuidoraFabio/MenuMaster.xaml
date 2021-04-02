@@ -4,14 +4,14 @@
              x:Class="DistribuidoraFabio.MenuMaster"
              Title="Master"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="#ffffff">
   <StackLayout>
     <ListView x:Name="MenuItemsListView"
               SeparatorVisibility="None"
               HasUnevenRows="true"
               ItemsSource="{Binding MenuItems}">
       <ListView.Header>
-                <Grid BackgroundColor="#4DCCE8">
+                <Grid BackgroundColor="#465B70">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
           </Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
           <ViewCell>
             <StackLayout Padding="20,10" HorizontalOptions="FillAndExpand" Orientation="Horizontal">
                 <Image Aspect="AspectFit" HorizontalOptions="Start" HeightRequest="30" VerticalOptions="Center" Source="{Binding icon}"/>
-                <Label VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" Text="{Binding Title}" FontSize="24" TextColor="#95B0B7" Padding="20, 0, 0, 0"/>
+                <Label VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" Text="{Binding Title}" FontSize="24" TextColor="#465B70" Padding="20, 0, 0, 0"/>
             </StackLayout>
           </ViewCell>
         </DataTemplate>

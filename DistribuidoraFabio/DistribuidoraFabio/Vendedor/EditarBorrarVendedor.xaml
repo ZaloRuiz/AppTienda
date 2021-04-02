@@ -11,16 +11,29 @@
         <ScrollView>
             <StackLayout Padding="20">
                 <StackLayout>
-                    <Entry x:Name="nombreEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" VerticalOptions="Center"/>
-                    <Entry x:Name="telefonoEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" VerticalOptions="Center" Keyboard="Numeric"/>
-                    <Entry x:Name="direccionEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" VerticalOptions="Center"/>
-                    <Entry x:Name="numero_cuentaEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta" VerticalOptions="Center"/>
-                    <Entry x:Name="cedulaEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de identidad" VerticalOptions="Center"/>
-                    <Entry x:Name="usuarioEntry" HorizontalOptions="FillAndExpand" Placeholder="Usuario" VerticalOptions="Center"/>
-                    <Entry x:Name="passwordEntry" HorizontalOptions="FillAndExpand" Placeholder="Contraseña" VerticalOptions="Center"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="nombreEntry" HorizontalOptions="FillAndExpand" Placeholder="Nombre" VerticalOptions="Center" PlaceholderColor="#465B70" 
+                               TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="telefonoEntry" HorizontalOptions="FillAndExpand" Placeholder="Telefono" VerticalOptions="Center" Keyboard="Numeric" 
+                               PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="cedulaEntry" HorizontalOptions="FillAndExpand" Placeholder="Cedula de identidad" VerticalOptions="Center" 
+                           PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="direccionEntry" HorizontalOptions="FillAndExpand" Placeholder="Direccion" VerticalOptions="Center" 
+                               PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="numero_cuentaEntry" HorizontalOptions="FillAndExpand" Placeholder="Numero de cuenta" VerticalOptions="Center" 
+                               PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="usuarioEntry" HorizontalOptions="FillAndExpand" Placeholder="Usuario" VerticalOptions="Center" PlaceholderColor="#465B70" 
+                           TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                        <Entry x:Name="passwordEntry" HorizontalOptions="FillAndExpand" Placeholder="Contraseña" VerticalOptions="Center" 
+                           PlaceholderColor="#465B70" TextColor="Black" FontSize="14" BackgroundColor="White"/>
+                    </StackLayout>
                 </StackLayout>
-                <Button x:Name="btnEditarVendedor" Text="Editar" Clicked="BtnEditarVendedor_Clicked"/>
-                <Button x:Name="btnBorrarVendedor" Text="Borrar" Clicked="BtnBorrarVendedor_Clicked"/>
+                <Button x:Name="btnEditarVendedor" Text="Editar" HeightRequest="40" Clicked="BtnEditarVendedor_Clicked"/>
+                <Button x:Name="btnBorrarVendedor" Text="Borrar" HeightRequest="40" Clicked="BtnBorrarVendedor_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
