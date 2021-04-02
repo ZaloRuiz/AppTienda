@@ -22,6 +22,7 @@ namespace DistribuidoraFabio.Models
         public decimal sub_total { get; set; }
         public int envases { get; set; }
         public string tipo_venta { get; set; }
+        public decimal saldo { get; set; }
         public string estado { get; set; }
     }
 }

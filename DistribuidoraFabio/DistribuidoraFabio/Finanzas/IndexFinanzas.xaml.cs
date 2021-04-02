@@ -24,7 +24,7 @@ namespace DistribuidoraFabio.Finanzas
 
 		private async void Button_Clicked_1(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new ListaCostoVariable());
+			await Navigation.PushAsync(new Deudas());
 		}
 
 		private async void Button_Clicked_2(object sender, EventArgs e)

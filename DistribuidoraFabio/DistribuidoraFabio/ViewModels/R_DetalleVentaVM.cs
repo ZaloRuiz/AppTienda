@@ -86,7 +86,7 @@ namespace DistribuidoraFabio.ViewModels
 
 
 			var header = new List<string>() { "ID", "Nombre", "Fecha", "Codigo Cliente", "Nombre Cliente", "Razon Social", "Nit", "Telefono", "Direccion","Geolocalizacion","Producto", "Precio", "Cantidad",
-			"Sub Total", "Envases" , "Tipo Venta", "Estado"};
+			"Sub Total", "Envases" , "Tipo Venta", "Saldo", "Estado"};
 
 			var data = new ExcelStructure();
 			data.Headers = header;
@@ -111,6 +111,7 @@ namespace DistribuidoraFabio.ViewModels
 					publication.sub_total.ToString(),
 					publication.envases.ToString(),
 					publication.tipo_venta,
+					publication.saldo.ToString(),
 					publication.estado,
 
 				};
@@ -125,10 +126,6 @@ namespace DistribuidoraFabio.ViewModels
 				File = new ReadOnlyFile(filePath)
 			});
 		}
-
-
-	
-
 		public async void GetReporte()
 		{
 			try
@@ -159,6 +156,7 @@ namespace DistribuidoraFabio.ViewModels
 							sub_total = item.sub_total,
 							envases = item.envases,
 							tipo_venta = item.tipo_venta,
+							saldo = item.saldo,
 							estado = item.estado
 						});
 					}

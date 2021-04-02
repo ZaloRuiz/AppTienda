@@ -132,9 +132,9 @@
                             FontSize="14" VerticalOptions="Center" BackgroundColor="White" TextColor="Black" PlaceholderColor="#465B70"/>
                     <Picker x:Name="estadoEntry" Title="Estado" HorizontalOptions="FillAndExpand" SelectedIndexChanged="estadoEntry_SelectedIndexChanged"
                              FontSize="14" VerticalOptions="Center" BackgroundColor="White" TextColor="Black" TitleColor="#465B70"/>
-                </StackLayout>
-                <Entry x:Name="totalVentaEntry" Keyboard="Numeric" Placeholder="Total" HorizontalOptions="FillAndExpand" TextColor="Black"  
+                    <Entry x:Name="totalVentaEntry" Keyboard="Numeric" Placeholder="Total" HorizontalOptions="FillAndExpand" TextColor="Black"  
                        IsReadOnly="True" FontSize="14" VerticalOptions="Center" BackgroundColor="White" PlaceholderColor="#465B70"/>
+                </StackLayout>
                 <Editor x:Name="entryObs" Placeholder="Observacion" Text="No" TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="Center"
                          FontSize="14" BackgroundColor="White" PlaceholderColor="#465B70"/>
                 <Button x:Name="btnVentaGuardar" Text="Guardar" HeightRequest="40" Clicked="BtnVentaGuardar_Clicked"/>
