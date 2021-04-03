@@ -37,6 +37,8 @@ namespace DistribuidoraFabio.Finanzas
 			base.OnAppearing();
 			if (CrossConnectivity.Current.IsConnected)
 			{
+				stkCV.Children.Clear();
+				stkCF.Children.Clear();
 				DateTime fechaMesAct = DateTime.Today;
 				_mesQuery = Convert.ToInt32(fechaMesAct.ToString("MM"));
 				_yearQuery = Convert.ToInt32(fechaMesAct.ToString("yyyy"));
@@ -175,7 +177,7 @@ namespace DistribuidoraFabio.Finanzas
 		}
 		private async void toolbarCF_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new ListaCostoFijo());
+			await Navigation.PushAsync(new AgregarCostoFijo());
 		}
 		private async void toolbarCV_Clicked(object sender, EventArgs e)
 		{

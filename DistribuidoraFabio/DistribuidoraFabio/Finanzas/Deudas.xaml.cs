@@ -34,11 +34,16 @@ namespace DistribuidoraFabio.Finanzas
 				try
 				{
 					GetDeudasXCobrar();
-					Task.Delay(400);
+					await Task.Delay(400);
 					GetDeudasEnvases();
 					MessagingCenter.Subscribe<DevolverEnvases>(this, "Hi", (sender) =>
 					{
 						GetDeudasEnvases();
+					});
+
+					MessagingCenter.Subscribe<CobrarDeuda>(this, "Hi", (sender) =>
+					{
+						GetDeudasXCobrar();
 					});
 				}
 				catch (Exception err)
@@ -103,9 +108,19 @@ namespace DistribuidoraFabio.Finanzas
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
-		private void listCuentas_ItemTapped(object sender, ItemTappedEventArgs e)
+		private async void listCuentas_ItemTapped(object sender, ItemTappedEventArgs e)
 		{
-
+			try
+			{
+				var detalles = e.Item as VentasNombre;
+				App._idVsaldo = detalles.id_venta;
+				App._saldoDeuda = detalles.saldo;
+				await PopupNavigation.Instance.PushAsync(new CobrarDeuda());
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("Error", err.ToString(), "OK");
+			}
 		}
 		private async void filtrarCliente_Clicked(object sender, EventArgs e)
 		{

@@ -28,16 +28,10 @@ namespace DistribuidoraFabio.Proveedor
                 contacto = contactoPEntry.Text,
                 telefono = Convert.ToInt32(telefonoPEntry.Text)
             };
-
             var json = JsonConvert.SerializeObject(proveedor);
-
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
             HttpClient client = new HttpClient();
-
             var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/proveedores/agregarProveedor.php", content);
-           
-
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
@@ -49,7 +43,6 @@ namespace DistribuidoraFabio.Proveedor
                 await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
                 await Navigation.PopAsync();
             }
-
         }
     }
 }

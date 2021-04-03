@@ -25,7 +25,8 @@ namespace DistribuidoraFabio
 		public static DateTime _fechaFinalFiltro = DateTime.Now;
 		public static int _idDVenvase;
 		public static int _envasesDeuda;
-		public static int _envasesDevueltos;
+		public static int _idVsaldo;
+		public static decimal _saldoDeuda;
 		protected override void OnStart()
 		{
 		}
