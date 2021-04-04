@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Finanzas.BalanceMensual"
              Visual="Material"
-             BackgroundColor="#324A51"
+             BackgroundColor="White"
+             Title="Balance mensual"
              xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms">
     <ContentPage.Content>
         <ScrollView>
@@ -19,15 +20,15 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
-                        <Label Text="MARZO 2021" TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="10"/>
+                        <Label x:Name="txtTitulo" TextColor="Black" FontSize="Large" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="10"/>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                             <StackLayout HorizontalOptions="CenterAndExpand">
-                                <Label Text="INGRESOS" TextColor="White" HorizontalOptions="Center"/>
-                                <Label Text="1650 Bs." TextColor="Green" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                                <Label Text="INGRESOS" TextColor="Black" HorizontalOptions="Center"/>
+                                <Label x:Name="txtTotalIngresos" TextColor="Green" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
                             </StackLayout>
                             <StackLayout HorizontalOptions="CenterAndExpand">
-                                <Label Text="EGRESOS" TextColor="White" HorizontalOptions="Center"/>
-                                <Label Text="1830 Bs." TextColor="Red" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
+                                <Label Text="EGRESOS" TextColor="Black" HorizontalOptions="Center"/>
+                                <Label x:Name="txtTotalEgresos" TextColor="Red" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Padding="15"/>
                             </StackLayout>
                         </StackLayout>
                     </StackLayout>
@@ -43,6 +44,10 @@
                                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                         <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="Red"/>
                                         <Label x:Name="txtCostosV" TextColor="White" FontSize="16" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                        <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="#f0d400"/>
+                                        <Label x:Name="txtCompras" TextColor="White" FontSize="16" VerticalTextAlignment="Center"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                         <BoxView WidthRequest="2" VerticalOptions="FillAndExpand" BackgroundColor="Green"/>
@@ -81,25 +86,25 @@
                             <StackLayout Padding="5">
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="Ventas" TextColor="White" FontSize="16" HorizontalTextAlignment="Start"/>
-                                    <Label Text="105843 Bs" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
+                                    <Label x:Name="txtTablaVenta" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
                                 </StackLayout>
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="- Costo de ventas / Compras" FontSize="16" TextColor="White" HorizontalTextAlignment="Start"/>
-                                    <Label Text="-70054 Bs" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
+                                    <Label x:Name="txtTablaCompra" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
                                 </StackLayout>
-                                <Label Text="Total: 35789 Bs" TextColor="White" FontSize="16" HorizontalTextAlignment="End"/>
+                                <Label x:Name="txtTotalVC" TextColor="White" FontSize="16" HorizontalTextAlignment="End"/>
                                 <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="Gastos Fijos" TextColor="White" FontSize="16" HorizontalTextAlignment="Start"/>
-                                    <Label Text="1064 Bs" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
+                                    <Label x:Name="txtTablaGF" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
                                 </StackLayout>
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="Gastos Variables" TextColor="White" FontSize="16" HorizontalTextAlignment="Start"/>
-                                    <Label Text="1842 Bs" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
+                                    <Label x:Name="txtTablaGV" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"/>
                                 </StackLayout>
-                                <Label Text="Total: 2906 Bs" TextColor="White" FontSize="16" HorizontalTextAlignment="End"/>
+                                <Label x:Name="txtTotalGastos" TextColor="White" FontSize="16" HorizontalTextAlignment="End"/>
                                 <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                                <Label Text="Total: 31356 Bs" TextColor="White" FontSize="16" HorizontalTextAlignment="End" FontAttributes="Bold"/>
+                                <Label x:Name="txtTablaTotal" TextColor="White" FontSize="16" HorizontalTextAlignment="End" FontAttributes="Bold"/>
                             </StackLayout>
                         </Frame>
                     </StackLayout>
@@ -110,8 +115,8 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="300"></RowDefinition>
-                        <RowDefinition Height="300"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
                         <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
@@ -119,7 +124,27 @@
                             <StackLayout Padding="5">
                                 <Label Text="Top vendedores" TextColor="White" HorizontalTextAlignment="Center"/>
                                 <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                    <microcharts:ChartView x:Name="grafVendedores" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                    <StackLayout Padding="5">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Cantidad de pedidos" FontSize="16" TextColor="White" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Nombre" TextColor="White" FontSize="16" HorizontalTextAlignment="Start" FontAttributes="Bold"/>
+                                            <Label Text="Cantidad" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"
+                                                   FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout x:Name="StkVendXCant"/>
+                                        <BoxView HeightRequest="1" HorizontalOptions="FillAndExpand" BackgroundColor="White"/>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Monto de ventas" FontSize="16" TextColor="White" FontAttributes="Bold" HorizontalOptions="CenterAndExpand"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Nombre" TextColor="White" FontSize="16" HorizontalTextAlignment="Start" FontAttributes="Bold"/>
+                                            <Label Text="Monto" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"
+                                                   FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout x:Name="StkMontXCant"/>
+                                    </StackLayout>
                                 </StackLayout>
                             </StackLayout>
                         </Frame>
@@ -130,7 +155,27 @@
                             <StackLayout Padding="5">
                                 <Label Text="Top clientes" TextColor="White" HorizontalTextAlignment="Center"/>
                                 <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                    <microcharts:ChartView x:Name="grafClientes" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                    <StackLayout Padding="5">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Cantidad de pedidos" FontSize="16" TextColor="White" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Nombre" TextColor="White" FontSize="16" HorizontalTextAlignment="Start" FontAttributes="Bold"/>
+                                            <Label Text="Cantidad" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"
+                                                   FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout x:Name="StkPedidXCant"/>
+                                        <BoxView HeightRequest="1" HorizontalOptions="FillAndExpand" BackgroundColor="White"/>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Monto de ventas" FontSize="16" TextColor="White" FontAttributes="Bold" HorizontalOptions="CenterAndExpand"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Nombre" TextColor="White" FontSize="16" HorizontalTextAlignment="Start" FontAttributes="Bold"/>
+                                            <Label Text="Monto" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"
+                                                   FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout x:Name="StkMontXPedid"/>
+                                    </StackLayout>
                                 </StackLayout>
                             </StackLayout>
                         </Frame>
@@ -141,7 +186,17 @@
                             <StackLayout Padding="5">
                                 <Label Text="Productos mas vendidos" TextColor="White" HorizontalTextAlignment="Center"/>
                                 <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                    <microcharts:ChartView x:Name="grafP_MasVendidos" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                    <StackLayout Padding="5">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Cantidad de pedidos" FontSize="16" TextColor="White" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Nombre" TextColor="White" FontSize="16" HorizontalTextAlignment="Start" FontAttributes="Bold"/>
+                                            <Label Text="Cantidad" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"
+                                                   FontAttributes="Bold"/>
+                                        </StackLayout>
+                                        <StackLayout x:Name="StkPedidXProd"/>
+                                    </StackLayout>
                                 </StackLayout>
                             </StackLayout>
                         </Frame>
@@ -150,9 +205,17 @@
                         <Frame BackgroundColor="#40616B" CornerRadius="10" Padding="5" HasShadow="True"
                         HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                             <StackLayout Padding="5">
-                                <Label Text="Productos en almacen" TextColor="White" HorizontalTextAlignment="Center"/>
+                                <Label Text="Productos con mayores ingresos" TextColor="White" HorizontalTextAlignment="Center"/>
                                 <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                    <microcharts:ChartView x:Name="grafP_almacen" Background="#40616B" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Monto de ventas" FontSize="16" TextColor="White" FontAttributes="Bold" HorizontalOptions="CenterAndExpand"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Nombre" TextColor="White" FontSize="16" HorizontalTextAlignment="Start" FontAttributes="Bold"/>
+                                        <Label Text="Monto" TextColor="White" FontSize="16" HorizontalTextAlignment="End" HorizontalOptions="EndAndExpand"
+                                                   FontAttributes="Bold"/>
+                                    </StackLayout>
+                                    <StackLayout x:Name="StkMontXProd"/>
                                 </StackLayout>
                             </StackLayout>
                         </Frame>

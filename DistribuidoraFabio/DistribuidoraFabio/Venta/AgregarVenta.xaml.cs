@@ -349,7 +349,7 @@ namespace DistribuidoraFabio.Venta
                             entryNombreProd.Text = string.Empty;
                             txtPrecio.Text = string.Empty;
                             txtCantidad.Text = string.Empty;
-                            txtDescuento.Text = string.Empty;
+                            txtDescuento.Text ="0";
                             txtSubTotal.Text = string.Empty;
                             txtStock.Text = string.Empty;
                             txtStockValorado.Text = string.Empty;

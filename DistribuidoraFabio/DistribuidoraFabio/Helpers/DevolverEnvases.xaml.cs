@@ -53,27 +53,33 @@ namespace DistribuidoraFabio.Helpers
 					{
 						_envasesDevuelto = Convert.ToInt32(entryCantDevuelta.Text);
 						_totalEnvases = App._envasesDeuda - _envasesDevuelto;
-
-						DetalleVenta _detalleVenta = new DetalleVenta()
+						if(_envasesDevuelto > App._envasesDeuda)
 						{
-							id_dv = App._idDVenvase,
-							envases = _totalEnvases
-						};
-						var json = JsonConvert.SerializeObject(_detalleVenta);
-						var content = new StringContent(json, Encoding.UTF8, "application/json");
-						HttpClient client = new HttpClient();
-						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarEnvases.php", content);
+							DetalleVenta _detalleVenta = new DetalleVenta()
+							{
+								id_dv = App._idDVenvase,
+								envases = _totalEnvases
+							};
+							var json = JsonConvert.SerializeObject(_detalleVenta);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarEnvases.php", content);
 
-						if (result.StatusCode == HttpStatusCode.OK)
-						{
-							await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-							MessagingCenter.Send<DevolverEnvases>(this, "Hi");
-							await PopupNavigation.Instance.PopAsync();
+							if (result.StatusCode == HttpStatusCode.OK)
+							{
+								await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
+								MessagingCenter.Send<DevolverEnvases>(this, "Hi");
+								await PopupNavigation.Instance.PopAsync();
+							}
+							else
+							{
+								await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+								await PopupNavigation.Instance.PopAsync();
+							}
 						}
 						else
 						{
-							await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-							await PopupNavigation.Instance.PopAsync();
+							await DisplayAlert("Error", "La cantidad de envases devueltos es mayor a los adeudados", "OK");
 						}
 					}
 					catch (Exception err)

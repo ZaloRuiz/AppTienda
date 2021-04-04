@@ -53,27 +53,33 @@ namespace DistribuidoraFabio.Helpers
 					{
 						_montoDevuelto = Convert.ToDecimal(entryCantCobrada.Text);
 						_totalCobrado = App._saldoDeuda - _montoDevuelto;
-
-						Ventas _ventas = new Ventas()
+						if(_montoDevuelto > App._saldoDeuda)
 						{
-							id_venta = App._idVsaldo,
-							saldo = _totalCobrado
-						};
-						var json = JsonConvert.SerializeObject(_ventas);
-						var content = new StringContent(json, Encoding.UTF8, "application/json");
-						HttpClient client = new HttpClient();
-						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarSaldo.php", content);
-
-						if (result.StatusCode == HttpStatusCode.OK)
-						{
-							await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-							MessagingCenter.Send<CobrarDeuda>(this, "Hi");
-							await PopupNavigation.Instance.PopAsync();
+							await DisplayAlert("Error", "El monto devuelto es mayor a la deuda", "OK");
 						}
 						else
 						{
-							await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-							await PopupNavigation.Instance.PopAsync();
+							Ventas _ventas = new Ventas()
+							{
+								id_venta = App._idVsaldo,
+								saldo = _totalCobrado
+							};
+							var json = JsonConvert.SerializeObject(_ventas);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarSaldo.php", content);
+
+							if (result.StatusCode == HttpStatusCode.OK)
+							{
+								await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
+								MessagingCenter.Send<CobrarDeuda>(this, "Hi");
+								await PopupNavigation.Instance.PopAsync();
+							}
+							else
+							{
+								await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+								await PopupNavigation.Instance.PopAsync();
+							}
 						}
 					}
 					catch (Exception err)
