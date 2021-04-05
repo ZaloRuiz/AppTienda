@@ -24,7 +24,6 @@ namespace DistribuidoraFabio.Vendedor
         {
             Navigation.PushAsync(new AgregarVendedor());
         }
-
         protected async override void OnAppearing()
         {
             base.OnAppearing();
@@ -40,7 +39,7 @@ namespace DistribuidoraFabio.Vendedor
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else

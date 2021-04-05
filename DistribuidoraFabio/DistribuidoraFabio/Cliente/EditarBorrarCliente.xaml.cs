@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,136 +33,106 @@ namespace DistribuidoraFabio.Cliente
 		}
         private async void BtnEditarCliente_Clicked(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(codigoEntry.Text) || (!string.IsNullOrEmpty(codigoEntry.Text)))
+            if (CrossConnectivity.Current.IsConnected)
             {
-                if (!string.IsNullOrWhiteSpace(nombreClienteEntry.Text) || (!string.IsNullOrEmpty(nombreClienteEntry.Text)))
+                if (!string.IsNullOrWhiteSpace(codigoEntry.Text) || (!string.IsNullOrEmpty(codigoEntry.Text)))
                 {
-                    if (!string.IsNullOrWhiteSpace(telefonoClienteEntry.Text) || (!string.IsNullOrEmpty(telefonoClienteEntry.Text)))
+                    if (!string.IsNullOrWhiteSpace(nombreClienteEntry.Text) || (!string.IsNullOrEmpty(nombreClienteEntry.Text)))
                     {
-                        if (!string.IsNullOrWhiteSpace(direccionEntry.Text) || (!string.IsNullOrEmpty(direccionEntry.Text)))
+                        if (!string.IsNullOrWhiteSpace(telefonoClienteEntry.Text) || (!string.IsNullOrEmpty(telefonoClienteEntry.Text)))
                         {
-                            if (!string.IsNullOrWhiteSpace(ubconfirmacionEntry.Text) || (!string.IsNullOrEmpty(ubconfirmacionEntry.Text)))
+                            if (!string.IsNullOrWhiteSpace(direccionEntry.Text) || (!string.IsNullOrEmpty(direccionEntry.Text)))
                             {
-                                if (!string.IsNullOrWhiteSpace(razonEntry.Text) || (!string.IsNullOrEmpty(razonEntry.Text)))
+                                if (!string.IsNullOrWhiteSpace(ubconfirmacionEntry.Text) || (!string.IsNullOrEmpty(ubconfirmacionEntry.Text)))
                                 {
-                                    if (!string.IsNullOrWhiteSpace(nitClienteEntry.Text) || (!string.IsNullOrEmpty(nitClienteEntry.Text)))
+                                    if (!string.IsNullOrWhiteSpace(razonEntry.Text) || (!string.IsNullOrEmpty(razonEntry.Text)))
                                     {
-                                        var action = await DisplayActionSheet("GUARDAR CAMBIOS?", null, null, "SI", "NO");
-                                        switch (action)
+                                        if (!string.IsNullOrWhiteSpace(nitClienteEntry.Text) || (!string.IsNullOrEmpty(nitClienteEntry.Text)))
                                         {
-                                            case "SI":
-                                                try
-                                                {
-                                                    Models.Cliente cliente = new Models.Cliente()
+                                            var action = await DisplayActionSheet("GUARDAR CAMBIOS?", null, null, "SI", "NO");
+                                            switch (action)
+                                            {
+                                                case "SI":
+                                                    try
                                                     {
-                                                        id_cliente = IdCliente,
-                                                        codigo_c = Convert.ToInt32(codigoEntry.Text),
-                                                        nombre_cliente = nombreClienteEntry.Text,
-                                                        ubicacion_latitud = ubicacionLatitudEntry.Text,
-                                                        ubicacion_longitud = ubicacionLongitudEntry.Text,
-                                                        telefono = Convert.ToInt32(telefonoClienteEntry.Text),
-                                                        direccion_cliente = direccionEntry.Text,
-                                                        razon_social = razonEntry.Text,
-                                                        nit = Convert.ToInt32(nitClienteEntry.Text)
-                                                    };
+                                                        Models.Cliente cliente = new Models.Cliente()
+                                                        {
+                                                            id_cliente = IdCliente,
+                                                            codigo_c = Convert.ToInt32(codigoEntry.Text),
+                                                            nombre_cliente = nombreClienteEntry.Text,
+                                                            ubicacion_latitud = ubicacionLatitudEntry.Text,
+                                                            ubicacion_longitud = ubicacionLongitudEntry.Text,
+                                                            telefono = Convert.ToInt32(telefonoClienteEntry.Text),
+                                                            direccion_cliente = direccionEntry.Text,
+                                                            razon_social = razonEntry.Text,
+                                                            nit = Convert.ToInt32(nitClienteEntry.Text)
+                                                        };
 
-                                                    var json = JsonConvert.SerializeObject(cliente);
-                                                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-                                                    HttpClient client = new HttpClient();
-                                                    var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/clientes/editarCliente.php", content);
+                                                        var json = JsonConvert.SerializeObject(cliente);
+                                                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                                                        HttpClient client = new HttpClient();
+                                                        var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/clientes/editarCliente.php", content);
 
-                                                    if (result.StatusCode == HttpStatusCode.OK)
-                                                    {
-                                                        await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-                                                        await Navigation.PopAsync();
+                                                        if (result.StatusCode == HttpStatusCode.OK)
+                                                        {
+                                                            await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
+                                                            await Navigation.PopAsync();
+                                                        }
+                                                        else
+                                                        {
+                                                            await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+                                                            await Navigation.PopAsync();
+                                                        }
                                                     }
-                                                    else
+                                                    catch (Exception err)
                                                     {
-                                                        await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-                                                        await Navigation.PopAsync();
+                                                        await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                                                     }
-                                                }
-                                                catch (Exception err)
-                                                {
-                                                    await DisplayAlert("Error", err.ToString(), "OK");
-                                                }
-                                                break;
-                                            case "NO":
-                                                break;
+                                                    break;
+                                                case "NO":
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            await DisplayAlert("Campo vacio", "El campo de Nit esta vacio", "Ok");
                                         }
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Campo vacio", "El campo de Nit esta vacio", "Ok");
+                                        await DisplayAlert("Campo vacio", "El campo de Razon social esta vacio", "Ok");
                                     }
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Campo vacio", "El campo de Razon social esta vacio", "Ok");
+                                    await DisplayAlert("Campo vacio", "El campo de Ubicacion esta vacio", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Campo vacio", "El campo de Ubicacion esta vacio", "Ok");
+                                await DisplayAlert("Campo vacio", "El campo de Direccion esta vacio", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Campo vacio", "El campo de Direccion esta vacio", "Ok");
+                            await DisplayAlert("Campo vacio", "El campo de Telefono esta vacio", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Campo vacio", "El campo de Telefono esta vacio", "Ok");
+                        await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+                    await DisplayAlert("Campo vacio", "El campo de Codigo esta vacio", "Ok");
                 }
             }
             else
             {
-                await DisplayAlert("Campo vacio", "El campo de Codigo esta vacio", "Ok");
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
-        }
-        private async void BtnBorrarCliente_Clicked(object sender, EventArgs e)
-        {
-            var action = await DisplayActionSheet("BORRAR CLIENTE?", null, null, "SI", "NO");
-            switch (action)
-            {
-                case "SI":
-                    try
-                    {
-                        Models.Cliente cliente = new Models.Cliente()
-                        {
-                            id_cliente = IdCliente,
-                        };
-
-                        var json = JsonConvert.SerializeObject(cliente);
-                        var content = new StringContent(json, Encoding.UTF8, "application/json");
-                        HttpClient client = new HttpClient();
-                        var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/clientes/borrarCliente.php", content);
-
-                        if (result.StatusCode == HttpStatusCode.OK)
-                        {
-                            await DisplayAlert("ELIMINAR", "Se elimino correctamente", "OK");
-                            await Navigation.PopAsync();
-                        }
-                        else
-                        {
-                            await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-                            await Navigation.PopAsync();
-                        }
-                    }
-                    catch (Exception err)
-                    {
-                        await DisplayAlert("Error", err.ToString(), "OK");
-                    }
-                    break;
-                case "NO":
-                    break;
-            }
+            
         }
         private async void BtnVerUbicacion_Clicked(object sender, EventArgs e)
         {
@@ -184,15 +155,15 @@ namespace DistribuidoraFabio.Cliente
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                await DisplayAlert("Error", fnsEx.Message, "OK");
+                await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
             }
             catch (PermissionException pEx)
             {
-                await DisplayAlert("Error", pEx.Message, "OK");
+                await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", ex.Message, "OK");
+                await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
             }
         }
         private void ToolbarItem_Clicked(object sender, EventArgs e)

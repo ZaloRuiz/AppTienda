@@ -4,7 +4,7 @@
              x:Class="DistribuidoraFabio.Cliente.EditarBorrarCliente"
              Visual="Material"
              BackgroundColor="#ffffff"
-             Title="Editar / Borrar cliente">
+             Title="Editar cliente">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Historial" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
@@ -32,7 +32,6 @@
                     <Entry x:Name="nitClienteEntry" HorizontalOptions="FillAndExpand" PlaceholderColor="#465B70" Placeholder="NIT" Keyboard="Numeric" FontSize="14" BackgroundColor="White"/>
                 </StackLayout>
                 <Button x:Name="btnEditarCliente" Text="Editar" Clicked="BtnEditarCliente_Clicked" HeightRequest="40"/>
-                <Button x:Name="btnBorrarCliente" Text="Borrar" Clicked="BtnBorrarCliente_Clicked" HeightRequest="40"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

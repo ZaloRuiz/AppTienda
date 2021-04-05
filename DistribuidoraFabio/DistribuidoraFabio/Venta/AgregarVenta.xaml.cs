@@ -51,7 +51,7 @@ namespace DistribuidoraFabio.Venta
                 }
                 catch (Exception err)
                 {
-                    await DisplayAlert("Error", err.ToString(), "OK");
+                    await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
                 }
             }
             else
@@ -61,55 +61,76 @@ namespace DistribuidoraFabio.Venta
         }
         private async void GetDataCliente()
         {
-            try
+            if (CrossConnectivity.Current.IsConnected)
             {
-                HttpClient client = new HttpClient();
-                var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/clientes/listaCliente.php");
-                var clientes = JsonConvert.DeserializeObject<List<Models.Cliente>>(response).ToList();
-                clientePicker.ItemsSource = clientes;
-                foreach (var item in clientes)
+                try
                 {
-                    clienteList.Add(item);
+                    HttpClient client = new HttpClient();
+                    var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/clientes/listaCliente.php");
+                    var clientes = JsonConvert.DeserializeObject<List<Models.Cliente>>(response).ToList();
+                    clientePicker.ItemsSource = clientes;
+                    foreach (var item in clientes)
+                    {
+                        clienteList.Add(item);
+                    }
+                }
+                catch (Exception error)
+                {
+                    await DisplayAlert("Erro", "Necesitas estar conectado a internet", "OK");
                 }
             }
-            catch (Exception error)
+            else
             {
-                await DisplayAlert("Erro", error.ToString(), "OK");
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
         }
         private async void GetDataVendedor()
         {
-            try
+            if (CrossConnectivity.Current.IsConnected)
             {
-                HttpClient client = new HttpClient();
-                var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/vendedores/listaVendedores.php");
-                var vendedores = JsonConvert.DeserializeObject<List<Vendedores>>(response).ToList();
-                vendedorPicker.ItemsSource = vendedores;
-                foreach (var item in vendedores)
+                try
                 {
-                    vendedorList.Add(item);
+                    HttpClient client = new HttpClient();
+                    var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/vendedores/listaVendedores.php");
+                    var vendedores = JsonConvert.DeserializeObject<List<Vendedores>>(response).ToList();
+                    vendedorPicker.ItemsSource = vendedores;
+                    foreach (var item in vendedores)
+                    {
+                        vendedorList.Add(item);
+                    }
+                }
+                catch (Exception error)
+                {
+                    await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
                 }
             }
-            catch (Exception error)
+            else
             {
-                await DisplayAlert("Error", error.ToString(), "OK");
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
         }
         public async void GetProductos()
         {
-            try
+            if (CrossConnectivity.Current.IsConnected)
             {
-				HttpClient client = new HttpClient();
-				var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/productos/listaProductoNombres.php");
-				var prodsList = JsonConvert.DeserializeObject<List<ProductoNombre>>(response).ToList();
-				foreach (var item in prodsList)
-				{
-					prods.Add(item);
-				}
-			}
-            catch (Exception error)
+                try
+                {
+                    HttpClient client = new HttpClient();
+                    var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/productos/listaProductoNombres.php");
+                    var prodsList = JsonConvert.DeserializeObject<List<ProductoNombre>>(response).ToList();
+                    foreach (var item in prodsList)
+                    {
+                        prods.Add(item);
+                    }
+                }
+                catch (Exception error)
+                {
+                    await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+                }
+            }
+            else
             {
-                await DisplayAlert("Error", error.ToString(), "OK");
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
         }
         List<string> _listSuggestion = null;
@@ -131,7 +152,7 @@ namespace DistribuidoraFabio.Venta
             }
             catch (Exception err)
             {
-                await DisplayAlert("ERROR", err.ToString(), "OK");
+                await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
             }
         }
         string pickedProducto;
@@ -160,13 +181,13 @@ namespace DistribuidoraFabio.Venta
                     }
                     catch (Exception err)
                     {
-                        await DisplayAlert("ERROR", err.ToString(), "OK");
+                        await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
                     }
                 }
             }
             catch (Exception err)
             {
-                await DisplayAlert("ERROR", err.ToString(), "OK");
+                await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
             }
         }
         private async void entryNombreProd_QuerySubmitted_1(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
@@ -183,7 +204,7 @@ namespace DistribuidoraFabio.Venta
             }
             catch (Exception err)
             {
-                await DisplayAlert("ERROR", err.ToString(), "OK");
+                await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
             }
         }
         private string vendedorPick;
@@ -208,7 +229,7 @@ namespace DistribuidoraFabio.Venta
                     }
                     catch (Exception err)
                     {
-                        await DisplayAlert("ERROR", err.ToString(), "OK");
+                        await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
                     }
                 }
             }
@@ -237,7 +258,7 @@ namespace DistribuidoraFabio.Venta
                 }
                 catch (Exception err)
                 {
-                    await DisplayAlert("ERROR", err.ToString(), "OK");
+                    await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
                 }
             }
         }
@@ -296,7 +317,7 @@ namespace DistribuidoraFabio.Venta
             }
             catch (Exception err)
             {
-                await DisplayAlert("ERROR", err.ToString(), "OK");
+                await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
             }
         }
         private async void txtCantidad_Completed(object sender, EventArgs e)
@@ -316,7 +337,7 @@ namespace DistribuidoraFabio.Venta
             }
             catch (Exception err)
             {
-                await DisplayAlert("ERROR", err.ToString(), "OK");
+                await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
             }
         }
         private async void agregarAlista_Clicked(object sender, EventArgs e)
@@ -364,7 +385,7 @@ namespace DistribuidoraFabio.Venta
                         }
                         catch (Exception err)
                         {
-                            await DisplayAlert("Error", err.ToString(), "OK");
+                            await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                         }
                     }
                     else
@@ -401,7 +422,7 @@ namespace DistribuidoraFabio.Venta
                     }
                     catch (Exception err)
                     {
-                        await DisplayAlert("Error", err.ToString(), "OK");
+                        await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                     }
                     break;
                 case "NO":
@@ -506,7 +527,7 @@ namespace DistribuidoraFabio.Venta
                                         else
                                         {
                                             await PopupNavigation.Instance.PopAsync();
-                                            await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+                                            await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                                             await Navigation.PopAsync();
                                         }
                                     }
@@ -558,7 +579,7 @@ namespace DistribuidoraFabio.Venta
                                         else
                                         {
                                             await PopupNavigation.Instance.PopAsync();
-                                            await DisplayAlert("Error", result5.StatusCode.ToString(), "OK");
+                                            await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                                             await Navigation.PopAsync();
                                         }
                                     }
@@ -566,7 +587,7 @@ namespace DistribuidoraFabio.Venta
                                 catch (Exception error)
                                 {
                                     await PopupNavigation.Instance.PopAsync();
-                                    await DisplayAlert("Error", error.ToString(), "OK");
+                                    await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                                 }
                             }
                             else

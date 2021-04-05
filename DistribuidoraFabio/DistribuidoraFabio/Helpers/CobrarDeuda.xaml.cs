@@ -77,14 +77,14 @@ namespace DistribuidoraFabio.Helpers
 							}
 							else
 							{
-								await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+								await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 								await PopupNavigation.Instance.PopAsync();
 							}
 						}
 					}
 					catch (Exception err)
 					{
-						await DisplayAlert("ERROR", err.ToString(), "OK");
+						await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 					}
 				}
 				else

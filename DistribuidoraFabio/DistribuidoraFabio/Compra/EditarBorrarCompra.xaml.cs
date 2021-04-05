@@ -71,7 +71,7 @@ namespace DistribuidoraFabio.Compra
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				try
 				{
@@ -151,7 +151,7 @@ namespace DistribuidoraFabio.Compra
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				try
 				{
@@ -188,13 +188,18 @@ namespace DistribuidoraFabio.Compra
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else
 			{
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
+		}
+
+		private void btnEditar_Clicked(object sender, EventArgs e)
+		{
+			EditarCompra();
 		}
 	}
 }

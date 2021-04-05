@@ -4,7 +4,7 @@
              x:Class="DistribuidoraFabio.Producto.EditarBorrarTipoProducto"
              Visual="Material"
              BackgroundColor="White"
-             Title="Editar / Borrar tipo de producto">
+             Title="Editar tipo de producto">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
@@ -13,7 +13,6 @@
                        FontSize="14" BackgroundColor="White"/>
                 </StackLayout>
                 <Button x:Name="btnEditarTP" Text="Editar" HeightRequest="40" Clicked="BtnEditarTP_Clicked"/>
-                <Button x:Name="btnBorrarTP" Text="Borrar" HeightRequest="40" Clicked="BtnBorrarTP_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

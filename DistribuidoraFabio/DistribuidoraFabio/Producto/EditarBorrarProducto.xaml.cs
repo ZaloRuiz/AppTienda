@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,16 +35,30 @@ namespace DistribuidoraFabio.Producto
         }
         private async void GetTipProd()
 		{
-            HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
-            var tipoproductos = JsonConvert.DeserializeObject<List<Tipo_producto>>(response);
-
-            foreach(var item in tipoproductos)
+			if (CrossConnectivity.Current.IsConnected)
 			{
-                if(idTProdEntry.Text == item.nombre_tipo_producto)
+				try
 				{
-                    IdTipProd = item.id_tipoproducto;
+					HttpClient client = new HttpClient();
+					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
+					var tipoproductos = JsonConvert.DeserializeObject<List<Tipo_producto>>(response);
+
+					foreach (var item in tipoproductos)
+					{
+						if (idTProdEntry.Text == item.nombre_tipo_producto)
+						{
+							IdTipProd = item.id_tipoproducto;
+						}
+					}
 				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
         }
         private async void BtnEditarProd_Clicked(object sender, EventArgs e)
@@ -88,13 +103,13 @@ namespace DistribuidoraFabio.Producto
 											}
 											else
 											{
-												await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+												await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 												await Navigation.PopAsync();
 											}
 										}
 										catch (Exception error)
 										{
-											await DisplayAlert("Error", error.ToString(), "OK");
+											await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 										}
 									}
 									else
@@ -131,29 +146,6 @@ namespace DistribuidoraFabio.Producto
 			{
 				await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
 			}
-        }
-        private async void BtnBorrarProd_Clicked(object sender, EventArgs e)
-        {
-            Models.Producto producto = new Models.Producto()
-            {
-                id_producto = IdProd,
-            };
-
-            var json = JsonConvert.SerializeObject(producto);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpClient client = new HttpClient();
-            var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/productos/borrarProducto.php", content);
-
-            if (result.StatusCode == HttpStatusCode.OK)
-            {
-                await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
-                await Navigation.PopAsync();
-            }
-            else
-            {
-                await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-                await Navigation.PopAsync();
-            }
         }
     }
 }

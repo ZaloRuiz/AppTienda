@@ -4,7 +4,7 @@
              x:Class="DistribuidoraFabio.Compra.EditarBorrarCompra"
              Visual="Material"
              BackgroundColor="White"
-             Title="Editar - Borrar compra">
+             Title="Editar compra">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
@@ -23,8 +23,7 @@
                         <StackLayout x:Name="stkFinal" Grid.Row="2"/>
                     </Grid>
                 </StackLayout>
-                <Button x:Name="btnEditar" HeightRequest="40" Text="Editar"/>
-                <Button x:Name="btnBorrar" HeightRequest="40" Text="Borrar"/>
+                <Button x:Name="btnEditar" HeightRequest="40" Text="Editar" Clicked="btnEditar_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

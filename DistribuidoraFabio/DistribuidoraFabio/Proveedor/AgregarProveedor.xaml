@@ -4,7 +4,7 @@
              x:Class="DistribuidoraFabio.Proveedor.AgregarProveedor"
              Visual="Material"
              BackgroundColor="white"
-             Title="Agregar proovedor">
+             Title="Agregar proveedor">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">

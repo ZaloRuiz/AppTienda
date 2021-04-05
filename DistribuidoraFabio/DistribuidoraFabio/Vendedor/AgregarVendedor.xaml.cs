@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,87 +23,94 @@ namespace DistribuidoraFabio.Vendedor
 		}
         private async void BtnGuardarVendedor_Clicked(object sender, EventArgs e)
         {
-			if (!string.IsNullOrWhiteSpace(nombreVendedorEntry.Text) || (!string.IsNullOrEmpty(nombreVendedorEntry.Text)))
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				if (!string.IsNullOrWhiteSpace(telefonoVendedorEntry.Text) || (!string.IsNullOrEmpty(telefonoVendedorEntry.Text)))
+				if (!string.IsNullOrWhiteSpace(nombreVendedorEntry.Text) || (!string.IsNullOrEmpty(nombreVendedorEntry.Text)))
 				{
-					if (!string.IsNullOrWhiteSpace(direccionVendedorEntry.Text) || (!string.IsNullOrEmpty(direccionVendedorEntry.Text)))
+					if (!string.IsNullOrWhiteSpace(telefonoVendedorEntry.Text) || (!string.IsNullOrEmpty(telefonoVendedorEntry.Text)))
 					{
-						if (!string.IsNullOrWhiteSpace(numero_cuentaVendedorEntry.Text) || (!string.IsNullOrEmpty(numero_cuentaVendedorEntry.Text)))
+						if (!string.IsNullOrWhiteSpace(direccionVendedorEntry.Text) || (!string.IsNullOrEmpty(direccionVendedorEntry.Text)))
 						{
-							if (!string.IsNullOrWhiteSpace(cedula_identidadVendedorEntry.Text) || (!string.IsNullOrEmpty(cedula_identidadVendedorEntry.Text)))
+							if (!string.IsNullOrWhiteSpace(numero_cuentaVendedorEntry.Text) || (!string.IsNullOrEmpty(numero_cuentaVendedorEntry.Text)))
 							{
-								if (!string.IsNullOrWhiteSpace(usuarioEntry.Text) || (!string.IsNullOrEmpty(usuarioEntry.Text)))
+								if (!string.IsNullOrWhiteSpace(cedula_identidadVendedorEntry.Text) || (!string.IsNullOrEmpty(cedula_identidadVendedorEntry.Text)))
 								{
-									if (!string.IsNullOrWhiteSpace(passwordEntry.Text) || (!string.IsNullOrEmpty(passwordEntry.Text)))
+									if (!string.IsNullOrWhiteSpace(usuarioEntry.Text) || (!string.IsNullOrEmpty(usuarioEntry.Text)))
 									{
-										try
+										if (!string.IsNullOrWhiteSpace(passwordEntry.Text) || (!string.IsNullOrEmpty(passwordEntry.Text)))
 										{
-											Vendedores vendedores = new Vendedores()
+											try
 											{
-												nombre = nombreVendedorEntry.Text,
-												telefono = Convert.ToInt32(telefonoVendedorEntry.Text),
-												direccion = direccionVendedorEntry.Text,
-												numero_cuenta = numero_cuentaVendedorEntry.Text,
-												cedula_identidad = cedula_identidadVendedorEntry.Text,
-												usuario = usuarioEntry.Text,
-												password = passwordEntry.Text
-											};
+												Vendedores vendedores = new Vendedores()
+												{
+													nombre = nombreVendedorEntry.Text,
+													telefono = Convert.ToInt32(telefonoVendedorEntry.Text),
+													direccion = direccionVendedorEntry.Text,
+													numero_cuenta = numero_cuentaVendedorEntry.Text,
+													cedula_identidad = cedula_identidadVendedorEntry.Text,
+													usuario = usuarioEntry.Text,
+													password = passwordEntry.Text
+												};
 
-											var json = JsonConvert.SerializeObject(vendedores);
-											var content = new StringContent(json, Encoding.UTF8, "application/json");
-											HttpClient client = new HttpClient();
-											var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/vendedores/agregarVendedor.php", content);
+												var json = JsonConvert.SerializeObject(vendedores);
+												var content = new StringContent(json, Encoding.UTF8, "application/json");
+												HttpClient client = new HttpClient();
+												var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/vendedores/agregarVendedor.php", content);
 
-											if (result.StatusCode == HttpStatusCode.OK)
-											{
-												await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-												await Navigation.PopAsync();
+												if (result.StatusCode == HttpStatusCode.OK)
+												{
+													await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
+													await Navigation.PopAsync();
+												}
+												else
+												{
+													await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+													await Navigation.PopAsync();
+												}
 											}
-											else
+											catch (Exception err)
 											{
-												await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-												await Navigation.PopAsync();
+												await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 											}
 										}
-										catch (Exception err)
+										else
 										{
-											await DisplayAlert("Error", err.ToString(), "OK");
+											await DisplayAlert("Campo vacio", "El campo de Contraseña esta vacio", "Ok");
 										}
 									}
 									else
 									{
-										await DisplayAlert("Campo vacio", "El campo de Contraseña esta vacio", "Ok");
+										await DisplayAlert("Campo vacio", "El campo de Usuario esta vacio", "Ok");
 									}
 								}
 								else
 								{
-									await DisplayAlert("Campo vacio", "El campo de Usuario esta vacio", "Ok");
+									await DisplayAlert("Campo vacio", "El campo de Cedula de identidad esta vacio", "Ok");
 								}
 							}
 							else
 							{
-								await DisplayAlert("Campo vacio", "El campo de Cedula de identidad esta vacio", "Ok");
+								await DisplayAlert("Campo vacio", "El campo de Numero de cuenta esta vacio", "Ok");
 							}
 						}
 						else
 						{
-							await DisplayAlert("Campo vacio", "El campo de Numero de cuenta esta vacio", "Ok");
+							await DisplayAlert("Campo vacio", "El campo de Direccion esta vacio", "Ok");
 						}
 					}
 					else
 					{
-						await DisplayAlert("Campo vacio", "El campo de Direccion esta vacio", "Ok");
+						await DisplayAlert("Campo vacio", "El campo de Telefono esta vacio", "Ok");
 					}
 				}
 				else
 				{
-					await DisplayAlert("Campo vacio", "El campo de Telefono esta vacio", "Ok");
+					await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
 				}
 			}
 			else
 			{
-				await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
         }
     }

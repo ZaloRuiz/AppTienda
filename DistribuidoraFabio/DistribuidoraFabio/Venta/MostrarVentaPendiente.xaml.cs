@@ -140,7 +140,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 				}
 				try
 				{
@@ -253,7 +253,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 				}
 				try
 				{
@@ -351,7 +351,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 				}
 			}
 			else
@@ -361,100 +361,114 @@ namespace DistribuidoraFabio.Venta
 		}
 		private async void ToolbarItemComp_Clicked(object sender, EventArgs e)
 		{
-			string _resultObs = await DisplayPromptAsync("Pedido entregado", "Comentarios:");
-			try
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				DetalleVenta _detaVenta = new DetalleVenta()
+				string _resultObs = await DisplayPromptAsync("Pedido entregado", "Comentarios:");
+				try
 				{
-					factura = _numero_factura
-				};
-				var jsonDV = JsonConvert.SerializeObject(_detaVenta);
-				var contentDV = new StringContent(jsonDV, Encoding.UTF8, "application/json");
-				HttpClient clientDV = new HttpClient();
-				var resultDV = await clientDV.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaDetalleVentaPrevio.php", contentDV);
-
-				var jsonR = await resultDV.Content.ReadAsStringAsync();
-				var dv_lista = JsonConvert.DeserializeObject<List<DetalleVenta_previo>>(jsonR);
-				foreach (var item in dv_lista)
-				{
-					Models.Producto producto = new Models.Producto()
+					DetalleVenta _detaVenta = new DetalleVenta()
 					{
-						id_producto = item.id_producto,
-						stock = item.stock - item.cantidad,
-						stock_valorado = item.stock_valorado - (item.cantidad * item.promedio),
-						promedio = item.stock_valorado / item.stock
+						factura = _numero_factura
 					};
-					var json3 = JsonConvert.SerializeObject(producto);
-					var content3 = new StringContent(json3, Encoding.UTF8, "application/json");
-					HttpClient client3 = new HttpClient();
-					var result3 = await client3.PostAsync("https://dmrbolivia.com/api_distribuidora/productos/editarProducto.php", content3);
-				}
+					var jsonDV = JsonConvert.SerializeObject(_detaVenta);
+					var contentDV = new StringContent(jsonDV, Encoding.UTF8, "application/json");
+					HttpClient clientDV = new HttpClient();
+					var resultDV = await clientDV.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaDetalleVentaPrevio.php", contentDV);
 
-				Ventas ventas = new Ventas()
-				{
-					id_venta = _id_venta,
-					numero_factura = _numero_factura,
-					fecha_entrega = _fechaHoy,
-					estado = "Entregado",
-					observacion = _resultObs
-				};
+					var jsonR = await resultDV.Content.ReadAsStringAsync();
+					var dv_lista = JsonConvert.DeserializeObject<List<DetalleVenta_previo>>(jsonR);
+					foreach (var item in dv_lista)
+					{
+						Models.Producto producto = new Models.Producto()
+						{
+							id_producto = item.id_producto,
+							stock = item.stock - item.cantidad,
+							stock_valorado = item.stock_valorado - (item.cantidad * item.promedio),
+							promedio = item.stock_valorado / item.stock
+						};
+						var json3 = JsonConvert.SerializeObject(producto);
+						var content3 = new StringContent(json3, Encoding.UTF8, "application/json");
+						HttpClient client3 = new HttpClient();
+						var result3 = await client3.PostAsync("https://dmrbolivia.com/api_distribuidora/productos/editarProducto.php", content3);
+					}
 
-				var json = JsonConvert.SerializeObject(ventas);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
-				HttpClient client = new HttpClient();
-				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarEstadoVenta.php", content);
-				if (result.StatusCode == HttpStatusCode.OK)
-				{
-					await DisplayAlert("OK", "Se agrego correctamente", "OK");
-					await Navigation.PopAsync();
+					Ventas ventas = new Ventas()
+					{
+						id_venta = _id_venta,
+						numero_factura = _numero_factura,
+						fecha_entrega = _fechaHoy,
+						estado = "Entregado",
+						observacion = _resultObs
+					};
+
+					var json = JsonConvert.SerializeObject(ventas);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarEstadoVenta.php", content);
+					if (result.StatusCode == HttpStatusCode.OK)
+					{
+						await DisplayAlert("OK", "Se agrego correctamente", "OK");
+						await Navigation.PopAsync();
+					}
+					else
+					{
+						await PopupNavigation.Instance.PopAsync();
+						await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+						await Navigation.PopAsync();
+					}
 				}
-				else
+				catch (Exception error)
 				{
 					await PopupNavigation.Instance.PopAsync();
-					await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 					await Navigation.PopAsync();
 				}
 			}
-			catch (Exception error)
+			else
 			{
-				await PopupNavigation.Instance.PopAsync();
-				await DisplayAlert("ERROR", error.ToString(), "OK");
-				await Navigation.PopAsync();
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 		private async void toolbarCanc_Clicked(object sender, EventArgs e)
 		{
-			string _resultObs = await DisplayPromptAsync("Pedido cancelado", "Comentarios:");
-			try
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				Ventas ventas = new Ventas()
+				string _resultObs = await DisplayPromptAsync("Pedido cancelado", "Comentarios:");
+				try
 				{
-					id_venta = _id_venta,
-					numero_factura = _numero_factura,
-					fecha_entrega = _fechaHoy,
-					estado = "Cancelado",
-					observacion = _resultObs
-				};
+					Ventas ventas = new Ventas()
+					{
+						id_venta = _id_venta,
+						numero_factura = _numero_factura,
+						fecha_entrega = _fechaHoy,
+						estado = "Cancelado",
+						observacion = _resultObs
+					};
 
-				var json = JsonConvert.SerializeObject(ventas);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
-				HttpClient client = new HttpClient();
-				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarEstadoVenta.php", content);
-				if (result.StatusCode == HttpStatusCode.OK)
-				{
-					await DisplayAlert("OK", "Se cancelo el producto", "OK");
-					await Navigation.PopAsync();
+					var json = JsonConvert.SerializeObject(ventas);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarEstadoVenta.php", content);
+					if (result.StatusCode == HttpStatusCode.OK)
+					{
+						await DisplayAlert("OK", "Se cancelo el producto", "OK");
+						await Navigation.PopAsync();
+					}
+					else
+					{
+						await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+						await Navigation.PopAsync();
+					}
 				}
-				else
+				catch (Exception error)
 				{
-					await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 					await Navigation.PopAsync();
 				}
 			}
-			catch (Exception error)
+			else
 			{
-				await DisplayAlert("ERROR", error.ToString(), "OK");
-				await Navigation.PopAsync();
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 		private async void ToolbarItem_Clicked(object sender, EventArgs e)

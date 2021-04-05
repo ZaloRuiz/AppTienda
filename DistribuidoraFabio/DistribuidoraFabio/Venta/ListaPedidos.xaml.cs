@@ -177,7 +177,7 @@ namespace DistribuidoraFabio.Venta
 			}
 			catch (Exception err)
 			{
-
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 		}
 		private async void toolbarBuscarEnt_Clicked(object sender, EventArgs e)
@@ -201,7 +201,7 @@ namespace DistribuidoraFabio.Venta
 			}
 			catch (Exception err)
 			{
-
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 		}
 		private async void toolbarBuscarCanc_Clicked(object sender, EventArgs e)
@@ -225,7 +225,7 @@ namespace DistribuidoraFabio.Venta
 			}
 			catch (Exception err)
 			{
-
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 		}
 	}

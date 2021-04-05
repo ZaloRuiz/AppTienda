@@ -55,7 +55,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else
@@ -92,7 +92,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(150);
 				try
@@ -119,7 +119,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(150);
 				try
@@ -146,7 +146,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(150);
 				try
@@ -173,7 +173,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				txtTotalIngresos.Text = _totalVentas.ToString();
 				txtTotalEgresos.Text = (_totalCompras + _totalC_Fijo + _totalC_Variable).ToString();
@@ -243,7 +243,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else

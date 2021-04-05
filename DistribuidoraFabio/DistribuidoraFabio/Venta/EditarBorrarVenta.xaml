@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Venta.EditarBorrarVenta"
              Visual="Material"
-             BackgroundColor="#324A51"
-             Title="Editar - Borrar venta">
+             BackgroundColor="White"
+             Title="Editar venta">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
@@ -24,7 +24,6 @@
                     </Grid>
                 </StackLayout>
                 <Button x:Name="btnEditar" HeightRequest="40" Text="Editar" Clicked="btnEditar_Clicked"/>
-                <Button x:Name="btnBorrar" HeightRequest="40" Text="Borrar" Clicked="btnBorrar_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

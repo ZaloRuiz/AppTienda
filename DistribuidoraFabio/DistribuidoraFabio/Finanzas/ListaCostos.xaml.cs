@@ -66,116 +66,130 @@ namespace DistribuidoraFabio.Finanzas
 		}
 		private async void GetCostoFijo()
 		{
-			await Task.Delay(400);
-			try
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				Costo_fijo _costoFijo = new Costo_fijo()
+				await Task.Delay(400);
+				try
 				{
-					mes_cf = _mesQuery,
-					gestion_cf = _yearQuery
-				};
-				var json = JsonConvert.SerializeObject(_costoFijo);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
-				HttpClient client = new HttpClient();
-				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostoFijoQuery.php", content);
-
-				var jsonR = await result.Content.ReadAsStringAsync();
-				var dataCostoFijo = JsonConvert.DeserializeObject<List<Costo_fijo>>(jsonR);
-
-				if (dataCostoFijo != null)
-				{
-					foreach (var item in dataCostoFijo)
+					Costo_fijo _costoFijo = new Costo_fijo()
 					{
-						StackLayout _stk1CF = new StackLayout();
-						stkCF.Children.Add(_stk1CF);
+						mes_cf = _mesQuery,
+						gestion_cf = _yearQuery
+					};
+					var json = JsonConvert.SerializeObject(_costoFijo);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostoFijoQuery.php", content);
 
-						Label _labelNombreCF = new Label();
-						_labelNombreCF.Text = "Nombre: " + item.nombre_cf;
-						_labelNombreCF.TextColor = Color.Black;
-						_labelNombreCF.FontSize = 14;
-						_labelNombreCF.HorizontalTextAlignment = TextAlignment.Start;
-						_stk1CF.Children.Add(_labelNombreCF);
+					var jsonR = await result.Content.ReadAsStringAsync();
+					var dataCostoFijo = JsonConvert.DeserializeObject<List<Costo_fijo>>(jsonR);
 
-						Label _labelMontoCF = new Label();
-						_labelMontoCF.Text = "Monto: " + item.monto_cf;
-						_labelMontoCF.TextColor = Color.Black;
-						_labelMontoCF.FontSize = 14;
-						_labelMontoCF.HorizontalTextAlignment = TextAlignment.Start;
-						_stk1CF.Children.Add(_labelMontoCF);
+					if (dataCostoFijo != null)
+					{
+						foreach (var item in dataCostoFijo)
+						{
+							StackLayout _stk1CF = new StackLayout();
+							stkCF.Children.Add(_stk1CF);
 
-						BoxView _bx1CF = new BoxView();
-						_bx1CF.HeightRequest = 1;
-						_bx1CF.Color = Color.FromHex("#465B70");
-						_bx1CF.HorizontalOptions = LayoutOptions.FillAndExpand;
-						_stk1CF.Children.Add(_bx1CF);
+							Label _labelNombreCF = new Label();
+							_labelNombreCF.Text = "Nombre: " + item.nombre_cf;
+							_labelNombreCF.TextColor = Color.Black;
+							_labelNombreCF.FontSize = 14;
+							_labelNombreCF.HorizontalTextAlignment = TextAlignment.Start;
+							_stk1CF.Children.Add(_labelNombreCF);
 
-						_totalCF = _totalCF + item.monto_cf;
+							Label _labelMontoCF = new Label();
+							_labelMontoCF.Text = "Monto: " + item.monto_cf;
+							_labelMontoCF.TextColor = Color.Black;
+							_labelMontoCF.FontSize = 14;
+							_labelMontoCF.HorizontalTextAlignment = TextAlignment.Start;
+							_stk1CF.Children.Add(_labelMontoCF);
+
+							BoxView _bx1CF = new BoxView();
+							_bx1CF.HeightRequest = 1;
+							_bx1CF.Color = Color.FromHex("#465B70");
+							_bx1CF.HorizontalOptions = LayoutOptions.FillAndExpand;
+							_stk1CF.Children.Add(_bx1CF);
+
+							_totalCF = _totalCF + item.monto_cf;
+						}
 					}
+					txtTotalCF.Text = _totalCF.ToString();
 				}
-				txtTotalCF.Text = _totalCF.ToString();
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "Ok");
+				}
 			}
-			catch (Exception err)
+			else
 			{
-				await DisplayAlert("Error", err.Message.ToString(), "Ok");
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 		private async void GetCostoVariable()
 		{
-			await Task.Delay(400);
-			try
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				Costo_variable _costoVariable = new Costo_variable()
+				await Task.Delay(400);
+				try
 				{
-					mes_cv = _mesQuery,
-					gestion_cv = _yearQuery
-				};
-				var json = JsonConvert.SerializeObject(_costoVariable);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
-				HttpClient client = new HttpClient();
-				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostoVariableQuery.php", content);
-
-				var jsonR = await result.Content.ReadAsStringAsync();
-				var dataCostoVar = JsonConvert.DeserializeObject<List<Costo_variable>>(jsonR);
-
-				if (dataCostoVar != null)
-				{
-					int _medidaStk = dataCostoVar.Count;
-					_medidaStk = _medidaStk * 60;
-					stkCV.HeightRequest = _medidaStk;
-					await Task.Delay(200);
-					foreach (var item in dataCostoVar)
+					Costo_variable _costoVariable = new Costo_variable()
 					{
-						StackLayout _stk1CV = new StackLayout();
-						stkCV.Children.Add(_stk1CV);
+						mes_cv = _mesQuery,
+						gestion_cv = _yearQuery
+					};
+					var json = JsonConvert.SerializeObject(_costoVariable);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostoVariableQuery.php", content);
 
-						Label _labelNombreCV = new Label();
-						_labelNombreCV.Text = "Nombre: " + item.nombre_cv;
-						_labelNombreCV.TextColor = Color.Black;
-						_labelNombreCV.FontSize = 14;
-						_labelNombreCV.HorizontalTextAlignment = TextAlignment.Start;
-						_stk1CV.Children.Add(_labelNombreCV);
+					var jsonR = await result.Content.ReadAsStringAsync();
+					var dataCostoVar = JsonConvert.DeserializeObject<List<Costo_variable>>(jsonR);
 
-						Label _labelMontoCV = new Label();
-						_labelMontoCV.Text = "Monto: " + item.monto_cv;
-						_labelMontoCV.TextColor = Color.Black;
-						_labelMontoCV.FontSize = 14;
-						_labelMontoCV.HorizontalTextAlignment = TextAlignment.Start;
-						_stk1CV.Children.Add(_labelMontoCV);
+					if (dataCostoVar != null)
+					{
+						int _medidaStk = dataCostoVar.Count;
+						_medidaStk = _medidaStk * 60;
+						stkCV.HeightRequest = _medidaStk;
+						await Task.Delay(200);
+						foreach (var item in dataCostoVar)
+						{
+							StackLayout _stk1CV = new StackLayout();
+							stkCV.Children.Add(_stk1CV);
 
-						BoxView _bx1CV = new BoxView();
-						_bx1CV.HeightRequest = 1;
-						_bx1CV.Color = Color.FromHex("#465B70");
-						_bx1CV.HorizontalOptions = LayoutOptions.FillAndExpand;
-						_stk1CV.Children.Add(_bx1CV);
+							Label _labelNombreCV = new Label();
+							_labelNombreCV.Text = "Nombre: " + item.nombre_cv;
+							_labelNombreCV.TextColor = Color.Black;
+							_labelNombreCV.FontSize = 14;
+							_labelNombreCV.HorizontalTextAlignment = TextAlignment.Start;
+							_stk1CV.Children.Add(_labelNombreCV);
 
-						_totalCV = _totalCV + item.monto_cv;
+							Label _labelMontoCV = new Label();
+							_labelMontoCV.Text = "Monto: " + item.monto_cv;
+							_labelMontoCV.TextColor = Color.Black;
+							_labelMontoCV.FontSize = 14;
+							_labelMontoCV.HorizontalTextAlignment = TextAlignment.Start;
+							_stk1CV.Children.Add(_labelMontoCV);
+
+							BoxView _bx1CV = new BoxView();
+							_bx1CV.HeightRequest = 1;
+							_bx1CV.Color = Color.FromHex("#465B70");
+							_bx1CV.HorizontalOptions = LayoutOptions.FillAndExpand;
+							_stk1CV.Children.Add(_bx1CV);
+
+							_totalCV = _totalCV + item.monto_cv;
+						}
 					}
+					txtTotalCV.Text = _totalCV.ToString();
 				}
-				txtTotalCV.Text = _totalCV.ToString();
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "Ok");
+				}
 			}
-			catch(Exception err)
+			else
 			{
-				await DisplayAlert("Error", err.Message.ToString(), "Ok");
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 		private async void toolbarCF_Clicked(object sender, EventArgs e)

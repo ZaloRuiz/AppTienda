@@ -1,6 +1,7 @@
 ﻿using DistribuidoraFabio.Helpers;
 using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
@@ -44,135 +45,149 @@ namespace DistribuidoraFabio.Finanzas
 
 		private async void btnEditar_Clicked(object sender, EventArgs e)
 		{
-			if (!string.IsNullOrWhiteSpace(entryNombre.Text) || (!string.IsNullOrEmpty(entryNombre.Text)))
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				if (!string.IsNullOrWhiteSpace(entrymonto.Text) || (!string.IsNullOrEmpty(entrymonto.Text)))
+				if (!string.IsNullOrWhiteSpace(entryNombre.Text) || (!string.IsNullOrEmpty(entryNombre.Text)))
 				{
-					if (!string.IsNullOrWhiteSpace(entryCantMeses.Text) || (!string.IsNullOrEmpty(entryCantMeses.Text)))
+					if (!string.IsNullOrWhiteSpace(entrymonto.Text) || (!string.IsNullOrEmpty(entrymonto.Text)))
 					{
-						if (!string.IsNullOrWhiteSpace(entryDescripcion.Text) || (!string.IsNullOrEmpty(entryDescripcion.Text)))
+						if (!string.IsNullOrWhiteSpace(entryCantMeses.Text) || (!string.IsNullOrEmpty(entryCantMeses.Text)))
 						{
-							if (!string.IsNullOrWhiteSpace(entryTipoGasto.Text) || (!string.IsNullOrEmpty(entryTipoGasto.Text)))
+							if (!string.IsNullOrWhiteSpace(entryDescripcion.Text) || (!string.IsNullOrEmpty(entryDescripcion.Text)))
 							{
-								_cantMeses = Convert.ToInt32(entryCantMeses.Text);
-								string BusyReason = "Editando...";
-								await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
-								for (int i = 1; i <= _cantMeses; i++)
+								if (!string.IsNullOrWhiteSpace(entryTipoGasto.Text) || (!string.IsNullOrEmpty(entryTipoGasto.Text)))
 								{
-									if (i <= _mesesFaltantes)
+									_cantMeses = Convert.ToInt32(entryCantMeses.Text);
+									string BusyReason = "Editando...";
+									await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+									for (int i = 1; i <= _cantMeses; i++)
 									{
-										try
+										if (i <= _mesesFaltantes)
 										{
-											Costo_fijo _costoFijo = new Costo_fijo()
+											try
 											{
-												id_cf = _IdCF,
-												nombre_cf = entryNombre.Text,
-												monto_cf = Convert.ToDecimal(entrymonto.Text),
-												mes_cf = _mesActual,
-												gestion_cf = _yearActual,
-												descripcion_cf = entryDescripcion.Text,
-												tipo_gasto_cf = entryTipoGasto.Text
-											};
-											var json = JsonConvert.SerializeObject(_costoFijo);
-											var content = new StringContent(json, Encoding.UTF8, "application/json");
-											HttpClient client = new HttpClient();
-											var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/editarCostoFijo.php", content);
-										}
-										catch (Exception err)
-										{
-											await DisplayAlert("Error", err.ToString(), "OK");
-										}
-										_mesActual = _mesActual + 1;
-										_IdCF = _IdCF + 1;
-									}
-									else if (i > _mesesFaltantes)
-									{
-										try
-										{
-											Costo_fijo _costoFijo = new Costo_fijo()
+												Costo_fijo _costoFijo = new Costo_fijo()
+												{
+													id_cf = _IdCF,
+													nombre_cf = entryNombre.Text,
+													monto_cf = Convert.ToDecimal(entrymonto.Text),
+													mes_cf = _mesActual,
+													gestion_cf = _yearActual,
+													descripcion_cf = entryDescripcion.Text,
+													tipo_gasto_cf = entryTipoGasto.Text
+												};
+												var json = JsonConvert.SerializeObject(_costoFijo);
+												var content = new StringContent(json, Encoding.UTF8, "application/json");
+												HttpClient client = new HttpClient();
+												var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/editarCostoFijo.php", content);
+											}
+											catch (Exception err)
 											{
-												id_cf = _IdCF,
-												nombre_cf = entryNombre.Text,
-												monto_cf = Convert.ToDecimal(entrymonto.Text),
-												mes_cf = _mesInicio,
-												gestion_cf = _yearSiguiente,
-												descripcion_cf = entryDescripcion.Text,
-												tipo_gasto_cf = entryTipoGasto.Text
-											};
-											var json = JsonConvert.SerializeObject(_costoFijo);
-											var content = new StringContent(json, Encoding.UTF8, "application/json");
-											HttpClient client = new HttpClient();
-											var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/agregarCostoFijo.php", content);
+												await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+											}
+											_mesActual = _mesActual + 1;
+											_IdCF = _IdCF + 1;
 										}
-										catch (Exception err)
+										else if (i > _mesesFaltantes)
 										{
-											await DisplayAlert("Error", err.ToString(), "OK");
+											try
+											{
+												Costo_fijo _costoFijo = new Costo_fijo()
+												{
+													id_cf = _IdCF,
+													nombre_cf = entryNombre.Text,
+													monto_cf = Convert.ToDecimal(entrymonto.Text),
+													mes_cf = _mesInicio,
+													gestion_cf = _yearSiguiente,
+													descripcion_cf = entryDescripcion.Text,
+													tipo_gasto_cf = entryTipoGasto.Text
+												};
+												var json = JsonConvert.SerializeObject(_costoFijo);
+												var content = new StringContent(json, Encoding.UTF8, "application/json");
+												HttpClient client = new HttpClient();
+												var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/agregarCostoFijo.php", content);
+											}
+											catch (Exception err)
+											{
+												await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+											}
+											_mesInicio = _mesInicio + 1;
+											_IdCF = _IdCF + 1;
 										}
-										_mesInicio = _mesInicio + 1;
-										_IdCF = _IdCF + 1;
 									}
+									await PopupNavigation.Instance.PopAsync();
+									await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
+									await Navigation.PopAsync();
 								}
-								await PopupNavigation.Instance.PopAsync();
-								await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-								await Navigation.PopAsync();
+								else
+								{
+									await DisplayAlert("Campo vacio", "El campo de Tipo de gasto esta vacio", "Ok");
+								}
 							}
 							else
 							{
-								await DisplayAlert("Campo vacio", "El campo de Tipo de gasto esta vacio", "Ok");
+								await DisplayAlert("Campo vacio", "El campo de Descripcion esta vacio", "Ok");
 							}
 						}
 						else
 						{
-							await DisplayAlert("Campo vacio", "El campo de Descripcion esta vacio", "Ok");
+							await DisplayAlert("Campo vacio", "El campo de Cantidad de meses esta vacio", "Ok");
 						}
 					}
 					else
 					{
-						await DisplayAlert("Campo vacio", "El campo de Cantidad de meses esta vacio", "Ok");
+						await DisplayAlert("Campo vacio", "El campo de Monto esta vacio", "Ok");
 					}
 				}
 				else
 				{
-					await DisplayAlert("Campo vacio", "El campo de Monto esta vacio", "Ok");
+					await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
 				}
 			}
 			else
 			{
-				await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 		private async void btnBorrar_Clicked(object sender, EventArgs e)
 		{
-			string BusyReason = "Eliminando...";
-			await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
-			try
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				Costo_fijo _costoFijo = new Costo_fijo()
+				string BusyReason = "Eliminando...";
+				await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+				try
 				{
-					id_cf = _IdCF
-				};
+					Costo_fijo _costoFijo = new Costo_fijo()
+					{
+						id_cf = _IdCF
+					};
 
-				var json = JsonConvert.SerializeObject(_costoFijo);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
-				HttpClient client = new HttpClient();
-				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/borrarCostoFijo.php", content);
+					var json = JsonConvert.SerializeObject(_costoFijo);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/borrarCostoFijo.php", content);
 
-				if (result.StatusCode == HttpStatusCode.OK)
-				{
-					await PopupNavigation.Instance.PopAsync();
-					await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
-					await Navigation.PopAsync();
+					if (result.StatusCode == HttpStatusCode.OK)
+					{
+						await PopupNavigation.Instance.PopAsync();
+						await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
+						await Navigation.PopAsync();
+					}
+					else
+					{
+						await PopupNavigation.Instance.PopAsync();
+						await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+						await Navigation.PopAsync();
+					}
 				}
-				else
+				catch (Exception err)
 				{
-					await PopupNavigation.Instance.PopAsync();
-					await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-					await Navigation.PopAsync();
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
-			catch (Exception err)
+			else
 			{
-				await DisplayAlert("Error", err.ToString(), "OK");
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 	}

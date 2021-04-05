@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,62 +27,46 @@ namespace DistribuidoraFabio.Proveedor
 		}
         private async void BtneditarProveedor_Clicked(object sender, EventArgs e)
         {
-            Models.Proveedor proveedor = new Models.Proveedor()
+            if (CrossConnectivity.Current.IsConnected)
             {
-                id_proveedor = Convert.ToInt32(idProvEntry.Text),
-                nombre = nombrePEntry.Text,
-                direccion = direccionPEntry.Text,
-                contacto = contactoPEntry.Text,
-                telefono = Convert.ToInt32(telefonoPEntry.Text),
-            };
+                try
+                {
+                    Models.Proveedor proveedor = new Models.Proveedor()
+                    {
+                        id_proveedor = Convert.ToInt32(idProvEntry.Text),
+                        nombre = nombrePEntry.Text,
+                        direccion = direccionPEntry.Text,
+                        contacto = contactoPEntry.Text,
+                        telefono = Convert.ToInt32(telefonoPEntry.Text),
+                    };
 
-            var json = JsonConvert.SerializeObject(proveedor);
+                    var json = JsonConvert.SerializeObject(proveedor);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            HttpClient client = new HttpClient();
+                    HttpClient client = new HttpClient();
 
-            var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/proveedores/editarProveedor.php", content);
+                    var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/proveedores/editarProveedor.php", content);
 
-            if (result.StatusCode == HttpStatusCode.OK)
-            {
-                await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-                await Navigation.PopAsync();
+                    if (result.StatusCode == HttpStatusCode.OK)
+                    {
+                        await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
+                        await Navigation.PopAsync();
+                    }
+                    else
+                    {
+                        await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
+                        await Navigation.PopAsync();
+                    }
+                }
+                catch (Exception err)
+                {
+                    await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+                }
             }
             else
             {
-                await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
-                await Navigation.PopAsync();
-            }
-        }
-
-        private async void BtnborrarProveedor_Clicked(object sender, EventArgs e)
-        {
-            Models.Proveedor proveedor = new Models.Proveedor()
-            {
-                id_proveedor = Convert.ToInt32(idProvEntry.Text),
-                nombre = nombrePEntry.Text,
-                direccion = direccionPEntry.Text,
-                contacto = contactoPEntry.Text,
-                telefono = Convert.ToInt32(telefonoPEntry.Text),
-            };
-            var json = JsonConvert.SerializeObject(proveedor);
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpClient client = new HttpClient();
-
-            var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/proveedores/borrarProveedor.php", content);
-
-            if (result.StatusCode == HttpStatusCode.OK)
-            {
-                await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
-                await Navigation.PopAsync();
-            }
-            else
-            {
-                await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
-                await Navigation.PopAsync();
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
         }
     }

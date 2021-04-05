@@ -1,6 +1,7 @@
 ﻿using DistribuidoraFabio.Helpers;
 using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
@@ -88,79 +89,86 @@ namespace DistribuidoraFabio.Finanzas
 		}
 		private async void btnGuardar_Clicked(object sender, EventArgs e)
 		{
-			if (!string.IsNullOrWhiteSpace(entryNombre.Text) || (!string.IsNullOrEmpty(entryNombre.Text)))
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				if (!string.IsNullOrWhiteSpace(entrymonto.Text) || (!string.IsNullOrEmpty(entrymonto.Text)))
+				if (!string.IsNullOrWhiteSpace(entryNombre.Text) || (!string.IsNullOrEmpty(entryNombre.Text)))
 				{
-					if (_mesQuery != 0)
+					if (!string.IsNullOrWhiteSpace(entrymonto.Text) || (!string.IsNullOrEmpty(entrymonto.Text)))
 					{
-						if (!string.IsNullOrWhiteSpace(entryDescripcion.Text) || (!string.IsNullOrEmpty(entryDescripcion.Text)))
+						if (_mesQuery != 0)
 						{
-							if (!string.IsNullOrWhiteSpace(entryTipoGasto.Text) || (!string.IsNullOrEmpty(entryTipoGasto.Text)))
+							if (!string.IsNullOrWhiteSpace(entryDescripcion.Text) || (!string.IsNullOrEmpty(entryDescripcion.Text)))
 							{
-								_fechaElegida = pickerFecha.Date.ToString("yyyy-MM-dd");
-								if(!string.IsNullOrWhiteSpace(_fechaElegida) || (!string.IsNullOrEmpty(_fechaElegida)))
+								if (!string.IsNullOrWhiteSpace(entryTipoGasto.Text) || (!string.IsNullOrEmpty(entryTipoGasto.Text)))
 								{
-									string BusyReason = "Agregando...";
-									await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
-									try
+									_fechaElegida = pickerFecha.Date.ToString("yyyy-MM-dd");
+									if (!string.IsNullOrWhiteSpace(_fechaElegida) || (!string.IsNullOrEmpty(_fechaElegida)))
 									{
-										Costo_variable _costoVariable = new Costo_variable()
+										string BusyReason = "Agregando...";
+										await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+										try
 										{
-											nombre_cv = entryNombre.Text,
-											monto_cv = Convert.ToDecimal(entrymonto.Text),
-											fecha_cv = Convert.ToDateTime(_fechaElegida),
-											mes_cv = _mesQuery,
-											gestion_cv = _yearActual,
-											descripcion_cv = entryDescripcion.Text,
-											tipo_gasto_cv = entryTipoGasto.Text
-										};
-										var json = JsonConvert.SerializeObject(_costoVariable);
-										var content = new StringContent(json, Encoding.UTF8, "application/json");
-										HttpClient client = new HttpClient();
-										var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/agregarCostoVariable.php", content);
-										if (result.StatusCode == HttpStatusCode.OK)
-										{
-											await PopupNavigation.Instance.PopAsync();
-											await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-											await Navigation.PopAsync();
+											Costo_variable _costoVariable = new Costo_variable()
+											{
+												nombre_cv = entryNombre.Text,
+												monto_cv = Convert.ToDecimal(entrymonto.Text),
+												fecha_cv = Convert.ToDateTime(_fechaElegida),
+												mes_cv = _mesQuery,
+												gestion_cv = _yearActual,
+												descripcion_cv = entryDescripcion.Text,
+												tipo_gasto_cv = entryTipoGasto.Text
+											};
+											var json = JsonConvert.SerializeObject(_costoVariable);
+											var content = new StringContent(json, Encoding.UTF8, "application/json");
+											HttpClient client = new HttpClient();
+											var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/agregarCostoVariable.php", content);
+											if (result.StatusCode == HttpStatusCode.OK)
+											{
+												await PopupNavigation.Instance.PopAsync();
+												await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
+												await Navigation.PopAsync();
+											}
+											else
+											{
+												await PopupNavigation.Instance.PopAsync();
+												await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
+												await Navigation.PopAsync();
+											}
 										}
-										else
+										catch (Exception err)
 										{
-											await PopupNavigation.Instance.PopAsync();
-											await DisplayAlert("ERROR", result.StatusCode.ToString(), "OK");
-											await Navigation.PopAsync();
+											await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 										}
 									}
-									catch (Exception err)
-									{
-										await DisplayAlert("Error", err.ToString(), "OK");
-									}
+								}
+								else
+								{
+									await DisplayAlert("Campo vacio", "El campo de Tipo de gasto esta vacio", "Ok");
 								}
 							}
 							else
 							{
-								await DisplayAlert("Campo vacio", "El campo de Tipo de gasto esta vacio", "Ok");
+								await DisplayAlert("Campo vacio", "El campo de Descripcion esta vacio", "Ok");
 							}
 						}
 						else
 						{
-							await DisplayAlert("Campo vacio", "El campo de Descripcion esta vacio", "Ok");
+							await DisplayAlert("Campo vacio", "El campo de Mes esta vacio", "Ok");
 						}
 					}
 					else
 					{
-						await DisplayAlert("Campo vacio", "El campo de Mes esta vacio", "Ok");
+						await DisplayAlert("Campo vacio", "El campo de Monto esta vacio", "Ok");
 					}
 				}
 				else
 				{
-					await DisplayAlert("Campo vacio", "El campo de Monto esta vacio", "Ok");
+					await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
 				}
 			}
 			else
 			{
-				await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
 	}

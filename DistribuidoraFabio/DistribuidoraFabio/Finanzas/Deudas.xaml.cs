@@ -48,7 +48,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else
@@ -74,7 +74,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else
@@ -100,7 +100,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else
@@ -119,7 +119,7 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			catch (Exception err)
 			{
-				await DisplayAlert("Error", err.ToString(), "OK");
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 		}
 		private async void filtrarCliente_Clicked(object sender, EventArgs e)
@@ -143,7 +143,7 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			catch (Exception err)
 			{
-
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 		}
 		private async void listEnvases_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -157,7 +157,7 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			catch (Exception err)
 			{
-				await DisplayAlert("Error", err.ToString(), "OK");
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 		}
 		private async void filtrarClienteEnvases_Clicked(object sender, EventArgs e)
@@ -181,7 +181,7 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			catch (Exception err)
 			{
-
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 		}
 	}

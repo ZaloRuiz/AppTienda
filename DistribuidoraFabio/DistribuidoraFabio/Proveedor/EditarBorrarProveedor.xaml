@@ -4,7 +4,7 @@
              x:Class="DistribuidoraFabio.Proveedor.EditarBorrarProveedor"
              Visual="Material"
              BackgroundColor="White"
-             Title="Editar / Borrar proveedor">
+             Title="Editar proveedor">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
@@ -25,7 +25,6 @@
                 </StackLayout>
                 <StackLayout>
                     <Button x:Name="BtneditarProveedor" Text="Editar" HeightRequest="40" Clicked="BtneditarProveedor_Clicked"/>
-                    <Button x:Name="BtnborrarProveedor" Text="Borrar" HeightRequest="40" Clicked="BtnborrarProveedor_Clicked"/>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

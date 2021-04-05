@@ -41,7 +41,7 @@ namespace DistribuidoraFabio.Producto
                 }
                 catch (Exception err)
                 {
-                    await DisplayAlert("Error", err.ToString(), "OK");
+                    await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                 }
             }
             else
@@ -81,87 +81,94 @@ namespace DistribuidoraFabio.Producto
         }
         private async void BtnGuardarPr_Clicked(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(pickedID_TP.ToString()) || (!string.IsNullOrEmpty(pickedID_TP.ToString())))
+            if (CrossConnectivity.Current.IsConnected)
             {
-                if (!string.IsNullOrWhiteSpace(nombrePEntry.Text) || (!string.IsNullOrEmpty(nombrePEntry.Text)))
+                if (!string.IsNullOrWhiteSpace(pickedID_TP.ToString()) || (!string.IsNullOrEmpty(pickedID_TP.ToString())))
                 {
-                    if (!string.IsNullOrWhiteSpace(precioventaEntry.Text) || (!string.IsNullOrEmpty(precioventaEntry.Text)))
+                    if (!string.IsNullOrWhiteSpace(nombrePEntry.Text) || (!string.IsNullOrEmpty(nombrePEntry.Text)))
                     {
-                        if (!string.IsNullOrWhiteSpace(stockProductoEntry.Text) || (!string.IsNullOrEmpty(stockProductoEntry.Text)))
+                        if (!string.IsNullOrWhiteSpace(precioventaEntry.Text) || (!string.IsNullOrEmpty(precioventaEntry.Text)))
                         {
-                            if (!string.IsNullOrWhiteSpace(stockValoradoProductoEntry.Text) || (!string.IsNullOrEmpty(stockValoradoProductoEntry.Text)))
+                            if (!string.IsNullOrWhiteSpace(stockProductoEntry.Text) || (!string.IsNullOrEmpty(stockProductoEntry.Text)))
                             {
-                                if (!string.IsNullOrWhiteSpace(promedioProductoEntry.Text) || (!string.IsNullOrEmpty(promedioProductoEntry.Text)))
+                                if (!string.IsNullOrWhiteSpace(stockValoradoProductoEntry.Text) || (!string.IsNullOrEmpty(stockValoradoProductoEntry.Text)))
                                 {
-                                    if (!string.IsNullOrWhiteSpace(alertaProductoEntry.Text) || (!string.IsNullOrEmpty(alertaProductoEntry.Text)))
+                                    if (!string.IsNullOrWhiteSpace(promedioProductoEntry.Text) || (!string.IsNullOrEmpty(promedioProductoEntry.Text)))
                                     {
-                                        try
+                                        if (!string.IsNullOrWhiteSpace(alertaProductoEntry.Text) || (!string.IsNullOrEmpty(alertaProductoEntry.Text)))
                                         {
-                                            Models.Producto producto = new Models.Producto()
+                                            try
                                             {
-                                                nombre_producto = nombrePEntry.Text,
-                                                id_tipo_producto = pickedID_TP,
-                                                stock = Convert.ToInt32(stockProductoEntry.Text),
-                                                stock_valorado = Convert.ToDecimal(stockValoradoProductoEntry.Text),
-                                                promedio = Convert.ToDecimal(promedioProductoEntry.Text),
-                                                precio_venta = Convert.ToDecimal(precioventaEntry.Text),
-                                                producto_alerta = Convert.ToDecimal(alertaProductoEntry.Text)
-                                            };
+                                                Models.Producto producto = new Models.Producto()
+                                                {
+                                                    nombre_producto = nombrePEntry.Text,
+                                                    id_tipo_producto = pickedID_TP,
+                                                    stock = Convert.ToInt32(stockProductoEntry.Text),
+                                                    stock_valorado = Convert.ToDecimal(stockValoradoProductoEntry.Text),
+                                                    promedio = Convert.ToDecimal(promedioProductoEntry.Text),
+                                                    precio_venta = Convert.ToDecimal(precioventaEntry.Text),
+                                                    producto_alerta = Convert.ToDecimal(alertaProductoEntry.Text)
+                                                };
 
-                                            var json = JsonConvert.SerializeObject(producto);
-                                            var content = new StringContent(json, Encoding.UTF8, "application/json");
-                                            HttpClient client = new HttpClient();
-                                            var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/productos/agregarProducto.php", content);
+                                                var json = JsonConvert.SerializeObject(producto);
+                                                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                                                HttpClient client = new HttpClient();
+                                                var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/productos/agregarProducto.php", content);
 
-                                            if (result.StatusCode == HttpStatusCode.OK)
-                                            {
-                                                await DisplayAlert("Guardado", "Se agrego correctamente", "OK");
-                                                await Navigation.PopAsync();
+                                                if (result.StatusCode == HttpStatusCode.OK)
+                                                {
+                                                    await DisplayAlert("Guardado", "Se agrego correctamente", "OK");
+                                                    await Navigation.PopAsync();
+                                                }
+                                                else
+                                                {
+                                                    await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+                                                    await Navigation.PopAsync();
+                                                }
                                             }
-                                            else
+                                            catch (Exception error)
                                             {
-                                                await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-                                                await Navigation.PopAsync();
+                                                await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                                             }
                                         }
-                                        catch (Exception error)
+                                        else
                                         {
-                                            await DisplayAlert("Error", error.ToString(), "OK");
+                                            await DisplayAlert("Campo vacio", "El campo de Alerta esta vacio", "Ok");
                                         }
                                     }
                                     else
                                     {
-                                        await DisplayAlert("Campo vacio", "El campo de Alerta esta vacio", "Ok");
+                                        await DisplayAlert("Campo vacio", "El campo de Promedio esta vacio", "Ok");
                                     }
                                 }
                                 else
                                 {
-                                    await DisplayAlert("Campo vacio", "El campo de Promedio esta vacio", "Ok");
+                                    await DisplayAlert("Campo vacio", "El campo de Stock Valorado esta vacio", "Ok");
                                 }
                             }
                             else
                             {
-                                await DisplayAlert("Campo vacio", "El campo de Stock Valorado esta vacio", "Ok");
+                                await DisplayAlert("Campo vacio", "El campo de Stock esta vacio", "Ok");
                             }
                         }
                         else
                         {
-                            await DisplayAlert("Campo vacio", "El campo de Stock esta vacio", "Ok");
+                            await DisplayAlert("Campo vacio", "El campo de Precio de venta esta vacio", "Ok");
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Campo vacio", "El campo de Precio de venta esta vacio", "Ok");
+                        await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+                    await DisplayAlert("Campo vacio", "El campo de Tipo de producto esta vacio", "Ok");
                 }
             }
             else
             {
-                await DisplayAlert("Campo vacio", "El campo de Tipo de producto esta vacio", "Ok");
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
         }
 	}

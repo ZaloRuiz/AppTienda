@@ -204,7 +204,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(200);
 				try
@@ -333,7 +333,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 		}
@@ -373,7 +373,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(200);
 				try
@@ -502,7 +502,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 		}
@@ -542,7 +542,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(200);
 				try
@@ -671,7 +671,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 		}
@@ -711,7 +711,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(200);
 				try
@@ -840,7 +840,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 		}
@@ -848,7 +848,6 @@ namespace DistribuidoraFabio.Finanzas
 		{
 			if (CrossConnectivity.Current.IsConnected)
 			{
-				
 				await Task.Delay(200);
 				try
 				{
@@ -881,7 +880,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(200);
 				try
@@ -915,7 +914,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(200);
 				try
@@ -949,7 +948,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(200);
 				try
@@ -983,7 +982,7 @@ namespace DistribuidoraFabio.Finanzas
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.Message.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				await Task.Delay(400);
 			}
@@ -1117,7 +1116,7 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			catch (Exception err)
 			{
-				await DisplayAlert("Error", err.ToString(), "OK");
+				await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 			await PopupNavigation.Instance.PopAsync();
 		}

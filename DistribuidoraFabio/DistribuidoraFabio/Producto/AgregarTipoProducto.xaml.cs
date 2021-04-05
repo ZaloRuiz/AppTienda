@@ -1,5 +1,6 @@
 ﻿using DistribuidoraFabio.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,39 +23,46 @@ namespace DistribuidoraFabio.Producto
 		}
         private async void BtnGuardarTP_Clicked(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(nombreTpEntry.Text) || (!string.IsNullOrEmpty(nombreTpEntry.Text)))
+            if (CrossConnectivity.Current.IsConnected)
             {
-                try
+                if (!string.IsNullOrWhiteSpace(nombreTpEntry.Text) || (!string.IsNullOrEmpty(nombreTpEntry.Text)))
                 {
-                    Tipo_producto tipo_Producto = new Tipo_producto()
+                    try
                     {
-                        nombre_tipo_producto = nombreTpEntry.Text
-                    };
+                        Tipo_producto tipo_Producto = new Tipo_producto()
+                        {
+                            nombre_tipo_producto = nombreTpEntry.Text
+                        };
 
-                    var json = JsonConvert.SerializeObject(tipo_Producto);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    HttpClient client = new HttpClient();
-                    var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/agregarTipoproducto.php", content);
+                        var json = JsonConvert.SerializeObject(tipo_Producto);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                        HttpClient client = new HttpClient();
+                        var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/agregarTipoproducto.php", content);
 
-                    if (result.StatusCode == HttpStatusCode.OK)
-                    {
-                        await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-                        await Navigation.PopAsync();
+                        if (result.StatusCode == HttpStatusCode.OK)
+                        {
+                            await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
+                            await Navigation.PopAsync();
+                        }
+                        else
+                        {
+                            await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+                            await Navigation.PopAsync();
+                        }
                     }
-                    else
+                    catch (Exception err)
                     {
-                        await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
-                        await Navigation.PopAsync();
+                        await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
                     }
                 }
-                catch (Exception err)
+                else
                 {
-                    await DisplayAlert("Error", err.ToString(), "OK");
+                    await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
                 }
             }
             else
             {
-                await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
         }
     }

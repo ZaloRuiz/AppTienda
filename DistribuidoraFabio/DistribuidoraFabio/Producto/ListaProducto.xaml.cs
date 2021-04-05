@@ -55,7 +55,7 @@ namespace DistribuidoraFabio.Producto
 				}
 				catch (HttpRequestException err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else

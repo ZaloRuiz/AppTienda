@@ -136,7 +136,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 				}
 				try
 				{
@@ -249,7 +249,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 				}
 				try
 				{
@@ -347,7 +347,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", err.ToString(), "OK");
+					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
 				}
 			}
 			else

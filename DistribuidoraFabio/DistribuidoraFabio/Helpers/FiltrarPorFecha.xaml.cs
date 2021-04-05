@@ -46,7 +46,7 @@ namespace DistribuidoraFabio.Helpers
 			}
 			catch (Exception err)
 			{
-				await DisplayAlert("ERROR", err.ToString(), "OK");
+				await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 			}
 			await PopupNavigation.Instance.PopAllAsync();
 		}
