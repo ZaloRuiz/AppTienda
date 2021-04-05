@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="DistribuidoraFabio.Finanzas.AgregarCostoFijo"
+             x:Class="DistribuidoraFabio.Finanzas.AgregarCostoVariable"
              Visual="Material"
              BackgroundColor="White"
-             Title="Agregar costo fijo">
+             Title="Agregar costo variable">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="10">
@@ -13,8 +13,10 @@
                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                     <Entry x:Name="entrymonto" Placeholder="Monto" PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White" FontSize="14"
                            HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Numeric"/>
-                    <Entry x:Name="entryCantMeses" Placeholder="Cantidad de meses" PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White"
-                           FontSize="14" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Numeric"/>
+                    <Picker x:Name="pickerMes" Title="Mes" TitleColor="#465B70" TextColor="Black" BackgroundColor="White"
+                           FontSize="14" HorizontalOptions="FillAndExpand" VerticalOptions="Center" SelectedIndexChanged="pickerMes_SelectedIndexChanged"/>
+                    <DatePicker x:Name="pickerFecha" TextColor="Black" BackgroundColor="White" FontSize="14" HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal">
                     <Entry x:Name="entryDescripcion" Placeholder="Descripcion" PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White"

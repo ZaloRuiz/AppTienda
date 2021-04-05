@@ -38,7 +38,9 @@ namespace DistribuidoraFabio.Compra
 					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/compras/listaCompraNombre.php");
 					var compras = JsonConvert.DeserializeObject<List<ComprasNombre>>(response);
 
-					listaCompra.ItemsSource = compras;
+					var _comprasList = compras.OrderByDescending(x => x.id_compra);
+
+					listaCompra.ItemsSource = _comprasList;
 					await PopupNavigation.Instance.PopAsync();
 				}
 				catch (Exception err)

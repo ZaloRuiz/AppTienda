@@ -4,7 +4,8 @@
              xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms" 
              x:Class="DistribuidoraFabio.Finanzas.BalanceAnual"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White"
+             Title="Balance Anual">
     <ContentPage.Content>
         <ScrollView>
             <Grid Padding="5" RowSpacing="5">
@@ -12,27 +13,66 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="400"></RowDefinition>
+                    <RowDefinition Height="400"></RowDefinition>
+                    <RowDefinition Height="400"></RowDefinition>
                     <RowDefinition Height="400"></RowDefinition>
                     <RowDefinition Height="400"></RowDefinition>
                 </Grid.RowDefinitions>
-                <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
-                    <Label Text="2021" TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="10"/>
+                <StackLayout Grid.Row="0" Grid.Column="0" Padding="5" Orientation="Horizontal">
+                    <Label Text="2021" TextColor="Black" FontSize="Large" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" Padding="10"/>
+                    <Picker x:Name="pickerYear" BackgroundColor="White" Title="Elija el año" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" 
+                            FontSize="14" TextColor="Black" SelectedIndexChanged="pickerYear_SelectedIndexChanged" WidthRequest="100"/>
+                    <Button x:Name="btnBuscar" HorizontalOptions="Fill" Text="IR" VerticalOptions="EndAndExpand" FontSize="14" Clicked="btnBuscar_Clicked"/>
                 </StackLayout>
                 <StackLayout Grid.Row="1" Grid.Column="0" Padding="0, 5, 0, 5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <StackLayout>
-                            <Label Text="VENTAS" FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                            <Label Text="Ventas en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
                             <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                <microcharts:ChartView x:Name="grafico1" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                                <microcharts:ChartView x:Name="graficoVentasBs" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                             </StackLayout>
                         </StackLayout>
                     </Frame>
                 </StackLayout>
                 <StackLayout Grid.Row="2" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                        <StackLayout x:Name="stkGrafico" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                            
+                        <StackLayout>
+                            <Label Text="Compras en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                            <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <microcharts:ChartView x:Name="graficoComprasBs" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="3" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout>
+                            <Label Text="Gastos fijos en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                            <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <microcharts:ChartView x:Name="graficoGastosFBs" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="4" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout>
+                            <Label Text="Gastos variables en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                            <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <microcharts:ChartView x:Name="graficoGastosVBs" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="5" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout>
+                            <Label Text="Ganacias en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                            <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <microcharts:ChartView x:Name="graficoGananciasBs" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
                         </StackLayout>
                     </Frame>
                 </StackLayout>

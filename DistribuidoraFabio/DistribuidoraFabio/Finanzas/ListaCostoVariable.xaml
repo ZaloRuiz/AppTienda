@@ -4,9 +4,12 @@
              x:Class="DistribuidoraFabio.Finanzas.ListaCostoVariable"
              Visual="Material"
              BackgroundColor="White">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="toolbarCV" Text="Agregar Costo variable" Clicked="toolbarCV_Clicked"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
-            <ListView x:Name="listCostoVariable" SeparatorColor="#465B70" RowHeight="60">
+            <ListView x:Name="listCostoVariable" SeparatorColor="#465B70" RowHeight="60" ItemTapped="listCostoVariable_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

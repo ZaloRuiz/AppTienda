@@ -54,6 +54,8 @@ namespace DistribuidoraFabio.Venta
 			var jsonR = await result.Content.ReadAsStringAsync();
 			var v_lista = JsonConvert.DeserializeObject<List<VentasNombre>>(jsonR);
 
+			var listVentEdit = v_lista.OrderByDescending(x => x.id_venta);
+
 			foreach(var item in v_lista)
 			{
 				if(item.id_venta == detalles.id_venta)

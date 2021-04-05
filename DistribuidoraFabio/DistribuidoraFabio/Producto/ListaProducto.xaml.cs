@@ -18,6 +18,8 @@ namespace DistribuidoraFabio.Producto
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ListaProducto : ContentPage
 	{
+		private int _estadoNFiltro = 0;
+		private int _estadoSFiltro = 0;
 		ObservableCollection<ProductoNombre> _listProdNom = new ObservableCollection<ProductoNombre>();
 		public ListaProducto()
 		{
@@ -48,8 +50,8 @@ namespace DistribuidoraFabio.Producto
 						_listProdNom.Add(item);
 					}
 					listaProd.ItemsSource = _listProdNom;
-					btnOrdNombre.Clicked += (sender, args) => listaProd.ItemsSource = _listProdNom.OrderBy(x => x.nombre_producto).ToList();
-					btnOrdStock.Clicked += (sender, args) => listaProd.ItemsSource = _listProdNom.OrderBy(x => x.stock).ToList();
+					btnOrdNombre.Clicked += (sender, args) => FiltrarNombre();
+					btnOrdStock.Clicked += (sender, args) => FiltrarStock();
 				}
 				catch (HttpRequestException err)
 				{
@@ -59,6 +61,32 @@ namespace DistribuidoraFabio.Producto
 			else
 			{
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
+		}
+		private void FiltrarNombre()
+		{
+			if(_estadoNFiltro == 0)
+			{
+				_estadoNFiltro = 1;
+				listaProd.ItemsSource = _listProdNom.OrderBy(x => x.nombre_producto).ToList();
+			}
+			else if(_estadoNFiltro == 1)
+			{
+				_estadoNFiltro = 0;
+				listaProd.ItemsSource = _listProdNom.OrderByDescending(x => x.nombre_producto).ToList();
+			}
+		}
+		private void FiltrarStock()
+		{
+			if (_estadoSFiltro == 0)
+			{
+				_estadoSFiltro = 1;
+				listaProd.ItemsSource = _listProdNom.OrderBy(x => x.stock).ToList();
+			}
+			else if (_estadoSFiltro == 1)
+			{
+				_estadoSFiltro = 0;
+				listaProd.ItemsSource = _listProdNom.OrderByDescending(x => x.stock).ToList();
 			}
 		}
 		private async void OnItemSelected(object sender, ItemTappedEventArgs e)

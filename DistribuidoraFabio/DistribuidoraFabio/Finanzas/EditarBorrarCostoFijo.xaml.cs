@@ -16,32 +16,33 @@ using Xamarin.Forms.Xaml;
 namespace DistribuidoraFabio.Finanzas
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class AgregarCostoFijo : ContentPage
+	public partial class EditarBorrarCostoFijo : ContentPage
 	{
-		private int _cantMeses = 0;
-		private int _mesCF = 0;
-		private int _gestionCF = 0;
-		private string _fechaHoy;
-		private int _yearActual;
+		private int _IdCF;
+		private int _cantMeses;
+		private int _mesesFaltantes;
 		private int _mesActual;
+		private int _yearActual;
 		private int _yearSiguiente;
 		private int _mesInicio;
-		private int _mesesFaltantes;
-		public AgregarCostoFijo()
+		public EditarBorrarCostoFijo(int id_cf, string nombre_cf, decimal monto_cf, int mes_cf, string tipo_gasto_cf,
+				DateTime fecha_cf, string descripcion_cf)
 		{
 			InitializeComponent();
-		}
-		protected async override void OnAppearing()
-		{
+			_IdCF = id_cf;
+			entryNombre.Text = nombre_cf;
+			entrymonto.Text = monto_cf.ToString();
+			entryTipoGasto.Text = tipo_gasto_cf;
+			entryDescripcion.Text = descripcion_cf;
 			DateTime fechaMesAct = DateTime.Today;
-			_fechaHoy = fechaMesAct.ToString("yyyy-MM-dd");
 			_yearActual = Convert.ToInt32(fechaMesAct.ToString("yyyy"));
 			_mesActual = Convert.ToInt32(fechaMesAct.ToString("MM"));
 			_mesesFaltantes = 13 - _mesActual;
 			_yearSiguiente = _yearActual + 1;
 			_mesInicio = 1;
 		}
-		private async void btnGuardar_Clicked(object sender, EventArgs e)
+
+		private async void btnEditar_Clicked(object sender, EventArgs e)
 		{
 			if (!string.IsNullOrWhiteSpace(entryNombre.Text) || (!string.IsNullOrEmpty(entryNombre.Text)))
 			{
@@ -54,7 +55,7 @@ namespace DistribuidoraFabio.Finanzas
 							if (!string.IsNullOrWhiteSpace(entryTipoGasto.Text) || (!string.IsNullOrEmpty(entryTipoGasto.Text)))
 							{
 								_cantMeses = Convert.ToInt32(entryCantMeses.Text);
-								string BusyReason = "Agregando...";
+								string BusyReason = "Editando...";
 								await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
 								for (int i = 1; i <= _cantMeses; i++)
 								{
@@ -64,9 +65,9 @@ namespace DistribuidoraFabio.Finanzas
 										{
 											Costo_fijo _costoFijo = new Costo_fijo()
 											{
+												id_cf = _IdCF,
 												nombre_cf = entryNombre.Text,
 												monto_cf = Convert.ToDecimal(entrymonto.Text),
-												fecha_cf = Convert.ToDateTime(_fechaHoy),
 												mes_cf = _mesActual,
 												gestion_cf = _yearActual,
 												descripcion_cf = entryDescripcion.Text,
@@ -75,13 +76,14 @@ namespace DistribuidoraFabio.Finanzas
 											var json = JsonConvert.SerializeObject(_costoFijo);
 											var content = new StringContent(json, Encoding.UTF8, "application/json");
 											HttpClient client = new HttpClient();
-											var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/agregarCostoFijo.php", content);
+											var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/editarCostoFijo.php", content);
 										}
 										catch (Exception err)
 										{
 											await DisplayAlert("Error", err.ToString(), "OK");
 										}
 										_mesActual = _mesActual + 1;
+										_IdCF = _IdCF + 1;
 									}
 									else if (i > _mesesFaltantes)
 									{
@@ -89,9 +91,9 @@ namespace DistribuidoraFabio.Finanzas
 										{
 											Costo_fijo _costoFijo = new Costo_fijo()
 											{
+												id_cf = _IdCF,
 												nombre_cf = entryNombre.Text,
 												monto_cf = Convert.ToDecimal(entrymonto.Text),
-												fecha_cf = Convert.ToDateTime(_fechaHoy),
 												mes_cf = _mesInicio,
 												gestion_cf = _yearSiguiente,
 												descripcion_cf = entryDescripcion.Text,
@@ -107,10 +109,11 @@ namespace DistribuidoraFabio.Finanzas
 											await DisplayAlert("Error", err.ToString(), "OK");
 										}
 										_mesInicio = _mesInicio + 1;
+										_IdCF = _IdCF + 1;
 									}
 								}
 								await PopupNavigation.Instance.PopAsync();
-								await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
+								await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
 								await Navigation.PopAsync();
 							}
 							else
@@ -136,6 +139,40 @@ namespace DistribuidoraFabio.Finanzas
 			else
 			{
 				await DisplayAlert("Campo vacio", "El campo de Nombre esta vacio", "Ok");
+			}
+		}
+		private async void btnBorrar_Clicked(object sender, EventArgs e)
+		{
+			string BusyReason = "Eliminando...";
+			await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+			try
+			{
+				Costo_fijo _costoFijo = new Costo_fijo()
+				{
+					id_cf = _IdCF
+				};
+
+				var json = JsonConvert.SerializeObject(_costoFijo);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+				HttpClient client = new HttpClient();
+				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/borrarCostoFijo.php", content);
+
+				if (result.StatusCode == HttpStatusCode.OK)
+				{
+					await PopupNavigation.Instance.PopAsync();
+					await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
+					await Navigation.PopAsync();
+				}
+				else
+				{
+					await PopupNavigation.Instance.PopAsync();
+					await DisplayAlert("Error", result.StatusCode.ToString(), "OK");
+					await Navigation.PopAsync();
+				}
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("Error", err.ToString(), "OK");
 			}
 		}
 	}

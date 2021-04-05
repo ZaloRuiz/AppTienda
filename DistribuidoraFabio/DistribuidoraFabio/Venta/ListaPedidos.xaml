@@ -8,6 +8,7 @@
   <!--Pages can be added as references or inline-->
     <ContentPage Title="Entregados" Visual="Material">
         <ContentPage.ToolbarItems>
+            <ToolbarItem x:Name="toolbarBuscarEnt" Text="Filtrar por cliente" Clicked="toolbarBuscarEnt_Clicked"/>
             <ToolbarItem x:Name="toolbar" Text="Agregar Venta" Clicked="ToolbarItem_Clicked"/>
         </ContentPage.ToolbarItems>
         <ListView x:Name="listaEntregados" ItemTapped="OnItemSelectedE" SeparatorColor="#465B70" ItemsSource="{Binding ListaPedidosEnt}">
@@ -56,6 +57,7 @@
     </ContentPage>
     <ContentPage Title="Pendientes" Visual="Material">
         <ContentPage.ToolbarItems>
+            <ToolbarItem x:Name="toolbarBuscar" Text="Filtrar por cliente" Clicked="toolbarBuscar_Clicked"/>
             <ToolbarItem x:Name="toolbarP" Text="Agregar Venta" Clicked="ToolbarItemP_Clicked"/>
         </ContentPage.ToolbarItems>
         <ListView x:Name="listaPendientes" ItemTapped="OnItemSelectedP" SeparatorColor="#465B70" ItemsSource="{Binding ListaPedidosPen}">
@@ -104,6 +106,7 @@
     </ContentPage>
     <ContentPage Title="Cancelados" Visual="Material">
         <ContentPage.ToolbarItems>
+            <ToolbarItem x:Name="toolbarBuscarCanc" Text="Filtrar por cliente" Clicked="toolbarBuscarCanc_Clicked"/>
             <ToolbarItem x:Name="toolbarC" Text="Agregar Venta" Clicked="ToolbarItemC_Clicked"/>
         </ContentPage.ToolbarItems>
         <ListView x:Name="listaCancelados" ItemTapped="OnItemSelectedC" SeparatorColor="#465B70" ItemsSource="{Binding ListaPedidosCanc}">

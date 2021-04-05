@@ -4,9 +4,12 @@
              x:Class="DistribuidoraFabio.Finanzas.ListaCostoFijo"
              Visual="Material"
              BackgroundColor="White">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="toolbarCF" Text="Agregar Costo fijo" Clicked="toolbarCF_Clicked"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
-            <ListView x:Name="listCostoFijo" SeparatorColor="#465B70" RowHeight="60">
+            <ListView x:Name="listCostoFijo" SeparatorColor="#465B70" RowHeight="60" ItemTapped="listCostoFijo_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

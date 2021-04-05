@@ -1,7 +1,9 @@
-﻿using DistribuidoraFabio.Models;
+﻿using DistribuidoraFabio.Helpers;
+using DistribuidoraFabio.Models;
 using Microcharts;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
+using Rg.Plugins.Popup.Services;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -26,24 +28,7 @@ namespace DistribuidoraFabio.Finanzas
 		private decimal _totalC_Variable = 0;
 		private decimal _totalCompras = 0;
 		private decimal _totalVentas = 0;
-		private decimal _costo_fijo;
-		private decimal _costo_variable;
-		private decimal _vend1 = 2457;
-		private decimal _vend2 = 4457;
-		private decimal _vend3 = 6457;
-		private decimal _vend4 = 8457;
-		private decimal _cliente1 = 14287;
-		private decimal _cliente2 = 12287;
-		private decimal _cliente3 = 11287;
-		private decimal _cliente4 = 10287;
-		private int _producto1 = 140;
-		private int _producto2 = 122;
-		private int _producto3 = 104;
-		private int _producto4 = 94;
-		private int _p_inventario1 = 166;
-		private int _p_inventario2 = 152;
-		private int _p_inventario3 = 144;
-		private int _p_inventario4 = 106;
+		string BusyReason = "Cargando...";
 		public BalanceMensual()
 		{
 			InitializeComponent();
@@ -82,6 +67,7 @@ namespace DistribuidoraFabio.Finanzas
 		{
 			if (CrossConnectivity.Current.IsConnected)
 			{
+				await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
 				try
 				{
 					Costo_fijo _costoFijo = new Costo_fijo()
@@ -96,7 +82,7 @@ namespace DistribuidoraFabio.Finanzas
 
 					var jsonR = await result.Content.ReadAsStringAsync();
 					var dataCostoFijo = JsonConvert.DeserializeObject<List<Costo_fijo>>(jsonR);
-					if(dataCostoFijo != null)
+					if (dataCostoFijo != null)
 					{
 						foreach (var item in dataCostoFijo)
 						{
@@ -104,10 +90,11 @@ namespace DistribuidoraFabio.Finanzas
 						}
 					}
 				}
-				catch(Exception err)
+				catch (Exception err)
 				{
 					await DisplayAlert("Error", err.ToString(), "OK");
 				}
+				await Task.Delay(150);
 				try
 				{
 					Costo_variable _costoVariable = new Costo_variable()
@@ -124,7 +111,7 @@ namespace DistribuidoraFabio.Finanzas
 					var dataCostoVar = JsonConvert.DeserializeObject<List<Costo_variable>>(jsonR);
 					if (dataCostoVar != null)
 					{
-						foreach(var item in dataCostoVar)
+						foreach (var item in dataCostoVar)
 						{
 							_totalC_Variable = _totalC_Variable + item.monto_cv;
 						}
@@ -134,7 +121,7 @@ namespace DistribuidoraFabio.Finanzas
 				{
 					await DisplayAlert("Error", err.ToString(), "OK");
 				}
-				await Task.Delay(1000);
+				await Task.Delay(150);
 				try
 				{
 					TotalCompra _totCompra = new TotalCompra()
@@ -161,7 +148,7 @@ namespace DistribuidoraFabio.Finanzas
 				{
 					await DisplayAlert("Error", err.ToString(), "OK");
 				}
-				await Task.Delay(1000);
+				await Task.Delay(150);
 				try
 				{
 					TotalVenta _totVenta = new TotalVenta()
@@ -222,7 +209,7 @@ namespace DistribuidoraFabio.Finanzas
 					};
 					grafico1.Chart = new DonutChart() { Entries = entries, BackgroundColor = SKColor.Parse("#40616B"), GraphPosition = GraphPosition.AutoFill };
 					//grafico costos
-					await Task.Delay(1000);
+					await Task.Delay(500);
 					try
 					{
 						txtCostosF2.Text = "Costos fijos: " + _totalC_Fijo.ToString() + " Bs.";
@@ -245,9 +232,9 @@ namespace DistribuidoraFabio.Finanzas
 						await DisplayAlert("Error", err.ToString(), "OK");
 					}
 					//Tabla mes
-					await Task.Delay(500);
+					await Task.Delay(300);
 					txtTablaVenta.Text = _totalVentas.ToString();
-					txtTablaCompra.Text = "- "+_totalCompras.ToString();
+					txtTablaCompra.Text = "- " + _totalCompras.ToString();
 					txtTotalVC.Text = (_totalVentas - _totalCompras).ToString();
 					txtTablaGF.Text = _totalC_Fijo.ToString();
 					txtTablaGV.Text = _totalC_Variable.ToString();
@@ -270,6 +257,7 @@ namespace DistribuidoraFabio.Finanzas
 			int limiteTop = 3;
 			if (CrossConnectivity.Current.IsConnected)
 			{
+				await Task.Delay(300);
 				try
 				{
 					VentasPorVendedor _ventaXvend = new VentasPorVendedor()
@@ -284,7 +272,7 @@ namespace DistribuidoraFabio.Finanzas
 
 					var jsonR = await result.Content.ReadAsStringAsync();
 					var dataVentXvende = JsonConvert.DeserializeObject<List<VentasPorVendedor>>(jsonR);
-					
+
 					if (dataVentXvende != null)
 					{
 						var ordenXped = dataVentXvende.OrderByDescending(x => x.vendedor_count);
@@ -311,11 +299,11 @@ namespace DistribuidoraFabio.Finanzas
 							_lblCant.HorizontalOptions = LayoutOptions.EndAndExpand;
 							_stkCant.Children.Add(_lblCant);
 
-							if(contTop == limiteTop)
+							if (contTop == limiteTop)
 							{
 								break;
 							}
- 						}
+						}
 						var ordenXmont = dataVentXvende.OrderByDescending(x => x.monto_vend);
 						StkMontXCant.Children.Clear();
 						foreach (var item in ordenXmont)
@@ -351,62 +339,6 @@ namespace DistribuidoraFabio.Finanzas
 				{
 					await DisplayAlert("Error", err.ToString(), "OK");
 				}
-				//Grafico Top Vendedores
-				try
-				{
-					//float _top_vendedor1 = (float)_vend1;
-					//float _top_vendedor2 = (float)_vend2;
-					//float _top_vendedor3 = (float)_vend3;
-					//float _top_vendedor4 = (float)_vend4;
-					//var entriesVendedores = new[]
-					//{
-					//	new ChartEntry(_top_vendedor1)
-					//	{
-					//		Color = SKColors.OrangeRed,
-					//		TextColor = SKColors.OrangeRed,
-					//		Label = "Vendedor 1",
-					//		ValueLabel = _top_vendedor1.ToString(),
-					//		ValueLabelColor = SKColors.OrangeRed
-					//	},
-					//	new ChartEntry(_top_vendedor2)
-					//	{
-					//		Color = SKColors.Yellow,
-					//		TextColor = SKColors.Yellow,
-					//		Label = "Vendedor 2",
-					//		ValueLabel = _top_vendedor2.ToString(),
-					//		ValueLabelColor = SKColors.Yellow
-					//	},
-					//	new ChartEntry(_top_vendedor3)
-					//	{
-					//		Color = SKColors.DarkSeaGreen,
-					//		TextColor = SKColors.DarkSeaGreen,
-					//		Label = "Vendedor 3",
-					//		ValueLabel = _top_vendedor3.ToString(),
-					//		ValueLabelColor = SKColors.DarkSeaGreen
-					//	},
-					//	new ChartEntry(_top_vendedor4)
-					//	{
-					//		Color = SKColors.BlueViolet,
-					//		TextColor = SKColors.BlueViolet,
-					//		Label = "Vendedor 4",
-					//		ValueLabel = _top_vendedor4.ToString(),
-					//		ValueLabelColor = SKColors.BlueViolet
-					//	},
-					//};
-					//grafVendedores.Chart = new BarChart()
-					//{
-					//	Entries = entriesVendedores,
-					//	BackgroundColor = SKColor.Parse("#40616B"),
-					//	LabelTextSize = 30,
-					//	LabelOrientation = Orientation.Horizontal,
-					//	ValueLabelOrientation = Orientation.Horizontal,
-					//	LabelColor = SKColors.White,
-					//};
-				}
-				catch (Exception err)
-				{
-					await DisplayAlert("Error", err.ToString(), "OK");
-				}
 			}
 			else
 			{
@@ -419,6 +351,7 @@ namespace DistribuidoraFabio.Finanzas
 			int limiteTop = 3;
 			if (CrossConnectivity.Current.IsConnected)
 			{
+				await Task.Delay(400);
 				try
 				{
 					VentasPorCliente _ventaXclien = new VentasPorCliente()
@@ -466,7 +399,7 @@ namespace DistribuidoraFabio.Finanzas
 						}
 						var orderXmont = dataVentXclient.OrderByDescending(x => x.monto_vend);
 						StkMontXPedid.Children.Clear();
-						foreach(var item in orderXmont)
+						foreach (var item in orderXmont)
 						{
 							contTop = contTop + 1;
 							StackLayout _stkMont = new StackLayout();
@@ -494,54 +427,6 @@ namespace DistribuidoraFabio.Finanzas
 							}
 						}
 					}
-					//		float _top_cliente1 = (float)_cliente1;
-					//		float _top_cliente2 = (float)_cliente2;
-					//		float _top_cliente3 = (float)_cliente3;
-					//		float _top_cliente4 = (float)_cliente4;
-					//		var entriesCliente = new[]
-					//		{
-					//	new ChartEntry(_top_cliente1)
-					//	{
-					//		Color = SKColors.OrangeRed,
-					//		TextColor = SKColors.OrangeRed,
-					//		Label = "Cliente 1",
-					//		ValueLabel = _top_cliente1.ToString(),
-					//		ValueLabelColor = SKColors.OrangeRed
-					//	},
-					//	new ChartEntry(_top_cliente2)
-					//	{
-					//		Color = SKColors.Yellow,
-					//		TextColor = SKColors.Yellow,
-					//		Label = "Cliente 2",
-					//		ValueLabel = _top_cliente2.ToString(),
-					//		ValueLabelColor = SKColors.Yellow
-					//	},
-					//	new ChartEntry(_top_cliente3)
-					//	{
-					//		Color = SKColors.DarkSeaGreen,
-					//		TextColor = SKColors.DarkSeaGreen,
-					//		Label = "Cliente 3",
-					//		ValueLabel = _top_cliente3.ToString(),
-					//		ValueLabelColor = SKColors.DarkSeaGreen
-					//	},
-					//	new ChartEntry(_top_cliente4)
-					//	{
-					//		Color = SKColors.BlueViolet,
-					//		TextColor = SKColors.BlueViolet,
-					//		Label = "Cliente 4",
-					//		ValueLabel = _top_cliente4.ToString(),
-					//		ValueLabelColor = SKColors.BlueViolet
-					//	},
-					//};
-					//		grafClientes.Chart = new BarChart()
-					//		{
-					//			Entries = entriesCliente,
-					//			BackgroundColor = SKColor.Parse("#40616B"),
-					//			LabelTextSize = 30,
-					//			LabelOrientation = Orientation.Horizontal,
-					//			ValueLabelOrientation = Orientation.Horizontal,
-					//			LabelColor = SKColors.White,
-					//		};
 				}
 				catch (Exception err)
 				{
@@ -559,6 +444,7 @@ namespace DistribuidoraFabio.Finanzas
 			int limiteTop = 5;
 			if (CrossConnectivity.Current.IsConnected)
 			{
+				await Task.Delay(300);
 				try
 				{
 					VentasPorProducto _ventaXprod = new VentasPorProducto()
@@ -634,110 +520,12 @@ namespace DistribuidoraFabio.Finanzas
 							}
 						}
 					}
-					//grafico productos mas vendidos
-					//		float _top_producto1 = (float)_producto1;
-					//		float _top_producto2 = (float)_producto2;
-					//		float _top_producto3 = (float)_producto3;
-					//		float _top_producto4 = (float)_producto4;
-					//		var entriesProductos = new[]
-					//		{
-					//	new ChartEntry(_top_producto1)
-					//	{
-					//		Color = SKColors.DarkOrange,
-					//		TextColor = SKColors.DarkOrange,
-					//		Label = "Producto 1",
-					//		ValueLabel = _top_producto1.ToString(),
-					//		ValueLabelColor = SKColors.DarkOrange
-					//	},
-					//	new ChartEntry(_top_producto2)
-					//	{
-					//		Color = SKColors.DarkCyan,
-					//		TextColor = SKColors.DarkCyan,
-					//		Label = "Producto 2",
-					//		ValueLabel = _top_producto2.ToString(),
-					//		ValueLabelColor = SKColors.DarkCyan
-					//	},
-					//	new ChartEntry(_top_producto3)
-					//	{
-					//		Color = SKColors.MediumPurple,
-					//		TextColor = SKColors.MediumPurple,
-					//		Label = "Producto 3",
-					//		ValueLabel = _top_producto3.ToString(),
-					//		ValueLabelColor = SKColors.MediumPurple
-					//	},
-					//	new ChartEntry(_top_producto4)
-					//	{
-					//		Color = SKColors.ForestGreen,
-					//		TextColor = SKColors.ForestGreen,
-					//		Label = "Producto 4",
-					//		ValueLabel = _top_producto4.ToString(),
-					//		ValueLabelColor = SKColors.ForestGreen
-					//	},
-					//};
-					//		grafP_MasVendidos.Chart = new BarChart()
-					//		{
-					//			Entries = entriesProductos,
-					//			BackgroundColor = SKColor.Parse("#40616B"),
-					//			LabelTextSize = 30,
-					//			LabelOrientation = Orientation.Horizontal,
-					//			ValueLabelOrientation = Orientation.Horizontal,
-					//			LabelColor = SKColors.White,
-					//		};
-
-					//		//Grafico productos en almacen
-					//		float _top_invent1 = (float)_p_inventario1;
-					//		float _top_invent2 = (float)_p_inventario2;
-					//		float _top_invent3 = (float)_p_inventario3;
-					//		float _top_invent4 = (float)_p_inventario4;
-					//		var entriesInventario = new[]
-					//		{
-					//	new ChartEntry(_top_invent1)
-					//	{
-					//		Color = SKColors.LawnGreen,
-					//		TextColor = SKColors.LawnGreen,
-					//		Label = "Producto 1",
-					//		ValueLabel = _top_invent1.ToString(),
-					//		ValueLabelColor = SKColors.LawnGreen
-					//	},
-					//	new ChartEntry(_top_invent2)
-					//	{
-					//		Color = SKColors.IndianRed,
-					//		TextColor = SKColors.IndianRed,
-					//		Label = "Producto 2",
-					//		ValueLabel = _top_invent2.ToString(),
-					//		ValueLabelColor = SKColors.IndianRed
-					//	},
-					//	new ChartEntry(_top_invent3)
-					//	{
-					//		Color = SKColors.DeepSkyBlue,
-					//		TextColor = SKColors.DeepSkyBlue,
-					//		Label = "Producto 3",
-					//		ValueLabel = _top_invent3.ToString(),
-					//		ValueLabelColor = SKColors.DeepSkyBlue
-					//	},
-					//	new ChartEntry(_top_invent4)
-					//	{
-					//		Color = SKColors.Brown,
-					//		TextColor = SKColors.Brown,
-					//		Label = "Producto 4",
-					//		ValueLabel = _top_invent4.ToString(),
-					//		ValueLabelColor = SKColors.Brown
-					//	},
-					//};
-					//		grafP_almacen.Chart = new BarChart()
-					//		{
-					//			Entries = entriesInventario,
-					//			BackgroundColor = SKColor.Parse("#40616B"),
-					//			LabelTextSize = 30,
-					//			LabelOrientation = Orientation.Horizontal,
-					//			ValueLabelOrientation = Orientation.Horizontal,
-					//			LabelColor = SKColors.White,
-					//		};
 				}
 				catch (Exception err)
 				{
 					await DisplayAlert("Error", err.ToString(), "OK");
 				}
+				await PopupNavigation.Instance.PopAsync();
 			}
 			else
 			{

@@ -31,6 +31,10 @@ namespace DistribuidoraFabio.Finanzas
 			pickerMes.ItemsSource = new List<string> { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Noviembre", "Diciembre" }; 
 			pickerYear.ItemsSource = new List<string> { "2021", "2022", "2023", "2024", "2025" };
 			txtTitulo.Text = DateTime.Now.ToString("MMMM yyyy").ToUpper();
+			DateTime fechaMesAct = DateTime.Today;
+			_mesQuery = Convert.ToInt32(fechaMesAct.ToString("MM"));
+			_yearQuery = Convert.ToInt32(fechaMesAct.ToString("yyyy"));
+			GetData();
 		}
 		protected async override void OnAppearing()
 		{
@@ -39,12 +43,11 @@ namespace DistribuidoraFabio.Finanzas
 			{
 				stkCV.Children.Clear();
 				stkCF.Children.Clear();
-				DateTime fechaMesAct = DateTime.Today;
-				_mesQuery = Convert.ToInt32(fechaMesAct.ToString("MM"));
-				_yearQuery = Convert.ToInt32(fechaMesAct.ToString("yyyy"));
-				GetData();
+				txtTotalCF.Text = "0";
+				txtTotalCV.Text = "0";
+				_totalCF = 0;
+				_totalCV = 0;
 				GetCostoVariable();
-				await Task.Delay(800);
 				GetCostoFijo();
 			}
 			else
@@ -63,7 +66,7 @@ namespace DistribuidoraFabio.Finanzas
 		}
 		private async void GetCostoFijo()
 		{
-			stkCF.Children.Clear();
+			await Task.Delay(400);
 			try
 			{
 				Costo_fijo _costoFijo = new Costo_fijo()
@@ -113,12 +116,12 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			catch (Exception err)
 			{
-				await DisplayAlert("Error", err.ToString(), "Ok");
+				await DisplayAlert("Error", err.Message.ToString(), "Ok");
 			}
 		}
 		private async void GetCostoVariable()
 		{
-			stkCV.Children.Clear();
+			await Task.Delay(400);
 			try
 			{
 				Costo_variable _costoVariable = new Costo_variable()
@@ -172,12 +175,12 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			catch(Exception err)
 			{
-				await DisplayAlert("Error", err.ToString(), "Ok");
+				await DisplayAlert("Error", err.Message.ToString(), "Ok");
 			}
 		}
 		private async void toolbarCF_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new AgregarCostoFijo());
+			await Navigation.PushAsync(new ListaCostoFijo());
 		}
 		private async void toolbarCV_Clicked(object sender, EventArgs e)
 		{

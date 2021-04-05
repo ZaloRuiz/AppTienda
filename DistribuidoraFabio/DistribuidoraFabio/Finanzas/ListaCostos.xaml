@@ -5,8 +5,8 @@
              Visual="Material"
              BackgroundColor="White">
     <ContentPage.ToolbarItems>
-        <ToolbarItem x:Name="toolbarCF" Text="Agregar Costo fijo" Order="Secondary" Priority="0" Clicked ="toolbarCF_Clicked"/>
-        <ToolbarItem x:Name="toolbarCV" Text="Agregar Costo variable" Order="Secondary" Priority="1" Clicked="toolbarCV_Clicked"/>
+        <ToolbarItem x:Name="toolbarCF" Text="Costo fijo" Order="Secondary" Priority="0" Clicked ="toolbarCF_Clicked"/>
+        <ToolbarItem x:Name="toolbarCV" Text="Costo variable" Order="Secondary" Priority="1" Clicked="toolbarCV_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>

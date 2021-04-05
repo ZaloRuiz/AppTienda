@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="DistribuidoraFabio.Finanzas.AgregarCostoFijo"
+             x:Class="DistribuidoraFabio.Finanzas.EditarBorrarCostoFijo"
              Visual="Material"
              BackgroundColor="White"
-             Title="Agregar costo fijo">
+             Title="Editar / Borrar costo fijo">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="10">
@@ -17,12 +17,13 @@
                            FontSize="14" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Numeric"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal">
-                    <Entry x:Name="entryDescripcion" Placeholder="Descripcion" PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White"
-                           FontSize="14" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                     <Entry x:Name="entryTipoGasto" Placeholder="Tipo de gasto" PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White"
                            FontSize="14" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    <Entry x:Name="entryDescripcion" Placeholder="Descripcion" PlaceholderColor="#465B70" TextColor="Black" BackgroundColor="White"
+                           FontSize="14" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                 </StackLayout>
-                <Button x:Name="btnGuardar" Text="GUARDAR" HorizontalOptions="FillAndExpand" HeightRequest="40" Clicked="btnGuardar_Clicked"/>
+                <Button x:Name="btnEditar" Text="Editar" HorizontalOptions="FillAndExpand" HeightRequest="40" Clicked="btnEditar_Clicked"/>
+                <Button x:Name="btnBorrar" Text="Borrar" HorizontalOptions="FillAndExpand" HeightRequest="40" Clicked="btnBorrar_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
