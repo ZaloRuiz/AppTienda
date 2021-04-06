@@ -20,9 +20,9 @@ namespace DistribuidoraFabio.Vendedor
 		{
 			InitializeComponent();
 		}
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new AgregarVendedor());
+            await Shell.Current.Navigation.PushAsync(new AgregarVendedor());
         }
         protected async override void OnAppearing()
         {
@@ -50,8 +50,8 @@ namespace DistribuidoraFabio.Vendedor
         private async void OnItemSelected(object sender, ItemTappedEventArgs e)
         {
             var detalles = e.Item as Vendedores;
-            await Navigation.PushAsync(new EditarBorrarVendedor(detalles.id_vendedor, detalles.nombre,
-                detalles.telefono, detalles.direccion, detalles.numero_cuenta, detalles.cedula_identidad, detalles.usuario, detalles.password));
+            await Shell.Current.Navigation.PushAsync(new EditarBorrarVendedor(detalles.id_vendedor, detalles.nombre,
+                detalles.telefono, detalles.direccion, detalles.numero_cuenta, detalles.cedula_identidad, detalles.usuario, detalles.password), true);
         }
     }
 }

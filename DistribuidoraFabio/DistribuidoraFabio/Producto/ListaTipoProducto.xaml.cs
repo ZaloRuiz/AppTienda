@@ -20,9 +20,9 @@ namespace DistribuidoraFabio.Producto
 		{
 			InitializeComponent();
 		}
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new AgregarTipoProducto());
+            await Shell.Current.Navigation.PushAsync(new AgregarTipoProducto(), true);
         }
         protected async override void OnAppearing()
         {
@@ -50,7 +50,7 @@ namespace DistribuidoraFabio.Producto
         private async void OnItemSelected(object sender, ItemTappedEventArgs e)
         {
             var detalle = e.Item as Tipo_producto;
-            await Navigation.PushAsync(new EditarBorrarTipoProducto(detalle.id_tipoproducto, detalle.nombre_tipo_producto));
+            await Shell.Current.Navigation.PushAsync(new EditarBorrarTipoProducto(detalle.id_tipoproducto, detalle.nombre_tipo_producto), true);
         }
     }
 }

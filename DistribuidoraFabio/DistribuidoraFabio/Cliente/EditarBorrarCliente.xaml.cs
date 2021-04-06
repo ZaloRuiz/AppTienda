@@ -76,12 +76,12 @@ namespace DistribuidoraFabio.Cliente
                                                         if (result.StatusCode == HttpStatusCode.OK)
                                                         {
                                                             await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-                                                            await Navigation.PopAsync();
+                                                            await Shell.Current.Navigation.PopAsync();
                                                         }
                                                         else
                                                         {
                                                             await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-                                                            await Navigation.PopAsync();
+                                                            await Shell.Current.Navigation.PopAsync();
                                                         }
                                                     }
                                                     catch (Exception err)
@@ -166,9 +166,9 @@ namespace DistribuidoraFabio.Cliente
                 await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
             }
         }
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new HistorialCliente(IdCliente));
+            await Shell.Current.Navigation.PushAsync(new HistorialCliente(IdCliente), true);
         }
     }
 }

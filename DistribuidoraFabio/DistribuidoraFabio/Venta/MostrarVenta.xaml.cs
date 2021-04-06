@@ -136,7 +136,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
+					await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				try
 				{
@@ -249,7 +249,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
+					await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 				try
 				{
@@ -347,7 +347,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("ERROR", "Necesitas estar conectado a internet", "OK");
+					await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else
@@ -357,8 +357,8 @@ namespace DistribuidoraFabio.Venta
 		}
 		private async void ToolbarItem_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new EditarBorrarVenta(_id_venta, _fecha, _numero_factura, _cliente, _vendedor, _tipo_venta, _saldo, _total, 
-				_fecha_entrega, _estado, _observacion));
+			await Shell.Current.Navigation.PushAsync(new EditarBorrarVenta(_id_venta, _fecha, _numero_factura, _cliente, _vendedor, _tipo_venta, _saldo, _total, 
+				_fecha_entrega, _estado, _observacion), true);
 		}
 	}
 }

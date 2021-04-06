@@ -14,8 +14,9 @@ namespace DistribuidoraFabio
 		public App()
 		{
 			InitializeComponent();
-			MainPage = new Menu();
+			//MainPage = new Menu();
 			//MainPage = new NavigationPage(new Menu());
+			MainPage = new AppShell();
 		}
 		public static ObservableCollection<DetalleVenta_previo> _detalleVData = new ObservableCollection<DetalleVenta_previo>();
 		public static ObservableCollection<DetalleVenta_previo> _DetalleVentaData { get { return _detalleVData; } }

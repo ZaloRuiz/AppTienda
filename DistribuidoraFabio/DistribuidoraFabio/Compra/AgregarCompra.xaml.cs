@@ -397,13 +397,13 @@ namespace DistribuidoraFabio.Compra
 										await PopupNavigation.Instance.PopAsync();
 										await DisplayAlert("OK", "Se agrego correctamente", "OK");
 										App._detalleCData.Clear();
-										await Navigation.PopAsync();
+										await Shell.Current.Navigation.PopAsync();
 									}
 									else
 									{
 										await PopupNavigation.Instance.PopAsync();
 										await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-										await Navigation.PopAsync();
+										await Shell.Current.Navigation.PopAsync();
 									}
 								}
 								else

@@ -71,12 +71,12 @@ namespace DistribuidoraFabio.Vendedor
 												if (result.StatusCode == HttpStatusCode.OK)
 												{
 													await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-													await Navigation.PopAsync();
+													await Shell.Current.Navigation.PopAsync();
 												}
 												else
 												{
 													await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-													await Navigation.PopAsync();
+													await Shell.Current.Navigation.PopAsync();
 												}
 											}
 											catch (Exception err)
@@ -124,9 +124,9 @@ namespace DistribuidoraFabio.Vendedor
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
         }
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new HistorialVendedor(IdVendedor));
+            await Shell.Current.Navigation.PushAsync(new HistorialVendedor(IdVendedor), true);
         }
     }
 }

@@ -194,11 +194,11 @@ namespace DistribuidoraFabio.Finanzas
 		}
 		private async void toolbarCF_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new ListaCostoFijo());
+			await Shell.Current.Navigation.PushAsync(new ListaCostoFijo(), true);
 		}
 		private async void toolbarCV_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new ListaCostoVariable());
+			await Shell.Current.Navigation.PushAsync(new ListaCostoVariable(), true);
 		}
 		private void pickerMes_SelectedIndexChanged(object sender, EventArgs e)
 		{

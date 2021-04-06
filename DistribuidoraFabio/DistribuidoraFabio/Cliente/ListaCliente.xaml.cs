@@ -19,9 +19,9 @@ namespace DistribuidoraFabio.Cliente
 		{
 			InitializeComponent();
 		}
-		private void ToolbarItem_Clicked(object sender, EventArgs e)
+		private async void ToolbarItem_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AgregarCliente());
+			await Shell.Current.Navigation.PushAsync(new AgregarCliente(), true);
 		}
         protected async override void OnAppearing()
         {
@@ -50,8 +50,8 @@ namespace DistribuidoraFabio.Cliente
         private async void OnItemSelected(object sender, ItemTappedEventArgs e)
         {
             var detalles = e.Item as Models.Cliente;
-            await Navigation.PushAsync(new EditarBorrarCliente(detalles.id_cliente, detalles.codigo_c, detalles.nombre_cliente, detalles.ubicacion_latitud, detalles.ubicacion_longitud, 
-                detalles.telefono, detalles.direccion_cliente, detalles.razon_social, detalles.nit));
+            await Shell.Current.Navigation.PushAsync(new EditarBorrarCliente(detalles.id_cliente, detalles.codigo_c, detalles.nombre_cliente, detalles.ubicacion_latitud, detalles.ubicacion_longitud, 
+                detalles.telefono, detalles.direccion_cliente, detalles.razon_social, detalles.nit), true);
         }
     }
 }

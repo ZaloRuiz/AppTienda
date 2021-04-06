@@ -114,7 +114,7 @@ namespace DistribuidoraFabio.Finanzas
 									}
 									await PopupNavigation.Instance.PopAsync();
 									await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-									await Navigation.PopAsync();
+									await Shell.Current.Navigation.PopAsync();
 								}
 								else
 								{

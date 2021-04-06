@@ -21,9 +21,9 @@ namespace DistribuidoraFabio.Compra
 		{
 			InitializeComponent();
 		}
-		private void ToolbarItem_Clicked(object sender, EventArgs e)
+		private async void ToolbarItem_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AgregarCompra());
+			await Shell.Current.Navigation.PushAsync(new AgregarCompra(), true);
 		}
 		protected async override void OnAppearing()
 		{
@@ -56,8 +56,8 @@ namespace DistribuidoraFabio.Compra
 		private async void OnItemSelected(object sender, ItemTappedEventArgs e)
 		{
 			var detalles = e.Item as ComprasNombre;
-			await Navigation.PushAsync(new MostrarCompra(detalles.id_compra, detalles.fecha_compra, detalles.numero_factura, detalles.nombre_proveedor,
-														detalles.saldo, detalles.total));
+			await Shell.Current.Navigation.PushAsync(new MostrarCompra(detalles.id_compra, detalles.fecha_compra, detalles.numero_factura, detalles.nombre_proveedor,
+														detalles.saldo, detalles.total), true);
 		}
 	}
 }

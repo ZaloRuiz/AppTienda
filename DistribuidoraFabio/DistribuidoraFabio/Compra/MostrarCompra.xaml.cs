@@ -276,7 +276,7 @@ namespace DistribuidoraFabio.Compra
 		}
 		private async void toolbar_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new EditarBorrarCompra(_id_compra, _fecha, _numero_factura, _proveedor, _saldo, _total));
+			await Shell.Current.Navigation.PushAsync(new EditarBorrarCompra(_id_compra, _fecha, _numero_factura, _proveedor, _saldo, _total), true);
 		}
 	}
 }

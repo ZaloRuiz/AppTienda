@@ -19,22 +19,22 @@ namespace DistribuidoraFabio.Finanzas
 
 		private async void Button_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new BalanceMensual());
+			await Shell.Current.Navigation.PushAsync(new BalanceMensual(), true);
 		}
 
 		private async void Button_Clicked_1(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new Deudas());
+			await Shell.Current.Navigation.PushAsync(new Deudas(), true);
 		}
 
 		private async void Button_Clicked_2(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new ListaCostos());
+			await Shell.Current.Navigation.PushAsync(new ListaCostos(), true);
 		}
 
 		private async void Button_Clicked_3(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new BalanceAnual());
+			await Shell.Current.Navigation.PushAsync(new BalanceAnual(), true);
 		}
 	}
 }

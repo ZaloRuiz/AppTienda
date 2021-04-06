@@ -19,9 +19,9 @@ namespace DistribuidoraFabio.Proveedor
 		{
 			InitializeComponent();
 		}
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new AgregarProveedor());
+            await Shell.Current.Navigation.PushAsync(new AgregarProveedor());
         }
         protected async override void OnAppearing()
         {
@@ -49,7 +49,8 @@ namespace DistribuidoraFabio.Proveedor
         private async void OnItemSelected(object sender, ItemTappedEventArgs e)
         {
             var detalles = e.Item as Models.Proveedor;
-            await Navigation.PushAsync(new EditarBorrarProveedor(detalles.id_proveedor, detalles.nombre, detalles.direccion, detalles.contacto, detalles.telefono));
+            await Shell.Current.Navigation.PushAsync(new EditarBorrarProveedor(detalles.id_proveedor, detalles.nombre, detalles.direccion, detalles.contacto, 
+				detalles.telefono), true);
         }
     }
 }

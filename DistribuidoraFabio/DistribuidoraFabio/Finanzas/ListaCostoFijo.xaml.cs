@@ -61,12 +61,12 @@ namespace DistribuidoraFabio.Finanzas
 		private async void listCostoFijo_ItemTapped(object sender, ItemTappedEventArgs e)
 		{
 			var detalles = e.Item as Costo_fijo;
-			await Navigation.PushAsync(new EditarBorrarCostoFijo(detalles.id_cf, detalles.nombre_cf, detalles.monto_cf, detalles.mes_cf, detalles.tipo_gasto_cf,
-				detalles.fecha_cf, detalles.descripcion_cf));
+			await Shell.Current.Navigation.PushAsync(new EditarBorrarCostoFijo(detalles.id_cf, detalles.nombre_cf, detalles.monto_cf, detalles.mes_cf, detalles.tipo_gasto_cf,
+				detalles.fecha_cf, detalles.descripcion_cf), true);
 		}
 		private async void toolbarCF_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new AgregarCostoFijo());
+			await Shell.Current.Navigation.PushAsync(new AgregarCostoFijo(), true);
 		}
 	}
 }

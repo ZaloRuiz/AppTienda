@@ -76,7 +76,7 @@ namespace DistribuidoraFabio.Venta
                 }
                 catch (Exception error)
                 {
-                    await DisplayAlert("Erro", "Necesitas estar conectado a internet", "OK");
+                    await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
                 }
             }
             else
@@ -522,13 +522,13 @@ namespace DistribuidoraFabio.Venta
                                             await PopupNavigation.Instance.PopAsync();
                                             await DisplayAlert("OK", "Se agrego correctamente", "OK");
                                             App._detalleVData.Clear();
-                                            await Navigation.PopAsync();
+                                            await Shell.Current.Navigation.PopAsync();
                                         }
                                         else
                                         {
                                             await PopupNavigation.Instance.PopAsync();
                                             await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-                                            await Navigation.PopAsync();
+                                            await Shell.Current.Navigation.PopAsync();
                                         }
                                     }
                                     else if(estadoPick == "Pendiente")
@@ -574,13 +574,13 @@ namespace DistribuidoraFabio.Venta
                                             await PopupNavigation.Instance.PopAsync();
                                             await DisplayAlert("OK", "Se agrego correctamente", "OK");
                                             App._detalleVData.Clear();
-                                            await Navigation.PopAsync();
+                                            await Shell.Current.Navigation.PopAsync();
                                         }
                                         else
                                         {
                                             await PopupNavigation.Instance.PopAsync();
                                             await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-                                            await Navigation.PopAsync();
+                                            await Shell.Current.Navigation.PopAsync();
                                         }
                                     }
                                 }

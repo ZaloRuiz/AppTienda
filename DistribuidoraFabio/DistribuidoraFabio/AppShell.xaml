@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.AppShell"
+       xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       xmlns:local="clr-namespace:DistribuidoraFabio"
+       xmlns:cliente="clr-namespace:DistribuidoraFabio.Cliente"
+       xmlns:compra="clr-namespace:DistribuidoraFabio.Compra"
+       xmlns:finanzas="clr-namespace:DistribuidoraFabio.Finanzas"
+       xmlns:inventario="clr-namespace:DistribuidoraFabio.Inventario"
+       xmlns:producto="clr-namespace:DistribuidoraFabio.Producto"
+       xmlns:vendedor="clr-namespace:DistribuidoraFabio.Vendedor"
+       xmlns:venta="clr-namespace:DistribuidoraFabio.Venta"
+       xmlns:reportes="clr-namespace:DistribuidoraFabio.Reportes"
+       xmlns:proveedor="clr-namespace:DistribuidoraFabio.Proveedor"
+       FlyoutBackgroundColor="#465B70"
+       FlyoutHeaderBehavior="Scroll">
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <ContentView BackgroundColor="#465B70" HeightRequest="130">
+                <Label Text="Distribuidora Fabio" TextColor="White" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center"/>
+            </ContentView>
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
+    <Shell.Resources>
+        <Style x:Key="MenuShell" TargetType="Element">
+            <Setter Property="Shell.BackgroundColor" Value="#465B70"/>
+            <Setter Property="Shell.TitleColor" Value="White"/>
+        </Style>
+    </Shell.Resources>
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <StackLayout Padding="20,10" HorizontalOptions="FillAndExpand" Orientation="Horizontal" BackgroundColor="White">
+                <Image Aspect="AspectFit" HorizontalOptions="Start" HeightRequest="30" VerticalOptions="Center" Source="{Binding Icon}"/>
+                <Label VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" Text="{Binding Title}" FontSize="24" TextColor="#465B70" Padding="20, 0, 0, 0"/>
+            </StackLayout>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+    <FlyoutItem Title="Inicio" Icon="icon_inicio.png" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate local:MenuDetail}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Compras" Icon="icon_compra.png" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate compra:ListaCompra}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Pedidos" Icon="icon_pedido.png" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate venta:ListaPedidos}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Clientes" Icon="icon_cliente.png" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate cliente:ListaCliente}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Productos" Icon="icon_producto.png" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate producto:ListaProducto}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Finanzas" Icon="icon_finanza.png" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate finanzas:IndexFinanzas}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Reportes" Icon="icon_reporte.png" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate reportes:R_DetalleVenta}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Inventario" Icon="icon_inventario" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate inventario:InventarioGeneral}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Vendedor" Icon="icon_vendedor" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate vendedor:ListaVendedor}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Proveedor" Icon="icon_proveedor" Style="{StaticResource MenuShell}">
+        <ShellContent ContentTemplate="{DataTemplate proveedor:ListaProveedor}"/>
+    </FlyoutItem>
+</Shell>

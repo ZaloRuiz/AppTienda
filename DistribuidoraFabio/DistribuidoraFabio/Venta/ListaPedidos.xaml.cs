@@ -123,38 +123,38 @@ namespace DistribuidoraFabio.Venta
 				}
 			}
 		}
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AgregarVenta());
+			await Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
 		}
-		private void ToolbarItemP_Clicked(object sender, EventArgs e)
+		private async void ToolbarItemP_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AgregarVenta());
+			Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
 		}
-		private void ToolbarItemC_Clicked(object sender, EventArgs e)
+		private async void ToolbarItemC_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AgregarVenta());
+			Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
 		}
 		private async void OnItemSelectedE(object sender, ItemTappedEventArgs e)
 		{
 			var detalles = e.Item as VentasNombre;
-			await Navigation.PushAsync(new MostrarVenta(detalles.id_venta, detalles.fecha, detalles.numero_factura, detalles.nombre_cliente,
+			await Shell.Current.Navigation.PushAsync(new MostrarVenta(detalles.id_venta, detalles.fecha, detalles.numero_factura, detalles.nombre_cliente,
 														detalles.nombre_vendedor, detalles.tipo_venta, detalles.saldo, detalles.total, detalles.fecha_entrega,
-														detalles.estado, detalles.observacion));
+														detalles.estado, detalles.observacion), true);
 		}
 		private async void OnItemSelectedP(object sender, ItemTappedEventArgs e)
 		{
 			var detalles = e.Item as VentasNombre;
-			await Navigation.PushAsync(new MostrarVentaPendiente(detalles.id_venta, detalles.fecha, detalles.numero_factura, detalles.nombre_cliente,
+			await Shell.Current.Navigation.PushAsync(new MostrarVentaPendiente(detalles.id_venta, detalles.fecha, detalles.numero_factura, detalles.nombre_cliente,
 														detalles.nombre_vendedor, detalles.tipo_venta, detalles.saldo, detalles.total, detalles.fecha_entrega,
-														detalles.estado, detalles.observacion));
+														detalles.estado, detalles.observacion), true);
 		}
 		private async void OnItemSelectedC(object sender, ItemTappedEventArgs e)
 		{
 			var detalles = e.Item as VentasNombre;
-			await Navigation.PushAsync(new MostrarVenta(detalles.id_venta, detalles.fecha, detalles.numero_factura, detalles.nombre_cliente,
+			await Shell.Current.Navigation.PushAsync(new MostrarVenta(detalles.id_venta, detalles.fecha, detalles.numero_factura, detalles.nombre_cliente,
 														detalles.nombre_vendedor, detalles.tipo_venta, detalles.saldo, detalles.total, detalles.fecha_entrega,
-														detalles.estado, detalles.observacion));
+														detalles.estado, detalles.observacion), true);
 		}
 		private async void toolbarBuscar_Clicked(object sender, EventArgs e)
 		{

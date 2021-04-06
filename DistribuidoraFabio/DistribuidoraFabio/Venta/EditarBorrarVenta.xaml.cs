@@ -266,12 +266,12 @@ namespace DistribuidoraFabio.Venta
                     {
                         await DisplayAlert("OK", "Se Agrego correctamente", "OK");
                         App._detalleventaguardar.Clear();
-                        await Navigation.PopAsync();
+                        await Shell.Current.Navigation.PopAsync();
                     }
                     else
                     {
                         await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-                        await Navigation.PopAsync();
+                        await Shell.Current.Navigation.PopAsync();
                     }
                 }
                 catch (Exception err)

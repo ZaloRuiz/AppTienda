@@ -45,7 +45,7 @@ namespace DistribuidoraFabio.Venta
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", err.ToString(), "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else
@@ -92,12 +92,12 @@ namespace DistribuidoraFabio.Venta
 							_observacion = item.observacion;
 						}
 					}
-					await Navigation.PushAsync(new EditarBorrarVenta(_id_venta, _fecha, _numero_factura, _cliente, _nombre_vendedor, _tipo_venta, _saldo,
-						_total, _fecha_entrega, _estado, _observacion));
+					await Shell.Current.Navigation.PushAsync(new EditarBorrarVenta(_id_venta, _fecha, _numero_factura, _cliente, _nombre_vendedor, _tipo_venta, _saldo,
+						_total, _fecha_entrega, _estado, _observacion), true);
 				}
 				catch (Exception err)
 				{
-					await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
 			else

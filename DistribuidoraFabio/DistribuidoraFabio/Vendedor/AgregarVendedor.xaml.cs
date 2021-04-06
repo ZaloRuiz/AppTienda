@@ -60,12 +60,12 @@ namespace DistribuidoraFabio.Vendedor
 												if (result.StatusCode == HttpStatusCode.OK)
 												{
 													await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-													await Navigation.PopAsync();
+													await Shell.Current.Navigation.PopAsync();
 												}
 												else
 												{
 													await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-													await Navigation.PopAsync();
+													await Shell.Current.Navigation.PopAsync();
 												}
 											}
 											catch (Exception err)

@@ -60,13 +60,13 @@ namespace DistribuidoraFabio.Finanzas
 
 		private async void toolbarCV_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new AgregarCostoVariable());
+			await Shell.Current.Navigation.PushAsync(new AgregarCostoVariable(), true);
 		}
 		private async void listCostoVariable_ItemTapped(object sender, ItemTappedEventArgs e)
 		{
 			var detalles = e.Item as Costo_variable;
-			await Navigation.PushAsync(new EditarBorrarCostoVariable(detalles.id_cv, detalles.nombre_cv, detalles.monto_cv, detalles.mes_cv, detalles.tipo_gasto_cv,
-				detalles.fecha_cv, detalles.descripcion_cv));
+			await Shell.Current.Navigation.PushAsync(new EditarBorrarCostoVariable(detalles.id_cv, detalles.nombre_cv, detalles.monto_cv, detalles.mes_cv, detalles.tipo_gasto_cv,
+				detalles.fecha_cv, detalles.descripcion_cv), true);
 		}
 	}
 }

@@ -136,13 +136,13 @@ namespace DistribuidoraFabio.Finanzas
 											{
 												await PopupNavigation.Instance.PopAsync();
 												await DisplayAlert("GUARDADO", "Se agrego correctamente", "OK");
-												await Navigation.PopAsync();
+												await Shell.Current.Navigation.PopAsync();
 											}
 											else
 											{
 												await PopupNavigation.Instance.PopAsync();
 												await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
-												await Navigation.PopAsync();
+												await Shell.Current.Navigation.PopAsync();
 											}
 										}
 										catch (Exception err)
@@ -204,13 +204,13 @@ namespace DistribuidoraFabio.Finanzas
 					{
 						await PopupNavigation.Instance.PopAsync();
 						await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
-						await Navigation.PopAsync();
+						await Shell.Current.Navigation.PopAsync();
 					}
 					else
 					{
 						await PopupNavigation.Instance.PopAsync();
 						await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-						await Navigation.PopAsync();
+						await Shell.Current.Navigation.PopAsync();
 					}
 				}
 				catch (Exception err)

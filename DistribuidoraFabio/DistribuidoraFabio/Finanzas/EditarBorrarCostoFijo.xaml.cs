@@ -42,7 +42,6 @@ namespace DistribuidoraFabio.Finanzas
 			_yearSiguiente = _yearActual + 1;
 			_mesInicio = 1;
 		}
-
 		private async void btnEditar_Clicked(object sender, EventArgs e)
 		{
 			if (CrossConnectivity.Current.IsConnected)
@@ -117,7 +116,7 @@ namespace DistribuidoraFabio.Finanzas
 									}
 									await PopupNavigation.Instance.PopAsync();
 									await DisplayAlert("EDITADO", "Se edito correctamente", "OK");
-									await Navigation.PopAsync();
+									await Shell.Current.Navigation.PopAsync();
 								}
 								else
 								{
@@ -171,13 +170,13 @@ namespace DistribuidoraFabio.Finanzas
 					{
 						await PopupNavigation.Instance.PopAsync();
 						await DisplayAlert("ELIMINADO", "Se elimino correctamente", "OK");
-						await Navigation.PopAsync();
+						await Shell.Current.Navigation.PopAsync();
 					}
 					else
 					{
 						await PopupNavigation.Instance.PopAsync();
 						await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-						await Navigation.PopAsync();
+						await Shell.Current.Navigation.PopAsync();
 					}
 				}
 				catch (Exception err)

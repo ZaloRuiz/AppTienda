@@ -196,7 +196,6 @@ namespace DistribuidoraFabio.Compra
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
-
 		private void btnEditar_Clicked(object sender, EventArgs e)
 		{
 			EditarCompra();
