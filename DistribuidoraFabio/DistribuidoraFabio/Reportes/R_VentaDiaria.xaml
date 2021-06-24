@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Reportes.R_VentaDiaria"
+             Visual="Material">
+    <ContentPage.Content>
+        <StackLayout Padding="10">
+            <StackLayout Padding="10">
+                <Label Text="Reporte diario" HorizontalOptions="CenterAndExpand" TextColor="White" FontAttributes="Bold" FontSize="18"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Label Text="Fecha del reporte: " TextColor="#465B70" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                <DatePicker x:Name="datePickerFecha" WidthRequest="200" BackgroundColor="White" TextColor="Black" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                <Button x:Name="btnReporte" Text="Buscar" BackgroundColor="Black" TextColor="White" HorizontalOptions="CenterAndExpand" 
+                        VerticalOptions="CenterAndExpand" CornerRadius="5" Clicked="btnReporte_Clicked"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

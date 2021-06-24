@@ -31,6 +31,18 @@ namespace DistribuidoraFabio.Finanzas
 		private decimal _v_octubre = 0;
 		private decimal _v_noviembre = 0;
 		private decimal _v_diciembre = 0;
+		private int _vcnt_enero = 0;
+		private int _vcnt_febrero = 0;
+		private int _vcnt_marzo = 0;
+		private int _vcnt_abril = 0;
+		private int _vcnt_mayo = 0;
+		private int _vcnt_junio = 0;
+		private int _vcnt_julio = 0;
+		private int _vcnt_agosto = 0;
+		private int _vcnt_septiembre = 0;
+		private int _vcnt_octubre = 0;
+		private int _vcnt_noviembre = 0;
+		private int _vcnt_diciembre = 0;
 		private decimal _c_enero = 0;
 		private decimal _c_febrero = 0;
 		private decimal _c_marzo = 0;
@@ -43,6 +55,18 @@ namespace DistribuidoraFabio.Finanzas
 		private decimal _c_octubre = 0;
 		private decimal _c_noviembre = 0;
 		private decimal _c_diciembre = 0;
+		private int _cCnt_enero = 0;
+		private int _cCnt_febrero = 0;
+		private int _cCnt_marzo = 0;
+		private int _cCnt_abril = 0;
+		private int _cCnt_mayo = 0;
+		private int _cCnt_junio = 0;
+		private int _cCnt_julio = 0;
+		private int _cCnt_agosto = 0;
+		private int _cCnt_septiembre = 0;
+		private int _cCnt_octubre = 0;
+		private int _cCnt_noviembre = 0;
+		private int _cCnt_diciembre = 0;
 		private decimal _gf_enero = 0;
 		private decimal _gf_febrero = 0;
 		private decimal _gf_marzo = 0;
@@ -103,7 +127,31 @@ namespace DistribuidoraFabio.Finanzas
 				_v_octubre = 0;
 				_v_noviembre = 0;
 				_v_diciembre = 0;
+				_vcnt_enero = 0;
+				_vcnt_febrero = 0;
+				_vcnt_marzo = 0;
+				_vcnt_abril = 0;
+				_vcnt_mayo = 0;
+				_vcnt_junio = 0;
+				_vcnt_julio = 0;
+				_vcnt_agosto = 0;
+				_vcnt_septiembre = 0;
+				_vcnt_octubre = 0;
+				_vcnt_noviembre = 0;
+				_vcnt_diciembre = 0;
 
+				_cCnt_enero = 0;
+				_cCnt_febrero = 0;
+				_cCnt_marzo = 0;
+				_cCnt_abril = 0;
+				_cCnt_mayo = 0;
+				_cCnt_junio = 0;
+				_cCnt_julio = 0;
+				_cCnt_agosto = 0;
+				_cCnt_septiembre = 0;
+				_cCnt_octubre = 0;
+				_cCnt_noviembre = 0;
+				_cCnt_diciembre = 0;
 				_c_enero = 0;
 				_c_febrero = 0;
 				_c_marzo = 0;
@@ -158,7 +206,9 @@ namespace DistribuidoraFabio.Finanzas
 				_yearElegido = "2021";
 				await Task.Delay(200);
 				GetDataVentas();
+				GetDataCantidadVentas();
 				GetDataCompras();
+				GetDataCantidadCompras();
 				GetDataGastosFijos();
 				GetDataGastosVariables();
 				GetDataGanancias();
@@ -337,6 +387,174 @@ namespace DistribuidoraFabio.Finanzas
 				}
 			}
 		}
+		public async void GetDataCantidadVentas()
+		{
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				try
+				{
+					CantidadTotalVentasPorMes _totalAnual = new CantidadTotalVentasPorMes()
+					{
+						fecha_year = Convert.ToInt32(_yearElegido)
+					};
+					var json = JsonConvert.SerializeObject(_totalAnual);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/listaCantTotalVentasPorMes.php", content);
+
+					var jsonR = await result.Content.ReadAsStringAsync();
+					var dataAnual = JsonConvert.DeserializeObject<List<CantidadTotalVentasPorMes>>(jsonR);
+					foreach (var item in dataAnual)
+					{
+						_vcnt_enero = item.Enero;
+						_vcnt_febrero = item.Febrero;
+						_vcnt_marzo = item.Marzo;
+						_vcnt_abril = item.Abril;
+						_vcnt_mayo = item.Mayo;
+						_vcnt_junio = item.Junio;
+						_vcnt_julio = item.Julio;
+						_vcnt_agosto = item.Agosto;
+						_vcnt_septiembre = item.Septiembre;
+						_vcnt_octubre = item.Octubre;
+						_vcnt_noviembre = item.Noviembre;
+						_vcnt_noviembre = item.Diciembre;
+					}
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+				}
+				await Task.Delay(200);
+				try
+				{
+					float _enero = (float)_vcnt_enero;
+					float _febrero = (float)_vcnt_febrero;
+					float _marzo = (float)_vcnt_marzo;
+					float _abril = (float)_vcnt_abril;
+					float _mayo = (float)_vcnt_mayo;
+					float _junio = (float)_vcnt_junio;
+					float _julio = (float)_vcnt_julio;
+					float _agosto = (float)_vcnt_agosto;
+					float _septiembre = (float)_vcnt_septiembre;
+					float _octubre = (float)_vcnt_octubre;
+					float _noviembre = (float)_vcnt_noviembre;
+					float _diciembre = (float)_vcnt_diciembre;
+
+					var entries = new[]
+					{
+				new ChartEntry(_enero)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Enero",
+						TextColor = SKColors.White,
+						ValueLabel = _enero.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_febrero)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Febrero",
+						TextColor = SKColors.White,
+						ValueLabel = _febrero.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_marzo)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Marzo",
+						TextColor = SKColors.White,
+						ValueLabel = _marzo.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_abril)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Abril",
+						TextColor = SKColors.White,
+						ValueLabel = _abril.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_mayo)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Mayo",
+						TextColor = SKColors.White,
+						ValueLabel = _mayo.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_junio)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Junio",
+						TextColor = SKColors.White,
+						ValueLabel = _junio.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_julio)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Julio",
+						TextColor = SKColors.White,
+						ValueLabel = _julio.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_agosto)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Agosto",
+						TextColor = SKColors.White,
+						ValueLabel = _agosto.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_septiembre)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Septiembre",
+						TextColor = SKColors.White,
+						ValueLabel = _septiembre.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_octubre)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Octubre",
+						TextColor = SKColors.White,
+						ValueLabel = _octubre.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_noviembre)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Noviembre",
+						TextColor = SKColors.White,
+						ValueLabel = _noviembre.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_diciembre)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Diciembre",
+						TextColor = SKColors.White,
+						ValueLabel = _diciembre.ToString(),
+						ValueLabelColor = SKColors.White,
+					}
+			};
+					graficoCantVentas.Chart = new BarChart()
+					{
+						Entries = entries,
+						BackgroundColor = SKColor.Parse("#40616B"),
+						LabelColor = SKColors.White,
+						LabelTextSize = 30,
+						LabelOrientation = Orientation.Horizontal,
+						ValueLabelOrientation = Orientation.Horizontal,
+					};
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+				}
+			}
+		}
 		public async void GetDataCompras()
 		{
 			if (CrossConnectivity.Current.IsConnected)
@@ -491,6 +709,175 @@ namespace DistribuidoraFabio.Finanzas
 					}
 			};
 					graficoComprasBs.Chart = new BarChart()
+					{
+						Entries = entries,
+						BackgroundColor = SKColor.Parse("#40616B"),
+						LabelColor = SKColors.White,
+						LabelTextSize = 30,
+						LabelOrientation = Orientation.Horizontal,
+						ValueLabelOrientation = Orientation.Horizontal,
+					};
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+				}
+			}
+		}
+		public async void GetDataCantidadCompras()
+		{
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				await Task.Delay(250);
+				try
+				{
+					CantidadTotalComprasPorMes _totalAnual = new CantidadTotalComprasPorMes()
+					{
+						fecha_year = Convert.ToInt32(_yearElegido)
+					};
+					var json = JsonConvert.SerializeObject(_totalAnual);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/listaCantTotalComprasPorMes.php", content);
+
+					var jsonR = await result.Content.ReadAsStringAsync();
+					var dataAnual = JsonConvert.DeserializeObject<List<CantidadTotalComprasPorMes>>(jsonR);
+					foreach (var item in dataAnual)
+					{
+						_cCnt_enero = item.Enero;
+						_cCnt_febrero = item.Febrero;
+						_cCnt_marzo = item.Marzo;
+						_cCnt_abril = item.Abril;
+						_cCnt_mayo = item.Mayo;
+						_cCnt_junio = item.Junio;
+						_cCnt_julio = item.Julio;
+						_cCnt_agosto = item.Agosto;
+						_cCnt_septiembre = item.Septiembre;
+						_cCnt_octubre = item.Octubre;
+						_cCnt_noviembre = item.Noviembre;
+						_cCnt_noviembre = item.Diciembre;
+					}
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+				}
+				await Task.Delay(200);
+				try
+				{
+					float _enero = (float)_c_enero;
+					float _febrero = (float)_c_febrero;
+					float _marzo = (float)_c_marzo;
+					float _abril = (float)_c_abril;
+					float _mayo = (float)_c_mayo;
+					float _junio = (float)_c_junio;
+					float _julio = (float)_c_julio;
+					float _agosto = (float)_c_agosto;
+					float _septiembre = (float)_c_septiembre;
+					float _octubre = (float)_c_octubre;
+					float _noviembre = (float)_c_noviembre;
+					float _diciembre = (float)_c_diciembre;
+
+					var entries = new[]
+					{
+				new ChartEntry(_enero)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Enero",
+						TextColor = SKColors.White,
+						ValueLabel = _enero.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_febrero)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Febrero",
+						TextColor = SKColors.White,
+						ValueLabel = _febrero.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_marzo)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Marzo",
+						TextColor = SKColors.White,
+						ValueLabel = _marzo.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_abril)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Abril",
+						TextColor = SKColors.White,
+						ValueLabel = _abril.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_mayo)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Mayo",
+						TextColor = SKColors.White,
+						ValueLabel = _mayo.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_junio)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Junio",
+						TextColor = SKColors.White,
+						ValueLabel = _junio.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_julio)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Julio",
+						TextColor = SKColors.White,
+						ValueLabel = _julio.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_agosto)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Agosto",
+						TextColor = SKColors.White,
+						ValueLabel = _agosto.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_septiembre)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Septiembre",
+						TextColor = SKColors.White,
+						ValueLabel = _septiembre.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_octubre)
+					{
+						Color = SKColor.Parse("#000FFF"),
+						Label = "Octubre",
+						TextColor = SKColors.White,
+						ValueLabel = _octubre.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_noviembre)
+					{
+						Color = SKColor.Parse("#FF0000"),
+						Label = "Noviembre",
+						TextColor = SKColors.White,
+						ValueLabel = _noviembre.ToString(),
+						ValueLabelColor = SKColors.White
+					},
+				new ChartEntry(_diciembre)
+					{
+						Color = SKColor.Parse("#059B00"),
+						Label = "Diciembre",
+						TextColor = SKColors.White,
+						ValueLabel = _diciembre.ToString(),
+						ValueLabelColor = SKColors.White,
+					}
+			};
+					graficoCantCompras.Chart = new BarChart()
 					{
 						Entries = entries,
 						BackgroundColor = SKColor.Parse("#40616B"),
@@ -1143,7 +1530,31 @@ namespace DistribuidoraFabio.Finanzas
 			_v_octubre = 0;
 			_v_noviembre = 0;
 			_v_diciembre = 0;
+			_vcnt_enero = 0;
+			_vcnt_febrero = 0;
+			_vcnt_marzo = 0;
+			_vcnt_abril = 0;
+			_vcnt_mayo = 0;
+			_vcnt_junio = 0;
+			_vcnt_julio = 0;
+			_vcnt_agosto = 0;
+			_vcnt_septiembre = 0;
+			_vcnt_octubre = 0;
+			_vcnt_noviembre = 0;
+			_vcnt_diciembre = 0;
 
+			_cCnt_enero = 0;
+			_cCnt_febrero = 0;
+			_cCnt_marzo = 0;
+			_cCnt_abril = 0;
+			_cCnt_mayo = 0;
+			_cCnt_junio = 0;
+			_cCnt_julio = 0;
+			_cCnt_agosto = 0;
+			_cCnt_septiembre = 0;
+			_cCnt_octubre = 0;
+			_cCnt_noviembre = 0;
+			_cCnt_diciembre = 0;
 			_c_enero = 0;
 			_c_febrero = 0;
 			_c_marzo = 0;

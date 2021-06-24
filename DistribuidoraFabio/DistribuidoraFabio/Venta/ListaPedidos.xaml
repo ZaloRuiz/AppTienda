@@ -8,8 +8,8 @@
   <!--Pages can be added as references or inline-->
     <ContentPage Title="Entregados" Visual="Material">
         <ContentPage.ToolbarItems>
-            <ToolbarItem x:Name="toolbarBuscarEnt" Text="Filtrar por cliente" Clicked="toolbarBuscarEnt_Clicked"/>
-            <ToolbarItem x:Name="toolbar" Text="Agregar Venta" Clicked="ToolbarItem_Clicked"/>
+            
+            
         </ContentPage.ToolbarItems>
         <ListView x:Name="listaEntregados" ItemTapped="OnItemSelectedE" SeparatorColor="#465B70" ItemsSource="{Binding ListaPedidosEnt}">
             <ListView.ItemTemplate>

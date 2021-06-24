@@ -23,7 +23,7 @@
                 <dg:DataGridColumn Title="Marca" PropertyName="nombre_producto" Width="2*"/>
                 <dg:DataGridColumn Title="Tipo" PropertyName="nombre_tipo_producto" Width="0.95*"/>
                 <dg:DataGridColumn Title="Cantidad" PropertyName="stock"  Width="1*"/>
-                <dg:DataGridColumn Title="Precio Promedio" PropertyName="promedio"/>
+                <dg:DataGridColumn Title="Precio Venta" PropertyName="precio_venta"/>
                 <dg:DataGridColumn Title="Total Bs." PropertyName="stock_valorado"/>
             </dg:DataGrid.Columns>
             <dg:DataGrid.RowsBackgroundColorPalette>

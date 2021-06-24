@@ -56,7 +56,7 @@
         <ShellContent ContentTemplate="{DataTemplate finanzas:IndexFinanzas}"/>
     </FlyoutItem>
     <FlyoutItem Title="Reportes" Icon="icon_reporte.png" Style="{StaticResource MenuShell}">
-        <ShellContent ContentTemplate="{DataTemplate reportes:R_DetalleVenta}"/>
+        <ShellContent ContentTemplate="{DataTemplate reportes:MenuReportes}"/>
     </FlyoutItem>
     <FlyoutItem Title="Inventario" Icon="icon_inventario" Style="{StaticResource MenuShell}">
         <ShellContent ContentTemplate="{DataTemplate inventario:InventarioGeneral}"/>

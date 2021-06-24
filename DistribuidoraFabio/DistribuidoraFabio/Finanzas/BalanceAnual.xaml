@@ -19,6 +19,8 @@
                     <RowDefinition Height="400"></RowDefinition>
                     <RowDefinition Height="400"></RowDefinition>
                     <RowDefinition Height="400"></RowDefinition>
+                    <RowDefinition Height="400"></RowDefinition>
+                    <RowDefinition Height="400"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackLayout Grid.Row="0" Grid.Column="0" Padding="5" Orientation="Horizontal">
                     <Label Text="2021" TextColor="Black" FontSize="Large" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" Padding="10"/>
@@ -36,7 +38,17 @@
                         </StackLayout>
                     </Frame>
                 </StackLayout>
-                <StackLayout Grid.Row="2" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout Grid.Row="2" Grid.Column="0" Padding="0, 5, 0, 5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout>
+                            <Label Text="Cantidad de cajas en ventas" FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                            <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <microcharts:ChartView x:Name="graficoCantVentas" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="3" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <StackLayout>
                             <Label Text="Compras en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
@@ -46,7 +58,17 @@
                         </StackLayout>
                     </Frame>
                 </StackLayout>
-                <StackLayout Grid.Row="3" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout Grid.Row="4" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout>
+                            <Label Text="Cantidad de cajas en compras" FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
+                            <StackLayout Background="#40616B" Padding="0, 15, 0, 15" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <microcharts:ChartView x:Name="graficoCantCompras" Background="#40616B" Margin="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="5" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <StackLayout>
                             <Label Text="Gastos fijos en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
@@ -56,7 +78,7 @@
                         </StackLayout>
                     </Frame>
                 </StackLayout>
-                <StackLayout Grid.Row="4" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout Grid.Row="6" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <StackLayout>
                             <Label Text="Gastos variables en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>
@@ -66,7 +88,7 @@
                         </StackLayout>
                     </Frame>
                 </StackLayout>
-                <StackLayout Grid.Row="5" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout Grid.Row="7" Grid.Column="0" Padding="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <Frame BackgroundColor="#40616B" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <StackLayout>
                             <Label Text="Ganacias en Bs." FontSize="20" HorizontalTextAlignment="Center" TextColor="White"/>

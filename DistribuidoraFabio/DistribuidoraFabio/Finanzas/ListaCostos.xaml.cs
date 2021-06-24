@@ -264,6 +264,12 @@ namespace DistribuidoraFabio.Finanzas
 		}
 		private void btnBuscar_Clicked(object sender, EventArgs e)
 		{
+			stkCV.Children.Clear();
+			stkCF.Children.Clear();
+			txtTotalCF.Text = "0";
+			txtTotalCV.Text = "0";
+			_totalCF = 0;
+			_totalCV = 0;
 			GetCostoVariable();
 			Task.Delay(200);
 			GetCostoFijo();

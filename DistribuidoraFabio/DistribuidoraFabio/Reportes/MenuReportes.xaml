@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DistribuidoraFabio.Reportes.MenuReportes"
+             Visual="Material"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="White">
+                <Frame BackgroundColor="White" Opacity="0.7" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Ventas diarias" BackgroundColor="#465B70" TextColor="White" CornerRadius="10" Clicked="Button_Clicked"/>
+                </Frame>
+            </StackLayout>
+            <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="White">
+                <Frame BackgroundColor="White" Opacity="0.7" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Inventario diario" BackgroundColor="#465B70" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_1"/>
+                </Frame>
+            </StackLayout>
+            <StackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="White">
+                <Frame BackgroundColor="White" Opacity="0.7" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Detalle de venta" BackgroundColor="#465B70" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_2"/>
+                </Frame>
+            </StackLayout>
+            <StackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="White">
+                <Frame BackgroundColor="White" Opacity="0.7" CornerRadius="10" Padding="20" HasShadow="True"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Button Text="Graficas" BackgroundColor="#465B70" TextColor="White" CornerRadius="10" Clicked="Button_Clicked_3"/>
+                </Frame>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

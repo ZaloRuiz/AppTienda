@@ -30,6 +30,7 @@ namespace DistribuidoraFabio.Venta
 		{
 			InitializeComponent();
 			AvisoModificar();
+			AgregarBotones();
 		}
         protected async override void OnAppearing()
         {
@@ -79,61 +80,99 @@ namespace DistribuidoraFabio.Venta
 				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 			}
 		}
+		private void AgregarBotones()
+		{
+			ToolbarItem toolbar = new ToolbarItem
+			{
+				Text = "Agregar Venta",
+				Order = ToolbarItemOrder.Primary,
+				Priority = 2
+			};
+			this.ToolbarItems.Add(toolbar);
+			toolbar.Clicked += ToolbarItem_Clicked;
+
+			ToolbarItem toolbarBuscarEnt = new ToolbarItem
+			{
+				Text = "Filtrar por cliente",
+				Order = ToolbarItemOrder.Secondary,
+				Priority = 1
+			};
+			this.ToolbarItems.Add(toolbarBuscarEnt);
+			toolbarBuscarEnt.Clicked += toolbarBuscarEnt_Clicked;
+		}
 		private async void AvisoModificar()
 		{
-			HttpClient client = new HttpClient();
-			var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaEditarVentaPendiente.php");
-			var lista_e_v = JsonConvert.DeserializeObject<List<Editar_Venta>>(response);
-			if(lista_e_v.Count != 0)
+			if (CrossConnectivity.Current.IsConnected)
 			{
-				ToolbarItem _item_aviso = new ToolbarItem
+				try
 				{
-					Text = "Editar Venta",
-					IconImageSource = ImageSource.FromFile("icon_advertencia.png"),
-					Order = ToolbarItemOrder.Primary,
-					Priority = 0
-				};
-				this.ToolbarItems.Add(_item_aviso);
-				_item_aviso.Clicked += OnItemAvisoClicked;
-			}
-			async void OnItemAvisoClicked(object sender, EventArgs e)
-			{
-				ToolbarItem item = (ToolbarItem)sender;
-				var actionSheet = await DisplayActionSheet("Aviso", "Ir a modificar", "Cancelar", "Existen ventas por modificar");
+					HttpClient client = new HttpClient();
+					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaEditarVentaPendiente.php");
+					var lista_e_v = JsonConvert.DeserializeObject<List<Editar_Venta>>(response);
+					if(lista_e_v.Count > 0)
+					{
+						if (lista_e_v.Count != 0)
+						{
+							ToolbarItem _item_aviso = new ToolbarItem
+							{
+								Text = "Editar Venta",
+								IconImageSource = ImageSource.FromFile("icon_advertencia.png"),
+								Order = ToolbarItemOrder.Secondary,
+								Priority = 0
+							};
+							this.ToolbarItems.Add(_item_aviso);
+							_item_aviso.Clicked += OnItemAvisoClicked;
+						}
+					}
+					async void OnItemAvisoClicked(object sender, EventArgs e)
+					{
+						ToolbarItem item = (ToolbarItem)sender;
+						var actionSheet = await DisplayActionSheet("Aviso", "Ir a modificar", "Cancelar", "Existen ventas por modificar");
 
-				switch (actionSheet)
+						switch (actionSheet)
+						{
+							case "Ir a modificar":
+
+								// Do Something when 'Cancel' Button is pressed
+								await Navigation.PushAsync(new ListaVentaAEditar());
+								break;
+
+							case "Cancelar":
+
+								// Do Something when 'Destruction' Button is pressed
+
+								break;
+
+							case "Existen ventas por modificar":
+
+								// Do Something when 'Button1' Button is pressed
+								await Navigation.PushAsync(new ListaVentaAEditar());
+								break;
+						}
+					}
+				}
+				catch (Exception err)
 				{
-					case "Ir a modificar":
-
-						// Do Something when 'Cancel' Button is pressed
-						await Navigation.PushAsync(new ListaVentaAEditar());
-						break;
-
-					case "Cancelar":
-
-						// Do Something when 'Destruction' Button is pressed
-						
-						break;
-
-					case "Existen ventas por modificar":
-
-						// Do Something when 'Button1' Button is pressed
-						await Navigation.PushAsync(new ListaVentaAEditar());
-						break;
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
 				}
 			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
+			
 		}
-        private async void ToolbarItem_Clicked(object sender, EventArgs e)
+		private async void ToolbarItem_Clicked(object sender, EventArgs e)
 		{
 			await Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
 		}
 		private async void ToolbarItemP_Clicked(object sender, EventArgs e)
 		{
-			Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
+			await Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
 		}
 		private async void ToolbarItemC_Clicked(object sender, EventArgs e)
 		{
-			Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
+			await Shell.Current.Navigation.PushAsync(new AgregarVenta(), true);
 		}
 		private async void OnItemSelectedE(object sender, ItemTappedEventArgs e)
 		{
