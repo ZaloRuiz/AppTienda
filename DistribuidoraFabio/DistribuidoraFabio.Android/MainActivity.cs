@@ -26,13 +26,23 @@ namespace DistribuidoraFabio.Droid
 
             this.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
 
-            //allowing the device to change the screen orientation based on the rotation
+            //Reportes de ventas diarias
             MessagingCenter.Subscribe<ListaR_VentaDiaria>(this, "allowPortrait", sender =>
             {
                 RequestedOrientation = ScreenOrientation.Portrait;
             });
-            //during page close setting back to portrait
+            //Reportes de ventas diarias
             MessagingCenter.Subscribe<ListaR_VentaDiaria>(this, "preventPortrait", sender =>
+            {
+                RequestedOrientation = ScreenOrientation.Landscape;
+            });
+            //Reportes de inventario diario
+            MessagingCenter.Subscribe<ListaR_InventarioDia>(this, "allowPortrait", sender =>
+            {
+                RequestedOrientation = ScreenOrientation.Portrait;
+            });
+            //Reportes de inventario diario
+            MessagingCenter.Subscribe<ListaR_InventarioDia>(this, "preventPortrait", sender =>
             {
                 RequestedOrientation = ScreenOrientation.Landscape;
             });
@@ -44,6 +54,7 @@ namespace DistribuidoraFabio.Droid
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             Rg.Plugins.Popup.Popup.Init(this);
+            OxyPlot.Xamarin.Forms.Platform.Android.PlotViewRenderer.Init();
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             LoadApplication(new App());

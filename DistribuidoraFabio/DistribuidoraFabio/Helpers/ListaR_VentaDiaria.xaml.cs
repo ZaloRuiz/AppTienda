@@ -48,7 +48,6 @@ namespace DistribuidoraFabio.Helpers
 
 					var jsonR = await result.Content.ReadAsStringAsync();
 					var dataVentXprod = JsonConvert.DeserializeObject<List<ReporteVentaDiaria>>(jsonR);
-					txtTitulo.Text = "Cantidad = " + dataVentXprod.Count().ToString();
 					if (dataVentXprod != null)
 					{
 						listData.ItemsSource = dataVentXprod;

@@ -21,11 +21,11 @@
                 <StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label Text="DESDE: " TextColor="Black" VerticalOptions="Center"/>
-                        <DatePicker x:Name="entryF_inicio" TextColor="Black" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
+                        <DatePicker x:Name="entryF_inicio" Format="dd/MM/yyyy" TextColor="Black" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label Text="HASTA: " TextColor="Black" VerticalOptions="Center"/>
-                        <DatePicker x:Name="entryF_final" TextColor="Black" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
+                        <DatePicker x:Name="entryF_final" Format="dd/MM/yyyy" TextColor="Black" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
                     </StackLayout>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand" Padding="0, 0, 0, 20">

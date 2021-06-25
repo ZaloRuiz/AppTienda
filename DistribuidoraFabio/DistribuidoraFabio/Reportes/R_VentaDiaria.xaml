@@ -10,7 +10,7 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label Text="Fecha del reporte: " TextColor="#465B70" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-                <DatePicker x:Name="datePickerFecha" WidthRequest="200" BackgroundColor="White" TextColor="Black" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                <DatePicker x:Name="datePickerFecha" Format="dd/MM/yyyy" WidthRequest="200" BackgroundColor="White" TextColor="Black" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
                 <Button x:Name="btnReporte" Text="Buscar" BackgroundColor="Black" TextColor="White" HorizontalOptions="CenterAndExpand" 
                         VerticalOptions="CenterAndExpand" CornerRadius="5" Clicked="btnReporte_Clicked"/>
             </StackLayout>
