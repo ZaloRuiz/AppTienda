@@ -42,21 +42,29 @@
                                 <Label Grid.Column="0" Text="Año " TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
                                 <Picker x:Name="pickSemYear" Grid.Column="1" VerticalOptions="Start" HorizontalOptions="FillAndExpand"/>
                                 <Label Grid.Column="2" Text="Mes " TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
-                                <Picker x:Name="pickSemMes" Grid.Column="3" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                                <Picker x:Name="pickSemMes" Grid.Column="3" VerticalOptions="Start" HorizontalOptions="FillAndExpand" SelectedIndexChanged="pickSemMes_SelectedIndexChanged"/>
                                 <Label Grid.Column="4" Text="Semana " TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
-                                <Picker x:Name="pickSemSemana" Grid.Column="5" VerticalOptions="Start" HorizontalOptions="FillAndExpand"/>
+                                <Picker x:Name="pickSemSemana" Grid.Column="5" VerticalOptions="Start" HorizontalOptions="FillAndExpand" SelectedIndexChanged="pickSemSemana_SelectedIndexChanged"/>
                             </Grid>
                         </StackLayout>
                         <StackLayout x:Name="stkYear" Orientation="Horizontal" IsVisible="False">
                             <Grid ColumnDefinitions="40*,60*" ColumnSpacing="10" HorizontalOptions="FillAndExpand">
                                 <Label Grid.Column="0" Text="Año " TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
-                                <Picker Grid.Column="1" VerticalOptions="Start" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
+                                <Picker x:Name="pickYear" Grid.Column="1" VerticalOptions="Start" HorizontalOptions="StartAndExpand" WidthRequest="200" SelectedIndexChanged="pickYear_SelectedIndexChanged"/>
                             </Grid>
                         </StackLayout>
                         <Button x:Name="btnFiltrar" Text="Mostrar" BackgroundColor="Black" TextColor="White" CornerRadius="5" Clicked="btnFiltrar_Clicked"/>
                     </StackLayout>
                     <StackLayout x:Name="stkGrafico" Grid.Row="1">
                         
+                    </StackLayout>
+                    <StackLayout x:Name="stkFinal" Grid.Row="2">
+                        <Label x:Name="txt1" FontSize="15" HorizontalTextAlignment="Center"/>
+                        <Label x:Name="txt2" FontSize="15" HorizontalTextAlignment="Center"/>
+                        <Label x:Name="txt3" FontSize="15" HorizontalTextAlignment="Center"/>
+                        <Label x:Name="txt4" FontSize="15" HorizontalTextAlignment="Center"/>
+                        <Label x:Name="txt5" FontSize="15" HorizontalTextAlignment="Center"/>
+                        <Label x:Name="txt6" FontSize="15" HorizontalTextAlignment="Center"/>
                     </StackLayout>
                 </Grid>
             </StackLayout>

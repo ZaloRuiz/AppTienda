@@ -39,7 +39,31 @@ namespace DistribuidoraFabio.Reportes
 		private decimal _v_octubre = 0;
 		private decimal _v_noviembre = 0;
 		private decimal _v_diciembre = 0;
+		private int _diasPrimerSemana = 0;
+		private int _diasSegundaSemana = 0;
+		private int _diasTerceraSemana = 0;
+		private int _diasCuartaSemana = 0;
+		private int _diasQuintaSemana = 0;
+		private DateTime PrimerDiaMes;
+		DateTime _inicioSem1;
+		DateTime _finSem1;
+		DateTime _inicioSem2;
+		DateTime _finSem2;
+		DateTime _inicioSem3;
+		DateTime _finSem3;
+		DateTime _inicioSem4;
+		DateTime _finSem4;
+		DateTime _inicioSem5;
+		DateTime _finSem5;
+		DateTime _inicioSem6;
+		DateTime _finSem6;
+		private DateTime _InicioSemana = DateTime.Today;
+		private DateTime _FinalSemana = DateTime.Today.AddDays(-7);
+		private DateTime _InicioYear;
+		private DateTime _FinalYear;
+		int _diasSextaSemana = 0;
 		List<Vendedores> vendedorList = new List<Vendedores>();
+		List<string> ListSemanas = new List<string>();
 		private int idVendedorSelected = 0;
 		ObservableCollection<GraficoVentaDiaria> _listaVentasDia = new ObservableCollection<GraficoVentaDiaria>();
 		ObservableCollection<VentasNombre> _listaVentasSemana = new ObservableCollection<VentasNombre>();
@@ -51,8 +75,9 @@ namespace DistribuidoraFabio.Reportes
 		public GraficoVentas ()
 		{
 			InitializeComponent ();
-			pickSemMes.ItemsSource = new List<string> { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Noviembre", "Diciembre" };
+			pickSemMes.ItemsSource = new List<string> { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
 			pickSemYear.ItemsSource = new List<string> { "2021", "2022", "2023", "2024", "2025" };
+			pickYear.ItemsSource = new List<string> { "2021", "2022", "2023", "2024", "2025" };
 			//GetDataVentas();
 			GetDataVendedor();
 			//GetGrafico();
@@ -499,39 +524,249 @@ namespace DistribuidoraFabio.Reportes
 			//filtrado por semana
 			else if (RB_Semana.IsChecked)
 			{
-				List<DateTime> _semana1 = new List<DateTime>();
-				List<DateTime> _semana2 = new List<DateTime>();
-				List<DateTime> _semana3 = new List<DateTime>();
-				List<DateTime> _semana4 = new List<DateTime>();
+				//Consulta al servidor
+				if (CrossConnectivity.Current.IsConnected)
+				{
+					string BusyReason = "Cargando...";
+					await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+					try
+					{
+						GraficoVentaDiaria _Ventas = new GraficoVentaDiaria()
+						{
+							id_vendedor = idVendedorSelected,
+							fecha_inicio = _InicioSemana,
+							fecha_final = _FinalSemana
+						};
+						var json = JsonConvert.SerializeObject(_Ventas);
+						var content = new StringContent(json, Encoding.UTF8, "application/json");
+						HttpClient client = new HttpClient();
+						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiaria.php", content);
+
+						var jsonR = await result.Content.ReadAsStringAsync();
+						var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiaria>>(jsonR);
+
+						foreach (var item in lista_ventas)
+						{
+							_listaVentasDia.Add(item);
+						}
+					}
+					catch (Exception err)
+					{
+						await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
+					}
+					foreach (var item in _listaVentasDia)
+					{
+						if (item.total < _montoMinimo)
+						{
+							_montoMinimo = item.total;
+						}
+						if (item.total > _montoMaximo)
+						{
+							_montoMaximo = item.total;
+						}
+					}
+					await DisplayAlert("Valores", _listaVentasDia.Count.ToString(), "OK");
+					//Crear grafico
+					stkGrafico.Children.Clear();
+					List<DataPoint> Points = new List<DataPoint>();
+					foreach (var item in _listaVentasDia)
+					{
+						Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+					}
+
+					//var Points2 = new List<DataPoint>
+					//{
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 1)), 4200),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 2)), 2963),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 3)), 3500),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 4)), 8455),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 5)), 7602),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 6)), 4117),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 7)), 3668),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 8)), 9412),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 9)), 6471)
+					//};
+
+					var m = new PlotModel();
+					m.PlotType = PlotType.XY;
+					m.InvalidatePlot(false);
+
+					m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+					var startDate = _InicioSemana.Date.AddDays(-2);
+					var endDate = _FinalSemana.Date.AddDays(2);
+
+					var minValue = DateTimeAxis.ToDouble(startDate);
+					var maxValue = DateTimeAxis.ToDouble(endDate);
+					m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+					double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+					double _maximum = Convert.ToDouble(_montoMaximo) + 50;
+					m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+					m.ResetAllAxes();
+
+					var ls1 = new LineSeries();
+					//var ls2 = new LineSeries();
+					//MarkerType = OxyPlot.MarkerType.Circle,
+					ls1.MarkerType = OxyPlot.MarkerType.Circle;
+					//ls2.MarkerType = OxyPlot.MarkerType.Circle;
+					ls1.ItemsSource = Points;
+					//ls2.ItemsSource = Points2;
+
+					m.Series.Add(ls1);
+					//m.Series.Add(ls2);
+					_opv = new PlotView
+					{
+						WidthRequest = 300,
+						HeightRequest = 300,
+						BackgroundColor = Color.White,
+					};
+					_opv.Model = m;
+					stkGrafico.Children.Add(_opv);
+					await PopupNavigation.Instance.PopAsync();
+				}
+				else
+				{
+					await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+				}
+			}
+			//filtrado de por año
+			else if (RB_Year.IsChecked)
+			{
+				if (CrossConnectivity.Current.IsConnected)
+				{
+					string BusyReason = "Cargando...";
+					await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+					try
+					{
+						GraficoVentaDiaria _Ventas = new GraficoVentaDiaria()
+						{
+							id_vendedor = idVendedorSelected,
+							fecha_inicio = _InicioYear,
+							fecha_final = _FinalYear
+						};
+						var json = JsonConvert.SerializeObject(_Ventas);
+						var content = new StringContent(json, Encoding.UTF8, "application/json");
+						HttpClient client = new HttpClient();
+						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiaria.php", content);
+
+						var jsonR = await result.Content.ReadAsStringAsync();
+						var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiaria>>(jsonR);
+
+						foreach (var item in lista_ventas)
+						{
+							_listaVentasDia.Add(item);
+						}
+					}
+					catch (Exception err)
+					{
+						await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
+					}
+					foreach (var item in _listaVentasDia)
+					{
+						if (item.total < _montoMinimo)
+						{
+							_montoMinimo = item.total;
+						}
+						if (item.total > _montoMaximo)
+						{
+							_montoMaximo = item.total;
+						}
+					}
+					await DisplayAlert("Valores", _listaVentasDia.Count.ToString(), "OK");
+					//Crear grafico
+					stkGrafico.Children.Clear();
+					List<DataPoint> Points = new List<DataPoint>();
+					foreach (var item in _listaVentasDia)
+					{
+						Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+					}
+
+					//var Points2 = new List<DataPoint>
+					//{
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 1)), 4200),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 2)), 2963),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 3)), 3500),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 4)), 8455),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 5)), 7602),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 6)), 4117),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 7)), 3668),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 8)), 9412),
+					//	new DataPoint(DateTimeAxis.ToDouble(new DateTime(2021, 6, 9)), 6471)
+					//};
+
+					var m = new PlotModel();
+					m.PlotType = PlotType.XY;
+					m.InvalidatePlot(false);
+
+					m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+					var startDate = _InicioYear.Date.AddDays(-2);
+					var endDate = _FinalYear.Date.AddDays(2);
+
+					var minValue = DateTimeAxis.ToDouble(startDate);
+					var maxValue = DateTimeAxis.ToDouble(endDate);
+					m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+					double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+					double _maximum = Convert.ToDouble(_montoMaximo) + 50;
+					m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+					m.ResetAllAxes();
+
+					var ls1 = new LineSeries();
+					//var ls2 = new LineSeries();
+					//MarkerType = OxyPlot.MarkerType.Circle,
+					ls1.MarkerType = OxyPlot.MarkerType.Circle;
+					//ls2.MarkerType = OxyPlot.MarkerType.Circle;
+					ls1.ItemsSource = Points;
+					//ls2.ItemsSource = Points2;
+
+					m.Series.Add(ls1);
+					//m.Series.Add(ls2);
+					_opv = new PlotView
+					{
+						WidthRequest = 300,
+						HeightRequest = 300,
+						BackgroundColor = Color.White,
+					};
+					_opv.Model = m;
+					stkGrafico.Children.Add(_opv);
+					await PopupNavigation.Instance.PopAsync();
+				}
+				else
+				{
+					await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+				}
+			}
+		}
+
+		private async void pickSemMes_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			try
+			{
 				List<DateTime> _fechaElegida = new List<DateTime>();
 				CultureInfo ci = Thread.CurrentThread.CurrentCulture;
 				int _numeroMes = pickSemMes.SelectedIndex + 1;
 				string _nombreMes = ci.DateTimeFormat.GetMonthName(_numeroMes);
 				int _numeroYear = Convert.ToInt32(pickSemYear.SelectedItem);
-				DateTime PrimerDiaMes = new DateTime(_numeroYear, _numeroMes, 1);
+				PrimerDiaMes = new DateTime(_numeroYear, _numeroMes, 1);
 				DiaDeLaSemana = ci.DateTimeFormat.GetDayName(PrimerDiaMes.DayOfWeek).ToString();
 				DiasSemana = PrimerDiaMes;
 				DateTime _DiasSemanaPorMes = PrimerDiaMes;
 				int _diasPorMes = DateTime.DaysInMonth(_numeroYear, _numeroMes);
-				
+
 				//agregar fechas del mes elegido a lista
-				for(int d = 0; d < _diasPorMes; d++)
+				for (int d = 0; d < _diasPorMes; d++)
 				{
 					_fechaElegida.Add(_DiasSemanaPorMes);
 					_DiasSemanaPorMes.AddDays(1);
 				}
 				int contadorDias = 0;
-				int iteracion = 0;
-				int _diasPrimerSemana = 0;
-				int _diasSegundaSemana = 0;
-				int _diasTerceraSemana = 0;
-				int _diasCuartaSemana = 0;
-				int _diasQuintaSemana = 0;
-				int _diasSextaSemana = 0;
-				//int NumDelDia = ci.DateTimeFormat.FirstDayOfWeek(_);
-				
-				DateTime _PrimerdiaS1 = PrimerDiaMes;
-				DateTime _UltimodiaS1;
+				_diasPrimerSemana = 0;
+				_diasSegundaSemana = 0;
+				_diasTerceraSemana = 0;
+				_diasCuartaSemana = 0;
+				_diasQuintaSemana = 0;
+				_diasSextaSemana = 0;
+
 				//obtener la cantidad de dias por semana
 				//foreach (var item in _fechaElegida)
 				for (int d = 0; d < _diasPorMes; d++)
@@ -559,7 +794,7 @@ namespace DistribuidoraFabio.Reportes
 							DiasSemana = DiasSemana.AddDays(1);
 							DiaDeLaSemana = ci.DateTimeFormat.GetDayName(DiasSemana.DayOfWeek).ToString();
 						}
-						else if(_diasCuartaSemana == 0)
+						else if (_diasCuartaSemana == 0)
 						{
 							_diasCuartaSemana = contadorDias + 1;
 							contadorDias = 0;
@@ -579,42 +814,122 @@ namespace DistribuidoraFabio.Reportes
 						contadorDias = contadorDias + 1;
 						DiasSemana = DiasSemana.AddDays(1);
 						DiaDeLaSemana = ci.DateTimeFormat.GetDayName(DiasSemana.DayOfWeek).ToString();
-						//_diasQuintaSemana = contadorDias;
 					}
 				}
-				if(_diasQuintaSemana == 0)
+				if (_diasQuintaSemana == 0)
 				{
 					_diasQuintaSemana = contadorDias;
 				}
-				if(_diasQuintaSemana == 7)
+				if (_diasQuintaSemana == 7)
 				{
 					_diasSextaSemana = contadorDias;
 				}
-				//if(contadorDias >= 7)
-				//{
-				//	_diasQuintaSemana = 7;
-				//	_diasSextaSemana = contadorDias;
-				//}	
-				//string fechaMesAnterior = ci.DateTimeFormat.GetMonthName(DateTime.Now.AddMonths(-1).Month).ToString().ToUpper();
-				//txtMesAnterior.Text = fechaMesAnterior;
-				//string fechaMesActual = ci.DateTimeFormat.GetMonthName(DateTime.Now.Month).ToString().ToUpper();
-				//txtFechaMes.Text = fechaMesActual;
-				//txtFechaActual.Text = DateTime.Today.ToString("dd/MM/yyy");
-				////FechaMesActual
-				//DateTime fechaMesAct = DateTime.Today;
-				//DateTime primerDiaMesAct = new DateTime(fechaMesAct.Year, fechaMesAct.Month, 1);
-				//DateTime ultimoDiaMesAct = primerDiaMesAct.AddMonths(1).AddDays(-1);
-				////const FormatException format = "yyyy'-'MM'-'dd";
-				//_FechaInicio = primerDiaMesAct.ToString("yyyy-MM-dd");
-				//_FechaFinal = ultimoDiaMesAct.ToString("yyyy-MM-dd");
-				await DisplayAlert("Semana del mes", "Contador dias="+contadorDias.ToString()+" / " + "diaspor mes="+ _diasPorMes.ToString() + " * " + _diasPrimerSemana.ToString() 
-					+ " - " + _diasSegundaSemana.ToString() + " - " + _diasTerceraSemana.ToString()
-					+ " - " + _diasCuartaSemana.ToString() + " - " + _diasQuintaSemana.ToString() + " * " + _diasSextaSemana.ToString() ,"Ok");
-			}
-			//filtrado de por año
-			else if (RB_Year.IsChecked)
-			{
 
+				//Ahora toca calcular el 1er y ultimo dia de cada semana en base a la cantidad de dias por semana y al primer dia del mes
+				_inicioSem1 = PrimerDiaMes;
+				_finSem1 = _inicioSem1.AddDays(_diasPrimerSemana - 1);
+				_inicioSem2 = _finSem1.AddDays(1);
+				_finSem2 = _inicioSem2.AddDays(_diasSegundaSemana - 1);
+				_inicioSem3 = _finSem2.AddDays(1);
+				_finSem3 = _inicioSem3.AddDays(_diasTerceraSemana - 1);
+				_inicioSem4 = _finSem3.AddDays(1);
+				_finSem4 = _inicioSem4.AddDays(_diasCuartaSemana - 1);
+				txt5.Text = string.Empty;
+				txt6.Text = string.Empty;
+				if (_diasQuintaSemana > 0)
+				{
+					_inicioSem5 = _finSem4.AddDays(1);
+					_finSem5 = _inicioSem5.AddDays(_diasQuintaSemana - 1);
+					//txt5.Text = string.Empty;
+					pickSemSemana.ItemsSource = new List<string> { "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Semana 5" };
+					//txt5.Text = "Valor= " + _diasQuintaSemana.ToString() + "  Inicio Sem5 = " + _inicioSem5.ToString("dd/MM/yyyy") + "  -  Final Sem5 " + _finSem5.ToString("dd/MM/yyyy");
+					if (_diasSextaSemana > 0)
+					{
+						_inicioSem6 = _finSem5.AddDays(1);
+						_finSem6 = _inicioSem6.AddDays(_diasSextaSemana - 1);
+						//txt6.Text = string.Empty;
+						pickSemSemana.ItemsSource = new List<string> { "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Semana 5", "Semana 6" };
+						//txt6.Text = "Valor= " + _diasSextaSemana.ToString() + "  Inicio Sem6 = " + _inicioSem6.ToString("dd/MM/yyyy") + "  -  Final Sem6 " + _finSem6.ToString("dd/MM/yyyy");
+					}
+
+				}
+				else
+				{
+					pickSemSemana.ItemsSource = new List<string> { "Semana 1", "Semana 2", "Semana 3", "Semana 4" };
+				}
+				//txt1.Text = "Inicio Sem1 = " + _inicioSem1.ToString("dd/MM/yyyy") + "  -  Final Sem1 " + _finSem1.ToString("dd/MM/yyyy");
+				//txt2.Text = "Inicio Sem2 = " + _inicioSem2.ToString("dd/MM/yyyy") + "  -  Final Sem2 " + _finSem2.ToString("dd/MM/yyyy");
+				//txt3.Text = "Inicio Sem3 = " + _inicioSem3.ToString("dd/MM/yyyy") + "  -  Final Sem3 " + _finSem3.ToString("dd/MM/yyyy");
+				//txt4.Text = "Inicio Sem4 = " + _inicioSem4.ToString("dd/MM/yyyy") + "  -  Final Sem4 " + _finSem4.ToString("dd/MM/yyyy");
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("ERROR", err.ToString(), "OK");
+			}
+		}
+		private async void pickSemSemana_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			try
+			{
+				var picker = (Picker)sender;
+				int selectedIndex = picker.SelectedIndex;
+				if (selectedIndex != -1)
+				{
+					if(picker.Items[selectedIndex] == "Semana 1")
+					{
+						_InicioSemana = _inicioSem1;
+						_FinalSemana = _finSem1;
+					}
+					else if(picker.Items[selectedIndex] == "Semana 2")
+					{
+						_InicioSemana = _inicioSem2;
+						_FinalSemana = _finSem2;
+					}
+					else if (picker.Items[selectedIndex] == "Semana 3")
+					{
+						_InicioSemana = _inicioSem3;
+						_FinalSemana = _finSem3;
+					}
+					else if (picker.Items[selectedIndex] == "Semana 4")
+					{
+						_InicioSemana = _inicioSem4;
+						_FinalSemana = _finSem4;
+					}
+					else if (picker.Items[selectedIndex] == "Semana 5")
+					{
+						_InicioSemana = _inicioSem5;
+						_FinalSemana = _finSem5;
+					}
+					else if (picker.Items[selectedIndex] == "Semana 6")
+					{
+						_InicioSemana = _inicioSem6;
+						_FinalSemana = _finSem6;
+					}
+				}
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("ERROR", err.ToString(), "OK");
+			}
+		}
+
+		private async void pickYear_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			int YearSelected = 0;
+			try
+			{
+				var picker = (Picker)sender;
+				int selectedIndex = picker.SelectedIndex;
+				if (selectedIndex != -1)
+				{
+					YearSelected = Convert.ToInt32(picker.Items[selectedIndex]);
+				}
+				_InicioYear = new DateTime(YearSelected, 1, 1);
+				_FinalYear = new DateTime(YearSelected, 12, 31);
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("ERROR", err.ToString(), "OK");
 			}
 		}
 	}
