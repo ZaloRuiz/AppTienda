@@ -33,7 +33,7 @@
                                 <StackLayout Grid.Column="1">
                                     <Picker x:Name="pickerTipoProducto" HorizontalOptions="FillAndExpand" SelectedIndexChanged="pickerTipoProducto_SelectedIndexChanged"
                                         ItemDisplayBinding="{Binding nombre_tipo_producto}" BackgroundColor="White" TextColor="Black" TitleColor="#465B70" 
-                                        Title="Tipo de producto" FontSize="17"/>
+                                        Title="Tipo de producto" FontSize="17" IsVisible="False"/>
                                     <Picker x:Name="pickerProducto" HorizontalOptions="FillAndExpand" SelectedIndexChanged="pickerProducto_SelectedIndexChanged"
                                         ItemDisplayBinding="{Binding nombre_producto}" BackgroundColor="White" TextColor="Black" TitleColor="#465B70"
                                         Title="Producto" FontSize="17" IsVisible="False"/>

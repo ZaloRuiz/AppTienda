@@ -10,7 +10,7 @@ namespace DistribuidoraFabio.Models
         public DateTime fecha { get; set; }
         public int id_vendedor { get; set; }
         public string nombre_vendedor { get; set; }
-        public decimal sub_total { get; set; }
+        public decimal total { get; set; }
         public int id_tipo_producto { get; set; }
         public int id_producto { get; set; }
         public string nombre_producto { get; set; }
