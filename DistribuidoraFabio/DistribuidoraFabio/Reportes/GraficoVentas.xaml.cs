@@ -61,6 +61,9 @@ namespace DistribuidoraFabio.Reportes
 		private DateTime _FinalSemana = DateTime.Today.AddDays(-7);
 		private DateTime _InicioYear;
 		private DateTime _FinalYear;
+		private DateTime _InicioMes;
+		private DateTime _FinMes;
+		private int MesSelected = 0;
 		int _diasSextaSemana = 0;
 		List<Vendedores> vendedorList = new List<Vendedores>();
 		List<ProductoNombre> productosList = new List<ProductoNombre>();
@@ -88,6 +91,8 @@ namespace DistribuidoraFabio.Reportes
 			pickSemMes.ItemsSource = new List<string> { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
 			pickSemYear.ItemsSource = new List<string> { "2021", "2022", "2023", "2024", "2025" };
 			pickYear.ItemsSource = new List<string> { "2021", "2022", "2023", "2024", "2025" };
+			pickMes.ItemsSource = new List<string> { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+			pickMesYear.ItemsSource = new List<string> { "2021", "2022", "2023", "2024", "2025" };
 			GetDataVendedor();
 			GetTipoProducto();
 			GetProductos();
@@ -427,6 +432,7 @@ namespace DistribuidoraFabio.Reportes
 			{
 				stkDia.IsVisible = true;
 				stkSemana.IsVisible = false;
+				stkMes.IsVisible = false;
 				stkYear.IsVisible = false;
 			}
 		}
@@ -436,6 +442,17 @@ namespace DistribuidoraFabio.Reportes
 			{
 				stkDia.IsVisible = false;
 				stkSemana.IsVisible = true;
+				stkMes.IsVisible = false;
+				stkYear.IsVisible = false;
+			}
+		}
+		private void RB_Mes_CheckedChanged(object sender, CheckedChangedEventArgs e)
+		{
+			if(RB_Mes.IsChecked)
+			{
+				stkDia.IsVisible = false;
+				stkSemana.IsVisible = false;
+				stkMes.IsVisible = true;
 				stkYear.IsVisible = false;
 			}
 		}
@@ -445,6 +462,7 @@ namespace DistribuidoraFabio.Reportes
 			{
 				stkDia.IsVisible = false;
 				stkSemana.IsVisible = false;
+				stkMes.IsVisible = false;
 				stkYear.IsVisible = true;
 			}
 		}
@@ -641,6 +659,41 @@ namespace DistribuidoraFabio.Reportes
 				await DisplayAlert("ERROR", err.ToString(), "OK");
 			}
 		}
+		private async void pickMes_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			try
+			{
+				var picker = (Picker)sender;
+				int selectedIndex = picker.SelectedIndex;
+				if(selectedIndex != -1)
+				{
+					MesSelected = selectedIndex + 1;
+				}
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("ERROR", err.ToString(), "OK");
+			}
+		}
+		private async void pickMesYear_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			int YearMesSelected = 0;
+			try
+			{
+				var picker = (Picker)sender;
+				int selectedIndex = picker.SelectedIndex;
+				if (selectedIndex != -1)
+				{
+					YearMesSelected = Convert.ToInt32(picker.Items[selectedIndex]);
+				}
+				_InicioMes = new DateTime(YearMesSelected, MesSelected, 1);
+				_FinMes = _InicioMes.AddMonths(1).AddDays(-1);
+			}
+			catch (Exception err)
+			{
+				await DisplayAlert("ERROR", err.ToString(), "OK");
+			}
+		}
 		private async void pickYear_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			int YearSelected = 0;
@@ -683,34 +736,6 @@ namespace DistribuidoraFabio.Reportes
 			{
 				await DisplayAlert("Error", error.ToString(), "OK");
 			}
-			
-			//try
-			//{
-			//	if(pickedTP == "Todos")
-			//	{
-			//		pickerProducto.Items.Add("Todos");
-			//		foreach (var item in productosList)
-			//		{
-			//			pickerProducto.Items.Add(item.nombre_producto);
-			//		}
-			//	}
-			//	else
-			//	{
-			//		pickerProducto.Items.Clear();
-			//		pickerProducto.Items.Add("Todos");
-			//		foreach (var item in productosList)
-			//		{
-			//			if (item.nombre_tipo_producto == pickedTP)
-			//			{
-			//				pickerProducto.Items.Add(item.nombre_producto);
-			//			}
-			//		}
-			//	}
-			//}
-			//catch (Exception error)
-			//{
-			//	await DisplayAlert("Error", error.ToString(), "OK");
-			//}
 		}
 		private async void pickerProducto_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -745,13 +770,14 @@ namespace DistribuidoraFabio.Reportes
 				_filtroProd = "TipoProducto";
 			}
 		}
-		private void RB_Producto_CheckedChanged(object sender, CheckedChangedEventArgs e)
+		private async void RB_Producto_CheckedChanged(object sender, CheckedChangedEventArgs e)
 		{
 			if (RB_Producto.IsChecked)
 			{
 				pickerProducto.IsVisible = true;
 				pickerTipoProducto.IsVisible = false;
 				_filtroProd = "Producto";
+				//await PopupNavigation.Instance.PushAsync(new ListaR_MutiProductos());
 			}
 		}
 		private void RB_Todos_CheckedChanged(object sender, CheckedChangedEventArgs e)
@@ -1241,6 +1267,258 @@ namespace DistribuidoraFabio.Reportes
 
 							var startDate = _InicioSemana.Date.AddDays(-2);
 							var endDate = _FinalSemana.Date.AddDays(2);
+
+							var minValue = DateTimeAxis.ToDouble(startDate);
+							var maxValue = DateTimeAxis.ToDouble(endDate);
+							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+							m.ResetAllAxes();
+
+							var ls1 = new LineSeries();
+							ls1.MarkerType = OxyPlot.MarkerType.Circle;
+							ls1.ItemsSource = Points;
+
+							m.Series.Add(ls1);
+							_opv = new PlotView
+							{
+								WidthRequest = 300,
+								HeightRequest = 340,
+								BackgroundColor = Color.White,
+							};
+							_opv.Model = m;
+							stkGrafico.Children.Add(_opv);
+							await PopupNavigation.Instance.PopAsync();
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "OK");
+						}
+					}
+				}
+				else
+				{
+					await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+				}
+			}
+			//filtrado por mes
+			else if(RB_Mes.IsChecked)
+			{
+				if (CrossConnectivity.Current.IsConnected)
+				{
+					string BusyReason = "Cargando...";
+					await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+					if (_filtroProd == "Producto")
+					{
+						try
+						{
+							GraficoVentaDiariaPorProducto _VentasXProd = new GraficoVentaDiariaPorProducto()
+							{
+								id_vendedor = idVendedorSelected,
+								id_producto = _idProducto,
+								fecha_inicio = _InicioMes,
+								fecha_final = _FinMes
+							};
+							var json = JsonConvert.SerializeObject(_VentasXProd);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiariasPorProducto.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiariaPorProducto>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentaDiaXProducto.Add(item);
+							}
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								if (item.total < _montoMinimo)
+								{
+									_montoMinimo = item.total;
+								}
+								if (item.total > _montoMaximo)
+								{
+									_montoMaximo = item.total;
+								}
+							}
+							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
+							//Crear grafico
+							stkGrafico.Children.Clear();
+							List<DataPoint> Points = new List<DataPoint>();
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+							}
+
+							var m = new PlotModel();
+							m.PlotType = PlotType.XY;
+							m.InvalidatePlot(false);
+
+							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+							var startDate = _InicioMes.Date.AddDays(-2);
+							var endDate = _FinMes.Date.AddDays(2);
+
+							var minValue = DateTimeAxis.ToDouble(startDate);
+							var maxValue = DateTimeAxis.ToDouble(endDate);
+							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+							m.ResetAllAxes();
+
+							var ls1 = new LineSeries();
+							ls1.MarkerType = OxyPlot.MarkerType.Circle;
+							ls1.ItemsSource = Points;
+
+							m.Series.Add(ls1);
+							_opv = new PlotView
+							{
+								WidthRequest = 300,
+								HeightRequest = 340,
+								BackgroundColor = Color.White,
+							};
+							_opv.Model = m;
+							stkGrafico.Children.Add(_opv);
+							await PopupNavigation.Instance.PopAsync();
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+					}
+					else if (_filtroProd == "TipoProducto")
+					{
+						try
+						{
+							GraficoVentaDiariaPorProducto _VentasXTipoProd = new GraficoVentaDiariaPorProducto()
+							{
+								id_vendedor = idVendedorSelected,
+								id_tipo_producto = _idTipoProducto,
+								fecha_inicio = _InicioMes,
+								fecha_final = _FinMes
+							};
+							var json = JsonConvert.SerializeObject(_VentasXTipoProd);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiariasPorTipoProducto.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiariaPorProducto>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentaDiaXProducto.Add(item);
+							}
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								if (item.total < _montoMinimo)
+								{
+									_montoMinimo = item.total;
+								}
+								if (item.total > _montoMaximo)
+								{
+									_montoMaximo = item.total;
+								}
+							}
+							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
+							//Crear grafico
+							stkGrafico.Children.Clear();
+							List<DataPoint> Points = new List<DataPoint>();
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+							}
+
+							var m = new PlotModel();
+							m.PlotType = PlotType.XY;
+							m.InvalidatePlot(false);
+
+							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+							var startDate = _InicioMes.Date.AddDays(-2);
+							var endDate = _FinMes.Date.AddDays(2);
+
+							var minValue = DateTimeAxis.ToDouble(startDate);
+							var maxValue = DateTimeAxis.ToDouble(endDate);
+							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+							m.ResetAllAxes();
+
+							var ls1 = new LineSeries();
+							ls1.MarkerType = OxyPlot.MarkerType.Circle;
+							ls1.ItemsSource = Points;
+
+							m.Series.Add(ls1);
+							_opv = new PlotView
+							{
+								WidthRequest = 300,
+								HeightRequest = 340,
+								BackgroundColor = Color.White,
+							};
+							_opv.Model = m;
+							stkGrafico.Children.Add(_opv);
+							await PopupNavigation.Instance.PopAsync();
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+					}
+					else if (_filtroProd == "Todos")
+					{
+						try
+						{
+							GraficoVentaDiaria _Ventas = new GraficoVentaDiaria()
+							{
+								id_vendedor = idVendedorSelected,
+								fecha_inicio = _InicioMes,
+								fecha_final = _FinMes
+							};
+							var json = JsonConvert.SerializeObject(_Ventas);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiaria.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiaria>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentasDia.Add(item);
+							}
+							foreach (var item in _listaVentasDia)
+							{
+								if (item.total < _montoMinimo)
+								{
+									_montoMinimo = item.total;
+								}
+								if (item.total > _montoMaximo)
+								{
+									_montoMaximo = item.total;
+								}
+							}
+							await DisplayAlert("Valores", _listaVentasDia.Count.ToString(), "OK");
+							//Crear grafico
+							stkGrafico.Children.Clear();
+							List<DataPoint> Points = new List<DataPoint>();
+							foreach (var item in _listaVentasDia)
+							{
+								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+							}
+
+							var m = new PlotModel();
+							m.PlotType = PlotType.XY;
+							m.InvalidatePlot(false);
+
+							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+							var startDate = _InicioMes.Date.AddDays(-2);
+							var endDate = _FinMes.Date.AddDays(2);
 
 							var minValue = DateTimeAxis.ToDouble(startDate);
 							var maxValue = DateTimeAxis.ToDouble(endDate);
@@ -2443,6 +2721,462 @@ namespace DistribuidoraFabio.Reportes
 					await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 				}
 			}
+			//filtrado por mes
+			else if(RB_Mes.IsChecked)
+			{
+				if (CrossConnectivity.Current.IsConnected)
+				{
+					string BusyReason = "Cargando...";
+					await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+					if (_filtroProd == "Producto")
+					{
+						//Datos fecha de busqueda
+						try
+						{
+							GraficoVentaDiariaPorProducto _VentasXTipoProd = new GraficoVentaDiariaPorProducto()
+							{
+								id_vendedor = idVendedorSelected,
+								id_producto = _idProducto,
+								fecha_inicio = _InicioMes,
+								fecha_final = _FinMes
+							};
+							var json = JsonConvert.SerializeObject(_VentasXTipoProd);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiariasPorProducto.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiariaPorProducto>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentaDiaXProducto.Add(item);
+							}
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+						//Datos año anterior
+						try
+						{
+							GraficoVentaDiariaPorProducto _VentasXTipoProd = new GraficoVentaDiariaPorProducto()
+							{
+								id_vendedor = idVendedorSelected,
+								id_producto = _idProducto,
+								fecha_inicio = _InicioMes.AddYears(-1),
+								fecha_final = _FinMes.AddYears(-1)
+							};
+							var json = JsonConvert.SerializeObject(_VentasXTipoProd);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiariasPorProducto.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiariaPorProducto>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentaDiaXProductoComparar.Add(item);
+							}
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+						try
+						{
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								if (item.total < _montoMinimo)
+								{
+									_montoMinimo = item.total;
+								}
+								if (item.total > _montoMaximo)
+								{
+									_montoMaximo = item.total;
+								}
+							}
+							foreach (var item in _listaVentaDiaXProductoComparar)
+							{
+								if (item.total < _montoMinimoComp)
+								{
+									_montoMinimoComp = item.total;
+								}
+								if (item.total > _montoMaximoComp)
+								{
+									_montoMaximoComp = item.total;
+								}
+							}
+							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
+							//Crear grafico
+							stkGrafico.Children.Clear();
+							List<DataPoint> Points = new List<DataPoint>();
+							List<DataPoint> PointsComp = new List<DataPoint>();
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+							}
+							foreach (var item in _listaVentaDiaXProductoComparar)
+							{
+								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+							}
+							var m = new PlotModel();
+							m.PlotType = PlotType.XY;
+							m.InvalidatePlot(false);
+
+							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+							var startDate = _InicioMes.Date.AddDays(-2);
+							var endDate = _FinMes.Date.AddDays(2);
+
+							var minValue = DateTimeAxis.ToDouble(startDate);
+							var maxValue = DateTimeAxis.ToDouble(endDate);
+							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+							double _minimum = 0;
+							double _maximum = 0;
+							if (_montoMinimo > _montoMinimoComp)
+							{
+								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+							}
+							else
+							{
+								_minimum = Convert.ToDouble(_montoMinimo) - 50;
+							}
+							if (_montoMaximo > _montoMaximoComp)
+							{
+								_maximum = Convert.ToDouble(_montoMaximo) + 50;
+							}
+							else
+							{
+								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+							}
+							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+							m.ResetAllAxes();
+
+							var ls1 = new LineSeries();
+							var ls2 = new LineSeries();
+							ls1.MarkerType = OxyPlot.MarkerType.Circle;
+							ls2.MarkerType = OxyPlot.MarkerType.Circle;
+							ls1.ItemsSource = Points;
+							ls2.ItemsSource = PointsComp;
+
+							m.Series.Add(ls1);
+							m.Series.Add(ls2);
+							_opv = new PlotView
+							{
+								WidthRequest = 300,
+								HeightRequest = 340,
+								BackgroundColor = Color.White,
+							};
+							_opv.Model = m;
+							stkGrafico.Children.Add(_opv);
+							await PopupNavigation.Instance.PopAsync();
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+					}
+					else if (_filtroProd == "TipoProducto")
+					{
+						//Datos fecha de busqueda
+						try
+						{
+							GraficoVentaDiariaPorProducto _VentasXTipoProd = new GraficoVentaDiariaPorProducto()
+							{
+								id_vendedor = idVendedorSelected,
+								id_tipo_producto = _idTipoProducto,
+								fecha_inicio = _InicioMes,
+								fecha_final = _FinMes
+							};
+							var json = JsonConvert.SerializeObject(_VentasXTipoProd);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiariasPorTipoProducto.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiariaPorProducto>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentaDiaXProducto.Add(item);
+							}
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+						//Datos año anterior
+						try
+						{
+							GraficoVentaDiariaPorProducto _VentasXTipoProd = new GraficoVentaDiariaPorProducto()
+							{
+								id_vendedor = idVendedorSelected,
+								id_tipo_producto = _idTipoProducto,
+								fecha_inicio = _InicioMes.AddYears(-1),
+								fecha_final = _FinMes.AddYears(-1)
+							};
+							var json = JsonConvert.SerializeObject(_VentasXTipoProd);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiariasPorTipoProducto.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiariaPorProducto>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentaDiaXProductoComparar.Add(item);
+							}
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+						try
+						{
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								if (item.total < _montoMinimo)
+								{
+									_montoMinimo = item.total;
+								}
+								if (item.total > _montoMaximo)
+								{
+									_montoMaximo = item.total;
+								}
+							}
+							foreach (var item in _listaVentaDiaXProductoComparar)
+							{
+								if (item.total < _montoMinimoComp)
+								{
+									_montoMinimoComp = item.total;
+								}
+								if (item.total > _montoMaximoComp)
+								{
+									_montoMaximoComp = item.total;
+								}
+							}
+							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
+							//Crear grafico
+							stkGrafico.Children.Clear();
+							List<DataPoint> Points = new List<DataPoint>();
+							List<DataPoint> PointsComp = new List<DataPoint>();
+							foreach (var item in _listaVentaDiaXProducto)
+							{
+								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+							}
+							foreach (var item in _listaVentaDiaXProductoComparar)
+							{
+								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+							}
+							var m = new PlotModel();
+							m.PlotType = PlotType.XY;
+							m.InvalidatePlot(false);
+
+							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+							var startDate = _InicioMes.Date.AddDays(-2);
+							var endDate = _FinMes.Date.AddDays(2);
+
+							var minValue = DateTimeAxis.ToDouble(startDate);
+							var maxValue = DateTimeAxis.ToDouble(endDate);
+							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+							double _minimum = 0;
+							double _maximum = 0;
+							if (_montoMinimo > _montoMinimoComp)
+							{
+								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+							}
+							else
+							{
+								_minimum = Convert.ToDouble(_montoMinimo) - 50;
+							}
+							if (_montoMaximo > _montoMaximoComp)
+							{
+								_maximum = Convert.ToDouble(_montoMaximo) + 50;
+							}
+							else
+							{
+								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+							}
+							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+							m.ResetAllAxes();
+
+							var ls1 = new LineSeries();
+							var ls2 = new LineSeries();
+							ls1.MarkerType = OxyPlot.MarkerType.Circle;
+							ls2.MarkerType = OxyPlot.MarkerType.Circle;
+							ls1.ItemsSource = Points;
+							ls2.ItemsSource = PointsComp;
+
+							m.Series.Add(ls1);
+							m.Series.Add(ls2);
+							_opv = new PlotView
+							{
+								WidthRequest = 300,
+								HeightRequest = 340,
+								BackgroundColor = Color.White,
+							};
+							_opv.Model = m;
+							stkGrafico.Children.Add(_opv);
+							await PopupNavigation.Instance.PopAsync();
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", err.ToString(), "Ok");
+						}
+					}
+					else if (_filtroProd == "Todos")
+					{
+						//Datos de la busqueda
+						try
+						{
+							GraficoVentaDiaria _Ventas = new GraficoVentaDiaria()
+							{
+								id_vendedor = idVendedorSelected,
+								fecha_inicio = _InicioMes,
+								fecha_final = _FinMes
+							};
+							var json = JsonConvert.SerializeObject(_Ventas);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiaria.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas = JsonConvert.DeserializeObject<List<GraficoVentaDiaria>>(jsonR);
+							listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas)
+							{
+								_listaVentasDia.Add(item);
+							}
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
+						}
+						//Datos año anterior
+						try
+						{
+							GraficoVentaDiaria _Ventas = new GraficoVentaDiaria()
+							{
+								id_vendedor = idVendedorSelected,
+								fecha_inicio = _InicioMes.AddYears(-1),
+								fecha_final = _FinMes.AddYears(-1)
+							};
+							var json = JsonConvert.SerializeObject(_Ventas);
+							var content = new StringContent(json, Encoding.UTF8, "application/json");
+							HttpClient client = new HttpClient();
+							var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteGraficoVentasDiaria.php", content);
+
+							var jsonR = await result.Content.ReadAsStringAsync();
+							var lista_ventas_comparar = JsonConvert.DeserializeObject<List<GraficoVentaDiaria>>(jsonR);
+							//listDataReporte.ItemsSource = lista_ventas;
+							foreach (var item in lista_ventas_comparar)
+							{
+								_listaVentasDiaComparar.Add(item);
+							}
+						}
+						catch (Exception err)
+						{
+							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
+						}
+						foreach (var item in _listaVentasDia)
+						{
+							if (item.total < _montoMinimo)
+							{
+								_montoMinimo = item.total;
+							}
+							if (item.total > _montoMaximo)
+							{
+								_montoMaximo = item.total;
+							}
+						}
+						foreach (var item in _listaVentasDiaComparar)
+						{
+							if (item.total < _montoMinimoComp)
+							{
+								_montoMinimoComp = item.total;
+							}
+							if (item.total > _montoMaximoComp)
+							{
+								_montoMaximoComp = item.total;
+							}
+						}
+						await DisplayAlert("Valores", "Presente año=" + _listaVentasDia.Count.ToString() + "Año anterior= " + _listaVentasDiaComparar.Count.ToString(), "OK");
+						//Crear grafico
+						stkGrafico.Children.Clear();
+						List<DataPoint> Points = new List<DataPoint>();
+						List<DataPoint> PointsComp = new List<DataPoint>();
+						foreach (var item in _listaVentasDia)
+						{
+							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+						}
+						foreach (var item in _listaVentasDiaComparar)
+						{
+							PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+						}
+
+						var m = new PlotModel();
+						m.PlotType = PlotType.XY;
+						m.InvalidatePlot(false);
+
+						m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " a " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+						var startDate = _InicioMes.Date.AddDays(-2);
+						var endDate = _FinMes.Date.AddDays(2);
+
+						var minValue = DateTimeAxis.ToDouble(startDate);
+						var maxValue = DateTimeAxis.ToDouble(endDate);
+						m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+						double _minimum = 0;
+						double _maximum = 0;
+						if (_montoMinimo > _montoMinimoComp)
+						{
+							_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+						}
+						else
+						{
+							_minimum = Convert.ToDouble(_montoMinimo) - 50;
+						}
+						if (_montoMaximo > _montoMaximoComp)
+						{
+							_maximum = Convert.ToDouble(_montoMaximo) + 50;
+						}
+						else
+						{
+							_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+						}
+						m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+						m.ResetAllAxes();
+
+						var ls1 = new LineSeries();
+						var ls2 = new LineSeries();
+						//MarkerType = OxyPlot.MarkerType.Circle,
+						ls1.MarkerType = OxyPlot.MarkerType.Circle;
+						ls2.MarkerType = OxyPlot.MarkerType.Circle;
+						ls1.ItemsSource = Points;
+						ls2.ItemsSource = PointsComp;
+
+						m.Series.Add(ls1);
+						m.Series.Add(ls2);
+						_opv = new PlotView
+						{
+							WidthRequest = 300,
+							HeightRequest = 340,
+							BackgroundColor = Color.White,
+						};
+						_opv.Model = m;
+						stkGrafico.Children.Add(_opv);
+						await PopupNavigation.Instance.PopAsync();
+					}
+					else
+					{
+						await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+					}
+				}
+			}
 			//filtrado por año
 			else if (RB_Year.IsChecked)
 			{
@@ -2899,6 +3633,5 @@ namespace DistribuidoraFabio.Reportes
 				}
 			}
 		}
-		
 	}
 }

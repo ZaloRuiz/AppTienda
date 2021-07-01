@@ -44,6 +44,7 @@
                             <Label Text="Filtrar" TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
                             <RadioButton x:Name="RB_Dia" Content="Dia" IsChecked="True" HorizontalOptions="CenterAndExpand" CheckedChanged="RB_Dia_CheckedChanged"/>
                             <RadioButton x:Name="RB_Semana" Content="Semana" IsChecked="False" HorizontalOptions="CenterAndExpand" CheckedChanged="RB_Semana_CheckedChanged"/>
+                            <RadioButton x:Name="RB_Mes" Content="Mes" IsChecked="False" HorizontalOptions="CenterAndExpand" CheckedChanged="RB_Mes_CheckedChanged"/>
                             <RadioButton x:Name="RB_Year" Content="Año" IsChecked="False" HorizontalOptions="CenterAndExpand" CheckedChanged="RB_Year_CheckedChanged"/>
                         </StackLayout>
                         <StackLayout x:Name="stkDia" Orientation="Horizontal" IsVisible="True">
@@ -64,10 +65,21 @@
                                 <Picker x:Name="pickSemSemana" Grid.Column="5" VerticalOptions="Start" HorizontalOptions="FillAndExpand" BackgroundColor="White" SelectedIndexChanged="pickSemSemana_SelectedIndexChanged"/>
                             </Grid>
                         </StackLayout>
+                        <StackLayout x:Name="stkMes" Orientation="Horizontal" IsVisible="False">
+                            <Grid ColumnDefinitions="10*,40*,10*,50*" ColumnSpacing="10" HorizontalOptions="FillAndExpand">
+                                <Label Grid.Column="0" Text="Mes" TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                                <Picker x:Name="pickMes" Grid.Column="1" VerticalOptions="Start" BackgroundColor="White" HorizontalOptions="CenterAndExpand" 
+                                        WidthRequest="200" SelectedIndexChanged="pickMes_SelectedIndexChanged"/>
+                                <Label Grid.Column="2" Text="Año" TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                                <Picker x:Name="pickMesYear" Grid.Column="3" VerticalOptions="Start" BackgroundColor="White" HorizontalOptions="CenterAndExpand"
+                                        WidthRequest="200" SelectedIndexChanged="pickMesYear_SelectedIndexChanged"/>
+                            </Grid>
+                        </StackLayout>
                         <StackLayout x:Name="stkYear" Orientation="Horizontal" IsVisible="False">
                             <Grid ColumnDefinitions="40*,60*" ColumnSpacing="10" HorizontalOptions="FillAndExpand">
                                 <Label Grid.Column="0" Text="Año " TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
-                                <Picker x:Name="pickYear" Grid.Column="1" VerticalOptions="Start" BackgroundColor="White" HorizontalOptions="StartAndExpand" WidthRequest="200" SelectedIndexChanged="pickYear_SelectedIndexChanged"/>
+                                <Picker x:Name="pickYear" Grid.Column="1" VerticalOptions="Start" BackgroundColor="White" HorizontalOptions="StartAndExpand" 
+                                        WidthRequest="200" SelectedIndexChanged="pickYear_SelectedIndexChanged"/>
                             </Grid>
                         </StackLayout>
                         <Button x:Name="btnFiltrar" Text="Mostrar" BackgroundColor="Black" TextColor="White" CornerRadius="5" Margin="10" Clicked="btnFiltrar_Clicked"/>
