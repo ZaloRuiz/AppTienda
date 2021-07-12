@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -44,8 +45,8 @@ namespace DistribuidoraFabio.ViewModels
 				{
 					if (_selectedProducto != null)
 					{
-						MasterDetailPage masterDetail = (MasterDetailPage)Application.Current.MainPage; 
-						masterDetail.Detail.Navigation.PushAsync(new Kardex( _selectedProducto.id_producto));
+						MasterDetailPage masterDetail = (MasterDetailPage)Application.Current.MainPage;
+						masterDetail.Detail.Navigation.PushAsync(new Kardex(_selectedProducto.id_producto));
 					}
 				}
 				catch (Exception err)
@@ -103,7 +104,9 @@ namespace DistribuidoraFabio.ViewModels
 		private void OnPropertyChanged(string property)
 		{
 			if (PropertyChanged != null)
+			{
 				PropertyChanged(this, new PropertyChangedEventArgs(property));
+			}
 		}
 	}
 }

@@ -32,49 +32,58 @@
                 </StackLayout>
                 <StackLayout Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Padding="10, 0, 10, 0">
                     <Label Text="Producto" TextColor="White" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
-                    <Label Text="Monto" TextColor="White" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-                    <Label Text="Cantidad" TextColor="White" HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand"/>
+                    <Label Text="Cantidad cajas" TextColor="White" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    <Label Text="Monto" TextColor="White" HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand" Margin="0, 0, 15, 0"/>
                 </StackLayout>
-                <ListView x:Name="listData" BackgroundColor="White" SeparatorColor="#465B70" RowHeight="25" HorizontalOptions="FillAndExpand" Grid.Column="0" Grid.Row="2">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid Padding="5" RowSpacing="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="25"></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="42*"></ColumnDefinition>
-                                        <ColumnDefinition Width="42*"></ColumnDefinition>
-                                        <ColumnDefinition Width="12*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="StartAndExpand">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding nombre_producto}"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                    <Label Grid.Row="0" Grid.Column="1" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="StartAndExpand">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding monto_vend}"/>
-                                                <Span Text="Bs. "/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                    <Label Grid.Row="0" Grid.Column="2" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="StartAndExpand">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding cliente_count}"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <StackLayout Grid.Column="0" Grid.Row="2" VerticalOptions="FillAndExpand">
+                    <ListView x:Name="listData" BackgroundColor="White" SeparatorColor="#465B70" RowHeight="25" HorizontalOptions="FillAndExpand">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid Padding="5" RowSpacing="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="25"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                                            <ColumnDefinition Width="25*"></ColumnDefinition>
+                                            <ColumnDefinition Width="25*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="StartAndExpand">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding nombre_producto}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <Label Grid.Row="0" Grid.Column="1" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="StartAndExpand">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding cantidad}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <Label Grid.Row="0" Grid.Column="2" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="StartAndExpand">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding monto_vend}"/>
+                                                    <Span Text="Bs. "/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Grid ColumnDefinitions="30*,40*,30*" ColumnSpacing="10" BackgroundColor="#465B70" HorizontalOptions="FillAndExpand">
+                                <Label Text="Total" Grid.Row="0" Grid.Column="0" TextColor="White" FontSize="12" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                                <Label x:Name="txtTotalCajas" Grid.Row="0" Grid.Column="1" TextColor="White" FontSize="12" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                                <Label x:Name="txtTotalMonto" Grid.Row="0" Grid.Column="2" TextColor="White" FontSize="12" HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand"/>
+                            </Grid>
+                        </ListView.Footer>
+                    </ListView>
+                </StackLayout>
             </Grid>
         </Frame>
     </Grid>

@@ -21,6 +21,8 @@ namespace DistribuidoraFabio.Helpers
 	{
 		private DateTime _fechaInicio = DateTime.Today;
 		private DateTime _fechaFinal = DateTime.Today;
+		private int _cantTotal = 0;
+		private decimal _montoTotal = 0;
 		public ListaR_VentaDiaria(DateTime _fechaElegida)
 		{
 			InitializeComponent();
@@ -50,6 +52,13 @@ namespace DistribuidoraFabio.Helpers
 					var dataVentXprod = JsonConvert.DeserializeObject<List<ReporteVentaDiaria>>(jsonR);
 					if (dataVentXprod != null)
 					{
+						foreach(var item in dataVentXprod)
+						{
+							_cantTotal = _cantTotal + item.cantidad;
+							_montoTotal = _montoTotal + item.monto_vend;
+						}
+						txtTotalCajas.Text = _cantTotal.ToString();
+						txtTotalMonto.Text = _montoTotal.ToString() + " Bs.";
 						listData.ItemsSource = dataVentXprod;
 					}
 				}

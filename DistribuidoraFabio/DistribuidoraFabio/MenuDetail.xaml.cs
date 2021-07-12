@@ -106,113 +106,223 @@ namespace DistribuidoraFabio
 				}
 				try
 				{
-					_cantCerv = 0;
-					_PromCerv = 0;
-					txtPromedioCerv.Text = string.Empty;
-					CantidadClientesVentas _cantClieVent = new CantidadClientesVentas()
+					if(vendedorPick == "Todos")
 					{
-						id_vendedor = idVendedorSelected,
-						id_tipo_producto = _IdTpCerv,
-						fecha_inicio = Convert.ToDateTime(_FechaInicio),
-						fecha_final = Convert.ToDateTime(_FechaFinal)
-					};
-					var json = JsonConvert.SerializeObject(_cantClieVent);
-					var content = new StringContent(json, Encoding.UTF8, "application/json");
-					HttpClient client = new HttpClient();
-					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleado.php", content);
-
-					var jsonR = await result.Content.ReadAsStringAsync();
-					var lista_Ccerv = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonR);
-					if (lista_Ccerv != null)
-					{
-						foreach (var item in lista_Ccerv)
+						_cantCerv = 0;
+						_PromCerv = 0;
+						txtPromedioCerv.Text = string.Empty;
+						CantidadClientesVentas _cantClieVent = new CantidadClientesVentas()
 						{
-							if (_IdTpCerv == item.id_tipo_producto)
+							id_tipo_producto = _IdTpCerv,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var json = JsonConvert.SerializeObject(_cantClieVent);
+						var content = new StringContent(json, Encoding.UTF8, "application/json");
+						HttpClient client = new HttpClient();
+						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleadoTodos.php", content);
+
+						var jsonR = await result.Content.ReadAsStringAsync();
+						var lista_Ccerv = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonR);
+						if (lista_Ccerv != null)
+						{
+							foreach (var item in lista_Ccerv)
 							{
-								_cantCerv = _cantCerv + item.cantidad;
+								if (_IdTpCerv == item.id_tipo_producto)
+								{
+									_cantCerv = _cantCerv + item.cantidad;
+								}
 							}
 						}
+						else
+						{
+							await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo por favor", "OK");
+						}
+						_PromCerv = _cantCerv / 24;
+						txtPromedioCerv.TargetValue = _PromCerv;
+						//Gaseosa
+						_cantGase = 0;
+						_PromGase = 0;
+						txtPromedioGase.Text = string.Empty;
+						CantidadClientesVentas _cantCliVenGase = new CantidadClientesVentas()
+						{
+							id_tipo_producto = _IdTpGase,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonG = JsonConvert.SerializeObject(_cantCliVenGase);
+						var contentG = new StringContent(jsonG, Encoding.UTF8, "application/json");
+						HttpClient clientG = new HttpClient();
+						var resultG = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleadoTodos.php", contentG);
+
+						var jsonRG = await resultG.Content.ReadAsStringAsync();
+						var lista_Cgase = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonRG);
+						if (lista_Cgase != null)
+						{
+							foreach (var item in lista_Cgase)
+							{
+								if (_IdTpGase == item.id_tipo_producto)
+								{
+									_cantGase = _cantGase + item.cantidad;
+								}
+							}
+						}
+						_PromGase = _cantGase / 24;
+						txtPromedioGase.TargetValue = _PromGase;
+						//Total
+						_CantTotal = 0;
+						_PromedioTotal = 0;
+						txtPromedioTotal.Text = string.Empty;
+						CantidadClientesVentas _caClVeGaTotal = new CantidadClientesVentas()
+						{
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonT = JsonConvert.SerializeObject(_caClVeGaTotal);
+						var contentT = new StringContent(jsonT, Encoding.UTF8, "application/json");
+						HttpClient clientT = new HttpClient();
+						var resultT = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleadoTotalTodos.php", contentT);
+
+						var jsonRT = await resultT.Content.ReadAsStringAsync();
+						var lista_CgaseT = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonRT);
+						if (lista_CgaseT != null)
+						{
+							foreach (var item in lista_CgaseT)
+							{
+								_CantTotal = _CantTotal + item.cantidad;
+							}
+						}
+						else
+						{
+							await DisplayAlert("Error", "Query null", "OK");
+						}
+						_PromedioTotal = _CantTotal / 24;
+						txtPromedioTotal.TargetValue = _PromedioTotal;
+						//reiniciar valores
+						_TendCerv = 0;
+						_TendGase = 0;
+						txtTendenciaCerv.Text = string.Empty;
+						txtTendenciaGase.Text = string.Empty;
+						_TendenciaTotal = 0;
+						txtTendendciaTotal.Text = string.Empty;
+						_TendCerv = (decimal)(_PromCerv / 24);
+						_TendGase = (decimal)(_PromGase / 24);
+						txtTendenciaCerv.TargetValue = (double)_TendCerv;
+						txtTendenciaGase.TargetValue = (double)_TendGase;
+
+						_TendenciaTotal = (decimal)(_PromedioTotal / 24);
+						txtTendendciaTotal.TargetValue = (double)_TendenciaTotal;
 					}
 					else
 					{
-						await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo por favor", "OK");
-					}
-					_PromCerv = _cantCerv / 24;
-					txtPromedioCerv.TargetValue = _PromCerv;
-					//Gaseosa
-					_cantGase = 0;
-					_PromGase = 0;
-					txtPromedioGase.Text = string.Empty;
-					CantidadClientesVentas _cantCliVenGase = new CantidadClientesVentas()
-					{
-						id_vendedor = idVendedorSelected,
-						id_tipo_producto = _IdTpGase,
-						fecha_inicio = Convert.ToDateTime(_FechaInicio),
-						fecha_final = Convert.ToDateTime(_FechaFinal)
-					};
-					var jsonG = JsonConvert.SerializeObject(_cantCliVenGase);
-					var contentG = new StringContent(jsonG, Encoding.UTF8, "application/json");
-					HttpClient clientG = new HttpClient();
-					var resultG = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleado.php", contentG);
-
-					var jsonRG = await resultG.Content.ReadAsStringAsync();
-					var lista_Cgase = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonRG);
-					if (lista_Cgase != null)
-					{
-						foreach (var item in lista_Cgase)
+						_cantCerv = 0;
+						_PromCerv = 0;
+						txtPromedioCerv.Text = string.Empty;
+						CantidadClientesVentas _cantClieVent = new CantidadClientesVentas()
 						{
-							if (_IdTpGase == item.id_tipo_producto)
+							id_vendedor = idVendedorSelected,
+							id_tipo_producto = _IdTpCerv,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var json = JsonConvert.SerializeObject(_cantClieVent);
+						var content = new StringContent(json, Encoding.UTF8, "application/json");
+						HttpClient client = new HttpClient();
+						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleado.php", content);
+
+						var jsonR = await result.Content.ReadAsStringAsync();
+						var lista_Ccerv = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonR);
+						if (lista_Ccerv != null)
+						{
+							foreach (var item in lista_Ccerv)
 							{
-								_cantGase = _cantGase + item.cantidad;
+								if (_IdTpCerv == item.id_tipo_producto)
+								{
+									_cantCerv = _cantCerv + item.cantidad;
+								}
 							}
 						}
-					}
-					_PromGase = _cantGase / 24;
-					txtPromedioGase.TargetValue = _PromGase;
-					//Total
-					_CantTotal = 0;
-					_PromedioTotal = 0;
-					txtPromedioTotal.Text = string.Empty;
-					CantidadClientesVentas _caClVeGaTotal = new CantidadClientesVentas()
-					{
-						id_vendedor = idVendedorSelected,
-						fecha_inicio = Convert.ToDateTime(_FechaInicio),
-						fecha_final = Convert.ToDateTime(_FechaFinal)
-					};
-					var jsonT = JsonConvert.SerializeObject(_caClVeGaTotal);
-					var contentT = new StringContent(jsonT, Encoding.UTF8, "application/json");
-					HttpClient clientT = new HttpClient();
-					var resultT = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleadoTotal.php", contentT);
-
-					var jsonRT = await resultT.Content.ReadAsStringAsync();
-					var lista_CgaseT = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonRT);
-					if (lista_CgaseT != null)
-					{
-						foreach (var item in lista_CgaseT)
+						else
 						{
-							_CantTotal = _CantTotal + item.cantidad;
+							await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo por favor", "OK");
 						}
-					}
-					else
-					{
-						await DisplayAlert("Error", "Query null", "OK");
-					}
-					_PromedioTotal = _CantTotal / 24;
-					txtPromedioTotal.TargetValue = _PromedioTotal;
-					//reiniciar valores
-					_TendCerv = 0;
-					_TendGase = 0;
-					txtTendenciaCerv.Text = string.Empty;
-					txtTendenciaGase.Text = string.Empty;
-					_TendenciaTotal = 0;
-					txtTendendciaTotal.Text = string.Empty;
-					_TendCerv = (decimal)(_PromCerv / 24);
-					_TendGase = (decimal)(_PromGase / 24);
-					txtTendenciaCerv.TargetValue = (double)_TendCerv;
-					txtTendenciaGase.TargetValue = (double)_TendGase;
+						_PromCerv = _cantCerv / 24;
+						txtPromedioCerv.TargetValue = _PromCerv;
+						//Gaseosa
+						_cantGase = 0;
+						_PromGase = 0;
+						txtPromedioGase.Text = string.Empty;
+						CantidadClientesVentas _cantCliVenGase = new CantidadClientesVentas()
+						{
+							id_vendedor = idVendedorSelected,
+							id_tipo_producto = _IdTpGase,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonG = JsonConvert.SerializeObject(_cantCliVenGase);
+						var contentG = new StringContent(jsonG, Encoding.UTF8, "application/json");
+						HttpClient clientG = new HttpClient();
+						var resultG = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleado.php", contentG);
 
-					_TendenciaTotal = (decimal)(_PromedioTotal / 24);
-					txtTendendciaTotal.TargetValue = (double)_TendenciaTotal;
+						var jsonRG = await resultG.Content.ReadAsStringAsync();
+						var lista_Cgase = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonRG);
+						if (lista_Cgase != null)
+						{
+							foreach (var item in lista_Cgase)
+							{
+								if (_IdTpGase == item.id_tipo_producto)
+								{
+									_cantGase = _cantGase + item.cantidad;
+								}
+							}
+						}
+						_PromGase = _cantGase / 24;
+						txtPromedioGase.TargetValue = _PromGase;
+						//Total
+						_CantTotal = 0;
+						_PromedioTotal = 0;
+						txtPromedioTotal.Text = string.Empty;
+						CantidadClientesVentas _caClVeGaTotal = new CantidadClientesVentas()
+						{
+							id_vendedor = idVendedorSelected,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonT = JsonConvert.SerializeObject(_caClVeGaTotal);
+						var contentT = new StringContent(jsonT, Encoding.UTF8, "application/json");
+						HttpClient clientT = new HttpClient();
+						var resultT = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadPorEmpleadoTotal.php", contentT);
+
+						var jsonRT = await resultT.Content.ReadAsStringAsync();
+						var lista_CgaseT = JsonConvert.DeserializeObject<List<CantidadPorEmpleado>>(jsonRT);
+						if (lista_CgaseT != null)
+						{
+							foreach (var item in lista_CgaseT)
+							{
+								_CantTotal = _CantTotal + item.cantidad;
+							}
+						}
+						else
+						{
+							await DisplayAlert("Error", "Query null", "OK");
+						}
+						_PromedioTotal = _CantTotal / 24;
+						txtPromedioTotal.TargetValue = _PromedioTotal;
+						//reiniciar valores
+						_TendCerv = 0;
+						_TendGase = 0;
+						txtTendenciaCerv.Text = string.Empty;
+						txtTendenciaGase.Text = string.Empty;
+						_TendenciaTotal = 0;
+						txtTendendciaTotal.Text = string.Empty;
+						_TendCerv = (decimal)(_PromCerv / 24);
+						_TendGase = (decimal)(_PromGase / 24);
+						txtTendenciaCerv.TargetValue = (double)_TendCerv;
+						txtTendenciaGase.TargetValue = (double)_TendGase;
+
+						_TendenciaTotal = (decimal)(_PromedioTotal / 24);
+						txtTendendciaTotal.TargetValue = (double)_TendenciaTotal;
+					}
 				}
 				catch (Exception err)
 				{
@@ -228,127 +338,259 @@ namespace DistribuidoraFabio
 		{
 			if (CrossConnectivity.Current.IsConnected)
 			{
-				try
+				if (vendedorPick == "Todos")
 				{
-					HttpClient client1 = new HttpClient();
-					var response1 = await client1.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
-					var tipoproductos = JsonConvert.DeserializeObject<List<Tipo_producto>>(response1);
-					if (tipoproductos != null)
+					try
 					{
-						foreach (var item in tipoproductos)
+						HttpClient client1 = new HttpClient();
+						var response1 = await client1.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
+						var tipoproductos = JsonConvert.DeserializeObject<List<Tipo_producto>>(response1);
+						if (tipoproductos != null)
 						{
-							if (item.nombre_tipo_producto == "Cerveza")
+							foreach (var item in tipoproductos)
 							{
-								_IdTpCerv = item.id_tipoproducto;
-							}
-							else if (item.nombre_tipo_producto == "Gaseosa")
-							{
-								_IdTpGase = item.id_tipoproducto;
+								if (item.nombre_tipo_producto == "Cerveza")
+								{
+									_IdTpCerv = item.id_tipoproducto;
+								}
+								else if (item.nombre_tipo_producto == "Gaseosa")
+								{
+									_IdTpGase = item.id_tipoproducto;
+								}
 							}
 						}
 					}
-				}
-				catch (Exception err)
-				{
-					await DisplayAlert("Error", err.ToString(), "OK");
-				}
-				try
-				{
-					//Cerveza
-					_cantCervCli = 0;
-					txtClienteCerv.Text = string.Empty;
-					CantidadClientesVentas _cantClieVent = new CantidadClientesVentas()
+					catch (Exception err)
 					{
-						id_vendedor = idVendedorSelected,
-						id_tipo_producto = _IdTpCerv,
-						fecha_inicio = Convert.ToDateTime(_FechaInicio),
-						fecha_final = Convert.ToDateTime(_FechaFinal)
-					};
-					var json = JsonConvert.SerializeObject(_cantClieVent);
-					var content = new StringContent(json, Encoding.UTF8, "application/json");
-					HttpClient client = new HttpClient();
-					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentas.php", content);
+						await DisplayAlert("Error", err.ToString(), "OK");
+					}
+					try
+					{
+						//Cerveza
+						_cantCervCli = 0;
+						txtClienteCerv.Text = string.Empty;
+						CantidadClientesVentas _cantClieVent = new CantidadClientesVentas()
+						{
+							id_tipo_producto = _IdTpCerv,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var json = JsonConvert.SerializeObject(_cantClieVent);
+						var content = new StringContent(json, Encoding.UTF8, "application/json");
+						HttpClient client = new HttpClient();
+						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentasTodos.php", content);
 
-					var jsonR = await result.Content.ReadAsStringAsync();
-					var lista_ventas = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonR);
-					if (lista_ventas != null)
-					{
-						foreach (var item in lista_ventas)
+						var jsonR = await result.Content.ReadAsStringAsync();
+						var lista_ventas = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonR);
+						if (lista_ventas != null)
 						{
-							if (_IdTpCerv == item.id_tipo_producto)
+							foreach (var item in lista_ventas)
 							{
-								_cantCervCli = item.cl_count;
+								if (_IdTpCerv == item.id_tipo_producto)
+								{
+									_cantCervCli = item.cl_count;
+								}
+							}
+						}
+						txtClienteCerv.TargetValue = _cantCervCli;
+					}
+					catch (Exception err)
+					{
+						await DisplayAlert("Error", err.Message, "OK");
+					}
+					try
+					{
+						//Gaseosa
+						_cantGaseCli = 0;
+						txtClienteGase.Text = string.Empty;
+						CantidadClientesVentas _cantCliVenGase = new CantidadClientesVentas()
+						{
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonG = JsonConvert.SerializeObject(_cantCliVenGase);
+						var contentG = new StringContent(jsonG, Encoding.UTF8, "application/json");
+						HttpClient clientG = new HttpClient();
+						var resultG = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentasTodos.php", contentG);
+
+						var jsonRG = await resultG.Content.ReadAsStringAsync();
+						var lista_ventaG = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonRG);
+						if (lista_ventaG != null)
+						{
+							foreach (var item in lista_ventaG)
+							{
+								if (_IdTpGase == item.id_tipo_producto)
+								{
+									_cantGaseCli = item.cl_count;
+								}
+							}
+						}
+						if(_cantGaseCli > 0)
+						{
+							txtClienteGase.TargetValue = _cantGaseCli;
+						}
+						else
+						{
+							txtClienteGase.TargetValue = 0;
+						}
+						
+						//Total
+						_CantCliTotal = 0;
+						txtClienteTotal.Text = string.Empty;
+						CantidadClientesVentas _caClVeGa = new CantidadClientesVentas()
+						{
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonT = JsonConvert.SerializeObject(_caClVeGa);
+						var contentT = new StringContent(jsonT, Encoding.UTF8, "application/json");
+						HttpClient clientT = new HttpClient();
+						var resultT = await clientT.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentasTotalTodos.php", contentT);
+
+						var jsonRT = await resultT.Content.ReadAsStringAsync();
+						var lista_ventaT = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonRT);
+						if (lista_ventaT != null)
+						{
+							foreach (var item in lista_ventaT)
+							{
+								_CantCliTotal = item.cl_count;
+							}
+						}
+						else
+						{
+							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
+						}
+						txtClienteTotal.TargetValue = _CantCliTotal;
+					}
+					catch (Exception err)
+					{
+						await DisplayAlert("Error", err.ToString(), "OK");
+					}
+				}
+				else
+				{
+					try
+					{
+						HttpClient client1 = new HttpClient();
+						var response1 = await client1.GetStringAsync("https://dmrbolivia.com/api_distribuidora/tipoproductos/listaTipoproducto.php");
+						var tipoproductos = JsonConvert.DeserializeObject<List<Tipo_producto>>(response1);
+						if (tipoproductos != null)
+						{
+							foreach (var item in tipoproductos)
+							{
+								if (item.nombre_tipo_producto == "Cerveza")
+								{
+									_IdTpCerv = item.id_tipoproducto;
+								}
+								else if (item.nombre_tipo_producto == "Gaseosa")
+								{
+									_IdTpGase = item.id_tipoproducto;
+								}
 							}
 						}
 					}
-					txtClienteCerv.TargetValue = _cantCervCli;
-				}
-				catch (Exception err)
-				{
-					await DisplayAlert("Error", err.Message, "OK");
-				}
-				try
-				{
-					//Gaseosa
-					_cantGaseCli = 0;
-					txtClienteGase.Text = string.Empty;
-					CantidadClientesVentas _cantCliVenGase = new CantidadClientesVentas()
+					catch (Exception err)
 					{
-						id_vendedor = idVendedorSelected,
-						id_tipo_producto = _IdTpGase,
-						fecha_inicio = Convert.ToDateTime(_FechaInicio),
-						fecha_final = Convert.ToDateTime(_FechaFinal)
-					};
-					var jsonG = JsonConvert.SerializeObject(_cantCliVenGase);
-					var contentG = new StringContent(jsonG, Encoding.UTF8, "application/json");
-					HttpClient clientG = new HttpClient();
-					var resultG = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentas.php", contentG);
-
-					var jsonRG = await resultG.Content.ReadAsStringAsync();
-					var lista_ventaG = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonRG);
-					if (lista_ventaG != null)
+						await DisplayAlert("Error", err.ToString(), "OK");
+					}
+					try
 					{
-						foreach (var item in lista_ventaG)
+						//Cerveza
+						_cantCervCli = 0;
+						txtClienteCerv.Text = string.Empty;
+						CantidadClientesVentas _cantClieVent = new CantidadClientesVentas()
 						{
-							if (_IdTpGase == item.id_tipo_producto)
+							id_vendedor = idVendedorSelected,
+							id_tipo_producto = _IdTpCerv,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var json = JsonConvert.SerializeObject(_cantClieVent);
+						var content = new StringContent(json, Encoding.UTF8, "application/json");
+						HttpClient client = new HttpClient();
+						var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentas.php", content);
+
+						var jsonR = await result.Content.ReadAsStringAsync();
+						var lista_ventas = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonR);
+						if (lista_ventas != null)
+						{
+							foreach (var item in lista_ventas)
 							{
-								_cantGaseCli = item.cl_count;
+								if (_IdTpCerv == item.id_tipo_producto)
+								{
+									_cantCervCli = item.cl_count;
+								}
 							}
 						}
+						txtClienteCerv.TargetValue = _cantCervCli;
 					}
-					txtClienteGase.TargetValue = _cantGaseCli;
-					//Total
-					_CantCliTotal = 0;
-					txtClienteTotal.Text = string.Empty;
-					CantidadClientesVentas _caClVeGa = new CantidadClientesVentas()
+					catch (Exception err)
 					{
-						id_vendedor = idVendedorSelected,
-						fecha_inicio = Convert.ToDateTime(_FechaInicio),
-						fecha_final = Convert.ToDateTime(_FechaFinal)
-					};
-					var jsonT = JsonConvert.SerializeObject(_caClVeGa);
-					var contentT = new StringContent(jsonT, Encoding.UTF8, "application/json");
-					HttpClient clientT = new HttpClient();
-					var resultT = await clientT.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentasTotal.php", contentT);
-
-					var jsonRT = await resultT.Content.ReadAsStringAsync();
-					var lista_ventaT = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonRT);
-					if (lista_ventaT != null)
+						await DisplayAlert("Error", err.Message, "OK");
+					}
+					try
 					{
-						foreach (var item in lista_ventaT)
+						//Gaseosa
+						_cantGaseCli = 0;
+						txtClienteGase.Text = string.Empty;
+						CantidadClientesVentas _cantCliVenGase = new CantidadClientesVentas()
 						{
-							_CantCliTotal = item.cl_count;
+							id_vendedor = idVendedorSelected,
+							id_tipo_producto = _IdTpGase,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonG = JsonConvert.SerializeObject(_cantCliVenGase);
+						var contentG = new StringContent(jsonG, Encoding.UTF8, "application/json");
+						HttpClient clientG = new HttpClient();
+						var resultG = await clientG.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentas.php", contentG);
+
+						var jsonRG = await resultG.Content.ReadAsStringAsync();
+						var lista_ventaG = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonRG);
+						if (lista_ventaG != null)
+						{
+							foreach (var item in lista_ventaG)
+							{
+								if (_IdTpGase == item.id_tipo_producto)
+								{
+									_cantGaseCli = item.cl_count;
+								}
+							}
 						}
+						txtClienteGase.TargetValue = _cantGaseCli;
+						//Total
+						_CantCliTotal = 0;
+						txtClienteTotal.Text = string.Empty;
+						CantidadClientesVentas _caClVeGa = new CantidadClientesVentas()
+						{
+							id_vendedor = idVendedorSelected,
+							fecha_inicio = Convert.ToDateTime(_FechaInicio),
+							fecha_final = Convert.ToDateTime(_FechaFinal)
+						};
+						var jsonT = JsonConvert.SerializeObject(_caClVeGa);
+						var contentT = new StringContent(jsonT, Encoding.UTF8, "application/json");
+						HttpClient clientT = new HttpClient();
+						var resultT = await clientT.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/CantidadClientesVentasTotal.php", contentT);
+
+						var jsonRT = await resultT.Content.ReadAsStringAsync();
+						var lista_ventaT = JsonConvert.DeserializeObject<List<CantidadClientesVentas>>(jsonRT);
+						if (lista_ventaT != null)
+						{
+							foreach (var item in lista_ventaT)
+							{
+								_CantCliTotal = item.cl_count;
+							}
+						}
+						else
+						{
+							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
+						}
+						txtClienteTotal.TargetValue = _CantCliTotal;
 					}
-					else
+					catch (Exception err)
 					{
-						await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
+						await DisplayAlert("Error", err.ToString(), "OK");
 					}
-					txtClienteTotal.TargetValue = _CantCliTotal;
-				}
-				catch (Exception err)
-				{
-					await DisplayAlert("Error", err.ToString(), "OK");
 				}
 			}
 			else
@@ -374,9 +616,11 @@ namespace DistribuidoraFabio
 					HttpClient client = new HttpClient();
 					var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/vendedores/listaVendedores.php");
 					var vendedores = JsonConvert.DeserializeObject<List<Vendedores>>(response).ToList();
-					pickerEmpleado.ItemsSource = vendedores;
+					//pickerEmpleado.ItemsSource = vendedores;
+					pickerEmpleado.Items.Add("Todos");
 					foreach (var item in vendedores)
 					{
+						pickerEmpleado.Items.Add(item.nombre);
 						vendedorList.Add(item);
 						idVendedorSelected = item.id_vendedor;
 					}
@@ -402,11 +646,18 @@ namespace DistribuidoraFabio
 					vendedorPick = picker.Items[selectedIndex];
 					try
 					{
-						foreach (var item in vendedorList)
+						if(vendedorPick == "Todos")
 						{
-							if (vendedorPick == item.nombre)
+
+						}
+						else
+						{
+							foreach (var item in vendedorList)
 							{
-								idVendedorSelected = item.id_vendedor;
+								if (vendedorPick == item.nombre)
+								{
+									idVendedorSelected = item.id_vendedor;
+								}
 							}
 						}
 					}
