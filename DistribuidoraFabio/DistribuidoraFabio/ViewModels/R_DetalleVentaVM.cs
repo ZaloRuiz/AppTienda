@@ -18,15 +18,8 @@ namespace DistribuidoraFabio.ViewModels
 	{
 		public ICommand ExportToExcelCommand { private set; get; }
 		private ExcelServices excelService;
-
 		public ObservableCollection<_RDetalleVenta> rDetalleVentas;
-
-
-		DateTime _fecha_inicio;
-		DateTime _fecha_final;
 		public event PropertyChangedEventHandler PropertyChanged;
-		
-		
 		private void OnPropertyChanged(string property)
 		{
 			if (PropertyChanged != null)
@@ -67,68 +60,12 @@ namespace DistribuidoraFabio.ViewModels
 		}
 		public R_DetalleVentaVM()
 		{
-			//_fecha_inicio = _fechaInicio;
-			//_fecha_final = _fechaFinal;
 			_reporteDV = new ObservableCollection<Models._RDetalleVenta>();
-			
 			RefreshCommand = new Command(CmdRefresh);
-			GetReporte();
 			ExportToExcelCommand = new Command(async () => await ExportToExcel());
 			excelService = new ExcelServices();
 		}
-
 		async Task ExportToExcel()
-		{
-			GetReporte();
-			await Task.Delay(2000);
-			string fechahoy = DateTime.Today.ToString("dd-MM-yyyy");
-			string fecha = "ReporteProductos" + fechahoy + ".xlsx";
-
-			string filePath = excelService.GenerateExcel(fecha);
-
-
-			var header = new List<string>() { "ID", "Nombre", "Fecha", "Codigo Cliente", "Nombre Cliente", "Razon Social", "Nit", "Telefono", "Direccion","Geolocalizacion","Producto", "Precio", "Cantidad",
-			"Sub Total", "Envases" , "Tipo Venta", "Saldo", "Estado"};
-
-			var data = new ExcelStructure();
-			data.Headers = header;
-
-			foreach (var publication in _reporteDV)
-			{
-				var row = new List<string>()
-				{
-					publication.id_venta.ToString(),
-					publication.nombre,
-					publication.fecha.ToString(),
-					publication.codigo_c.ToString(),
-					publication.nombre_cliente,
-					publication.razon_social,
-					publication.nit.ToString(),
-					publication.telefono.ToString(),
-					publication.direccion_cliente,
-					publication.geolocalizacion,
-					publication.nombre_producto,
-					publication.precio_producto.ToString(),
-					publication.cantidad.ToString(),
-					publication.sub_total.ToString(),
-					publication.envases.ToString(),
-					publication.tipo_venta,
-					publication.saldo.ToString(),
-					publication.estado,
-
-				};
-
-				data.Values.Add(row);
-			}
-
-			excelService.InsertDataIntoSheet(filePath, "Publications", data);
-
-			await Launcher.OpenAsync(new OpenFileRequest()
-			{
-				File = new ReadOnlyFile(filePath)
-			});
-		}
-		public async void GetReporte()
 		{
 			try
 			{
@@ -144,7 +81,7 @@ namespace DistribuidoraFabio.ViewModels
 
 				var jsonR = await result.Content.ReadAsStringAsync();
 				var _dataRDV = JsonConvert.DeserializeObject<List<_RDetalleVenta>>(jsonR);
-								
+
 				foreach (var item in _dataRDV)
 				{
 					_reporteDV.Add(new Models._RDetalleVenta
@@ -174,6 +111,45 @@ namespace DistribuidoraFabio.ViewModels
 			{
 				Console.WriteLine("###################################################" + err.ToString());
 			}
+
+			await Task.Delay(1000);
+			string fechahoy = DateTime.Today.ToString("dd-MM-yyyy");
+			string fecha = "DetalleDeVenta_" + fechahoy + ".xlsx";
+			string filePath = excelService.GenerateExcel(fecha);
+			var header = new List<string>() { "ID", "Nombre", "Fecha", "Codigo Cliente", "Nombre Cliente", "Razon Social", "Nit", "Telefono", "Direccion","Geolocalizacion","Producto", "Precio", "Cantidad",
+			"Sub Total", "Envases" , "Tipo Venta", "Saldo", "Estado"};
+			var data = new ExcelStructure();
+			data.Headers = header;
+			foreach (var publication in _reporteDV)
+			{
+				var row = new List<string>()
+				{
+					publication.id_venta.ToString(),
+					publication.nombre,
+					publication.fecha.ToString(),
+					publication.codigo_c.ToString(),
+					publication.nombre_cliente,
+					publication.razon_social,
+					publication.nit.ToString(),
+					publication.telefono.ToString(),
+					publication.direccion_cliente,
+					publication.geolocalizacion,
+					publication.nombre_producto,
+					publication.precio_producto.ToString(),
+					publication.cantidad.ToString(),
+					publication.sub_total.ToString(),
+					publication.envases.ToString(),
+					publication.tipo_venta,
+					publication.saldo.ToString(),
+					publication.estado,
+				};
+				data.Values.Add(row);
+			}
+			excelService.InsertDataIntoSheet(filePath, "Publications", data);
+			await Launcher.OpenAsync(new OpenFileRequest()
+			{
+				File = new ReadOnlyFile(filePath)
+			});
 		}
 	}
 }

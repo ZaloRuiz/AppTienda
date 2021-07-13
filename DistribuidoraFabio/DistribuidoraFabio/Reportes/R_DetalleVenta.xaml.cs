@@ -1,16 +1,18 @@
 ﻿using DistribuidoraFabio.Helpers;
 using DistribuidoraFabio.Models;
+using DistribuidoraFabio.Service;
 using DistribuidoraFabio.ViewModels;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,8 +23,7 @@ namespace DistribuidoraFabio.Reportes
 	{
 		DateTime _fechaInicio;
 		DateTime _fechaFinal;
-		DateTime _fecha_inicioVM;
-		DateTime _fecha_finalVM;
+		ObservableCollection<_RDetalleVenta> _reporteDV = new ObservableCollection<_RDetalleVenta>();
 		public R_DetalleVenta()
 		{
 			InitializeComponent();
@@ -36,19 +37,7 @@ namespace DistribuidoraFabio.Reportes
 				try
 				{
 					GetDatos();
-					//string BusyReason = "Cargando...";
-					//await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
-					//_fechaInicio = App._fechaInicioFiltro;
-					//_fechaFinal = App._fechaFinalFiltro;
-					//BindingContext = new R_DetalleVentaVM(); 
-					//MessagingCenter.Subscribe<FiltrarPorFecha>(this, "Hi", (sender) =>
-					//{
-					//	Navigation.PopAsync();
-					//	_fechaInicio = App._fechaInicioFiltro;
-					//	_fechaFinal = App._fechaFinalFiltro;
-					//	BindingContext = new R_DetalleVentaVM(_fechaInicio, _fechaFinal);
-					//});
-
+					BindingContext = new R_DetalleVentaVM();
 				}
 				catch (Exception err)
 				{
@@ -84,7 +73,7 @@ namespace DistribuidoraFabio.Reportes
 			}
 			catch (Exception err)
 			{
-				Console.WriteLine("###################################################" + err.ToString());
+				await DisplayAlert("Error", err.ToString(), "OK");
 			}
 		}
 		private void toolbarFiltro_Clicked(object sender, EventArgs e)
@@ -106,12 +95,14 @@ namespace DistribuidoraFabio.Reportes
 			stkFiltro.IsVisible = false;
 			GetDatos();
 		}
-
-		private void toolbarExcel_Clicked(object sender, EventArgs e)
+		private async void toolbarExcel_Clicked(object sender, EventArgs e)
 		{
-			//_fechaInicio = App._fechaInicioFiltro;
-			//_fechaFinal = App._fechaFinalFiltro;
-			//BindingContext = new R_DetalleVentaVM();
+			App._fechaInicioFiltro = _fechaInicio;
+			App._fechaFinalFiltro = _fechaFinal;
+			string BusyReason = "Generando Excel...";
+			await PopupNavigation.Instance.PushAsync(new BusyPopup(BusyReason));
+			await Task.Delay(3500);
+			await PopupNavigation.Instance.PopAsync();
 		}
 	}
 }
