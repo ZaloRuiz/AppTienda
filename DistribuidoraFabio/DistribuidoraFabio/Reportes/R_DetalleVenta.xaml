@@ -7,49 +7,225 @@
              BackgroundColor="#324A51">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="toolbarFiltro" Text="Filtrar por fecha" Clicked="toolbarFiltro_Clicked"/>
-        <ToolbarItem x:Name="toolbarExcel" Command="{Binding ExportToExcelCommand}" Text="Export to Excel"/>
+        <ToolbarItem x:Name="toolbarExcel" Command="{Binding ExportToExcelCommand}" Clicked="toolbarExcel_Clicked" Text="Exportar a Excel"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ScrollView Orientation="Both">
-            <dg:DataGrid ItemsSource="{Binding ReportesDVs}" SelectionEnabled="True"
-            RowHeight="70" HeaderHeight="50" BorderColor="#CCCCCC" HeaderBackground="#E0E6F8"
-            PullToRefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-                <x:Arguments>
-                    <ListViewCachingStrategy>RetainElement</ListViewCachingStrategy>
-                </x:Arguments>
-                <dg:DataGrid.HeaderFontSize>
-                    <OnIdiom  x:TypeArguments="x:Double">
-                        <OnIdiom.Tablet>15</OnIdiom.Tablet>
-                        <OnIdiom.Phone>13</OnIdiom.Phone>
-                    </OnIdiom>
-                </dg:DataGrid.HeaderFontSize>
-                <dg:DataGrid.Columns>
-                    <dg:DataGridColumn Title="Id" PropertyName="id_venta"/>
-                    <dg:DataGridColumn Title="Nombre Vendedor" PropertyName="nombre" />
-                    <dg:DataGridColumn Title="Fecha" PropertyName="fecha" StringFormat="{}{0:dd/MM/yyyy}"/>
-                    <dg:DataGridColumn Title="Codigo Cliente" PropertyName="codigo_c" />
-                    <dg:DataGridColumn Title="Nombre Cliente" PropertyName="nombre_cliente" />
-                    <dg:DataGridColumn Title="Razon Social" PropertyName="razon_social" />
-                    <dg:DataGridColumn Title="Nit" PropertyName="nit" StringFormat="{}{0:0}"/>
-                    <dg:DataGridColumn Title="Telefono" PropertyName="telefono" StringFormat="{}{0:0}"/>
-                    <dg:DataGridColumn Title="Direccion Cliente" PropertyName="direccion_cliente"/>
-                    <dg:DataGridColumn Title="Geolocalizacion" PropertyName="geolocalizacion"/>
-                    <dg:DataGridColumn Title="Nombre Producto" PropertyName="nombre_producto"/>
-                    <dg:DataGridColumn Title="Precio Producto" PropertyName="precio_producto" StringFormat="{}{0:0.00}"/>
-                    <dg:DataGridColumn Title="Cantidad" PropertyName="cantidad" StringFormat="{}{0:0}"/>
-                    <dg:DataGridColumn Title="Sub Total" PropertyName="sub_total" StringFormat="{}{0:0.00}"/>
-                    <dg:DataGridColumn Title="Envases" PropertyName="envases" StringFormat="{}{0:0}"/>
-                    <dg:DataGridColumn Title="Tipo Venta" PropertyName="tipo_venta"/>
-                    <dg:DataGridColumn Title="Saldo" PropertyName="saldo" StringFormat="{}{0:0.00}"/>
-                    <dg:DataGridColumn Title="Estado" PropertyName="estado"/>
-                </dg:DataGrid.Columns>
-                <dg:DataGrid.RowsBackgroundColorPalette>
-                    <dg:PaletteCollection>
-                        <Color>#F2F2F2</Color>
-                        <Color>#FFFFFF</Color>
-                    </dg:PaletteCollection>
-                </dg:DataGrid.RowsBackgroundColorPalette>
-            </dg:DataGrid>
+        <ScrollView Orientation="Horizontal">
+            <StackLayout HorizontalOptions="FillAndExpand">
+                <StackLayout x:Name="stkFiltro" IsVisible="false" Orientation="Horizontal" VerticalOptions="CenterAndExpand" BackgroundColor="White">
+                    <Label Text="Desde: " TextColor="Black" VerticalOptions="CenterAndExpand" Margin="20,0,0,0"/>
+                    <DatePicker x:Name="pickFechaInicio" Format="dd/MM/yyyy" WidthRequest="120" TextColor="Black" VerticalOptions="CenterAndExpand" BackgroundColor="White"/>
+                    <Label Text="Hasta: " TextColor="Black" VerticalOptions="CenterAndExpand" Margin="30,0,0,0"/>
+                    <DatePicker x:Name="pickFechaFinal" Format="dd/MM/yyyy" WidthRequest="120" TextColor="Black" VerticalOptions="CenterAndExpand" BackgroundColor="White"/>
+                    <Button x:Name="btnFiltro" Text="Filtrar" HorizontalOptions="Center" Margin="100,0,0,0" BackgroundColor="Green" TextColor="White" CornerRadius="5" 
+                            VerticalOptions="CenterAndExpand" Clicked="btnFiltro_Clicked"/>
+                </StackLayout>
+                <Grid Padding="5" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="70"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="70"></ColumnDefinition>
+                        <ColumnDefinition Width="70"></ColumnDefinition>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Text="Id" Grid.Column="0" WidthRequest="50" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Nombre Vendedor" Grid.Column="1" WidthRequest="100" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Fecha" WidthRequest="80" Grid.Column="2" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Codigo Cliente" Grid.Column="3" WidthRequest="50" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Nombre Cliente" Grid.Column="4" WidthRequest="100" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Razon Social" Grid.Column="5" WidthRequest="100" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Nit" Grid.Column="6" WidthRequest="50" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Telefono" Grid.Column="7" WidthRequest="50" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Direccion Cliente" Grid.Column="8" WidthRequest="50" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Geolocalizacion" Grid.Column="9" WidthRequest="80" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Nombre Producto" Grid.Column="10" WidthRequest="150" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Precio Producto" Grid.Column="11" WidthRequest="100" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Cantidad" Grid.Column="12" WidthRequest="70" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Sub Total" Grid.Column="13" WidthRequest="50" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Envases" Grid.Column="14" WidthRequest="80" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Tipo Venta" Grid.Column="15" WidthRequest="70" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Saldo" Grid.Column="16" WidthRequest="70" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <Label Text="Estado" Grid.Column="17" WidthRequest="80" TextColor="#ffffff" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                </Grid>
+                <ListView x:Name="listData" WidthRequest="1500" BackgroundColor="White" SeparatorColor="#465B70" RowHeight="25" HorizontalOptions="FillAndExpand" HorizontalScrollBarVisibility="Always">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="5" RowSpacing="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                        <ColumnDefinition Width="80"></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                        <ColumnDefinition Width="80"></ColumnDefinition>
+                                        <ColumnDefinition Width="150"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                        <ColumnDefinition Width="70"></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                        <ColumnDefinition Width="80"></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                        <ColumnDefinition Width="70"></ColumnDefinition>
+                                        <ColumnDefinition Width="70"></ColumnDefinition>
+                                        <ColumnDefinition Width="80"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding id_venta}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="1" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding nombre}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="2" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding fecha, StringFormat='{}{0:dd-MM-yyyy}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="3" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding codigo_c}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="4" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding nombre_cliente}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="5" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding razon_social}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="6" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding nit}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="7" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding telefono}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="8" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding direccion_cliente}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="9" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding geolocalizacion}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="10" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding nombre_producto}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="11" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding precio_producto, StringFormat=' {0:0.00}'}"/>
+                                                <Span Text="Bs. "/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="12" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding cantidad}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="13" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding sub_total, StringFormat=' {0:0.00}'}"/>
+                                                <Span Text="Bs. "/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="14" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding envases}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="15" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding tipo_venta}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="16" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding saldo, StringFormat=' {0:0.00}'}"/>
+                                                <Span Text="Bs. "/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="0" Grid.Column="17" FontSize="12" TextColor="#000000" LineBreakMode="TailTruncation" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding estado}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

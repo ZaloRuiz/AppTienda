@@ -6,6 +6,8 @@ namespace DistribuidoraFabio.Models
 {
     public class _RDetalleVenta
     {
+        public DateTime fecha_inicio { get; set; }
+        public DateTime fecha_final { get; set; }
         public int id_venta { get; set; }
         public string nombre { get; set; }
         public DateTime fecha { get; set; }

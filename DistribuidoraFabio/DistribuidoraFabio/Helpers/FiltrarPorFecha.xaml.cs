@@ -41,14 +41,14 @@ namespace DistribuidoraFabio.Helpers
 			{
 				App._fechaInicioFiltro = entryF_inicio.Date;
 				App._fechaFinalFiltro = entryF_final.Date;
-				MessagingCenter.Send<FiltrarPorFecha>(this, "Hi");
+				MessagingCenter.Send(this, "Hi");
 				
 			}
 			catch (Exception err)
 			{
 				await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 			}
-			await PopupNavigation.Instance.PopAllAsync();
+			await PopupNavigation.Instance.PopAsync();
 		}
 	}
 }

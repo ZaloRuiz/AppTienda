@@ -22,8 +22,8 @@ namespace DistribuidoraFabio.ViewModels
 		public ObservableCollection<_RDetalleVenta> rDetalleVentas;
 
 
-		DateTime fecha_inicio;
-		DateTime fecha_final;
+		DateTime _fecha_inicio;
+		DateTime _fecha_final;
 		public event PropertyChangedEventHandler PropertyChanged;
 		
 		
@@ -65,20 +65,22 @@ namespace DistribuidoraFabio.ViewModels
 			await Task.Delay(1500);
 			IsRefreshing = false;
 		}
-		public R_DetalleVentaVM(DateTime _fechaInicio, DateTime _fechaFinal)
+		public R_DetalleVentaVM()
 		{
-			fecha_inicio = _fechaInicio;
-			fecha_final = _fechaFinal;
+			//_fecha_inicio = _fechaInicio;
+			//_fecha_final = _fechaFinal;
 			_reporteDV = new ObservableCollection<Models._RDetalleVenta>();
-			GetReporte();
+			
 			RefreshCommand = new Command(CmdRefresh);
-
+			GetReporte();
 			ExportToExcelCommand = new Command(async () => await ExportToExcel());
 			excelService = new ExcelServices();
 		}
 
 		async Task ExportToExcel()
 		{
+			GetReporte();
+			await Task.Delay(2000);
 			string fechahoy = DateTime.Today.ToString("dd-MM-yyyy");
 			string fecha = "ReporteProductos" + fechahoy + ".xlsx";
 
@@ -130,36 +132,42 @@ namespace DistribuidoraFabio.ViewModels
 		{
 			try
 			{
+				_RDetalleVenta _R_detalleVenta = new _RDetalleVenta()
+				{
+					fecha_inicio = App._fechaInicioFiltro,
+					fecha_final = App._fechaFinalFiltro
+				};
+				var json = JsonConvert.SerializeObject(_R_detalleVenta);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
 				HttpClient client = new HttpClient();
-				var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteDetalleVenta.php");
-				var _dataRDV = JsonConvert.DeserializeObject<List<Models._RDetalleVenta>>(response);
+				var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/reportes/ReporteDetalleVenta.php", content);
 
+				var jsonR = await result.Content.ReadAsStringAsync();
+				var _dataRDV = JsonConvert.DeserializeObject<List<_RDetalleVenta>>(jsonR);
+								
 				foreach (var item in _dataRDV)
 				{
-					if(item.fecha.Ticks > fecha_inicio.Ticks && item.fecha.Ticks < fecha_final.Ticks)
+					_reporteDV.Add(new Models._RDetalleVenta
 					{
-						_reporteDV.Add(new Models._RDetalleVenta
-						{
-							id_venta = item.id_venta,
-							nombre = item.nombre,
-							fecha = item.fecha,
-							codigo_c = item.codigo_c,
-							nombre_cliente = item.nombre_cliente,
-							razon_social = item.razon_social,
-							nit = item.nit,
-							telefono = item.telefono,
-							direccion_cliente = item.direccion_cliente,
-							geolocalizacion = item.geolocalizacion,
-							nombre_producto = item.nombre_producto,
-							precio_producto = item.precio_producto,
-							cantidad = item.cantidad,
-							sub_total = item.sub_total,
-							envases = item.envases,
-							tipo_venta = item.tipo_venta,
-							saldo = item.saldo,
-							estado = item.estado
-						});
-					}
+						id_venta = item.id_venta,
+						nombre = item.nombre,
+						fecha = item.fecha,
+						codigo_c = item.codigo_c,
+						nombre_cliente = item.nombre_cliente,
+						razon_social = item.razon_social,
+						nit = item.nit,
+						telefono = item.telefono,
+						direccion_cliente = item.direccion_cliente,
+						geolocalizacion = item.geolocalizacion,
+						nombre_producto = item.nombre_producto,
+						precio_producto = item.precio_producto,
+						cantidad = item.cantidad,
+						sub_total = item.sub_total,
+						envases = item.envases,
+						tipo_venta = item.tipo_venta,
+						saldo = item.saldo,
+						estado = item.estado
+					});
 				}
 			}
 			catch (Exception err)
