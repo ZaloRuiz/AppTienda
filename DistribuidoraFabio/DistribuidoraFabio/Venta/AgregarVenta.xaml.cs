@@ -68,7 +68,6 @@ namespace DistribuidoraFabio.Venta
                     HttpClient client = new HttpClient();
                     var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/clientes/listaCliente.php");
                     var clientes = JsonConvert.DeserializeObject<List<Models.Cliente>>(response).ToList();
-                    //clientePicker.ItemsSource = clientes;
                     foreach (var item in clientes)
                     {
                         clienteList.Add(item);
@@ -273,7 +272,7 @@ namespace DistribuidoraFabio.Venta
             }
         }
         private string tipoVentaPick;
-        private void TipoVentaEntry_SelectedIndexChanged(object sender, EventArgs e)
+        private async void TipoVentaEntry_SelectedIndexChanged(object sender, EventArgs e)
         {
             var picker = (Picker)sender;
             int selectedIndex = picker.SelectedIndex;
@@ -651,7 +650,7 @@ namespace DistribuidoraFabio.Venta
                     {
                         foreach (var item in clienteList)
                         {
-                            if (clientePick == item.nombre_cliente)
+                            if(clientePick == item.razon_social)
                             {
                                 idClienteSelected = item.id_cliente;
                             }

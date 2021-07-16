@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -25,6 +26,10 @@ namespace DistribuidoraFabio.Finanzas
 		private string _yearElegido;
 		private int _yearQuery;
 		private string _mesDefault;
+		int _medidaStkFijo = 0;
+		int _medidaStkVariable = 0;
+		ObservableCollection<Costo_fijo> _listaCostoFijo = new ObservableCollection<Costo_fijo>();
+		ObservableCollection<Costo_variable> _listaCostoVariable = new ObservableCollection<Costo_variable>();
 		public ListaCostos()
 		{
 			InitializeComponent();
@@ -41,14 +46,105 @@ namespace DistribuidoraFabio.Finanzas
 			base.OnAppearing();
 			if (CrossConnectivity.Current.IsConnected)
 			{
-				stkCV.Children.Clear();
-				stkCF.Children.Clear();
-				txtTotalCF.Text = "0";
-				txtTotalCV.Text = "0";
-				_totalCF = 0;
-				_totalCV = 0;
-				GetCostoVariable();
-				GetCostoFijo();
+				try
+				{
+					stkCV.Children.Clear();
+					stkCF.Children.Clear();
+					txtTotalCF.Text = "0";
+					txtTotalCV.Text = "0";
+					_totalCF = 0;
+					_totalCV = 0;
+					GetAltura();
+					GetCostoVariable();
+					await Task.Delay(400);
+					GetCostoFijo();
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "Ok");
+				}
+			}
+			else
+			{
+				await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+			}
+		}
+		private async void GetAltura()
+		{
+			if (CrossConnectivity.Current.IsConnected)
+			{
+				try
+				{
+					Costo_fijo _costoFijo = new Costo_fijo()
+					{
+						mes_cf = _mesQuery,
+						gestion_cf = _yearQuery
+					};
+					var json = JsonConvert.SerializeObject(_costoFijo);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostoFijoQuery.php", content);
+
+					var jsonR = await result.Content.ReadAsStringAsync();
+					var dataCostoFijo = JsonConvert.DeserializeObject<List<Costo_fijo>>(jsonR);
+
+					if (dataCostoFijo != null)
+					{
+						foreach (var item in dataCostoFijo)
+						{
+							_listaCostoFijo.Add(item);
+						}
+						_medidaStkFijo = dataCostoFijo.Count;
+						await Task.Delay(200);
+					}
+					txtTotalCF.Text = _totalCF.ToString();
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "Ok");
+				}
+				try
+				{
+					Costo_variable _costoVariable = new Costo_variable()
+					{
+						mes_cv = _mesQuery,
+						gestion_cv = _yearQuery
+					};
+					var json = JsonConvert.SerializeObject(_costoVariable);
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+					HttpClient client = new HttpClient();
+					var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/egresos/listaCostoVariableQuery.php", content);
+
+					var jsonR = await result.Content.ReadAsStringAsync();
+					var dataCostoVar = JsonConvert.DeserializeObject<List<Costo_variable>>(jsonR);
+
+					if (dataCostoVar != null)
+					{
+						foreach (var item in dataCostoVar)
+						{
+							_listaCostoVariable.Add(item);
+						}
+						_medidaStkVariable = dataCostoVar.Count;
+						await Task.Delay(200);
+					}
+				}
+				catch (Exception err)
+				{
+					await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "Ok");
+				}
+				if(_medidaStkFijo > _medidaStkVariable)
+				{
+					_medidaStkFijo = _medidaStkFijo * 60;
+					stkCF.HeightRequest = _medidaStkFijo;
+					stkCV.HeightRequest = _medidaStkVariable;
+				}
+				else if(_medidaStkVariable > _medidaStkFijo)
+				{
+					_medidaStkVariable = _medidaStkVariable * 60;
+					stkCF.HeightRequest = _medidaStkFijo;
+					stkCV.HeightRequest = _medidaStkVariable;
+				}
+				await Task.Delay(400);
 			}
 			else
 			{
@@ -133,6 +229,7 @@ namespace DistribuidoraFabio.Finanzas
 				await Task.Delay(400);
 				try
 				{
+					_listaCostoVariable.Clear();
 					Costo_variable _costoVariable = new Costo_variable()
 					{
 						mes_cv = _mesQuery,
@@ -148,10 +245,6 @@ namespace DistribuidoraFabio.Finanzas
 
 					if (dataCostoVar != null)
 					{
-						int _medidaStk = dataCostoVar.Count;
-						_medidaStk = _medidaStk * 60;
-						stkCV.HeightRequest = _medidaStk;
-						await Task.Delay(200);
 						foreach (var item in dataCostoVar)
 						{
 							StackLayout _stk1CV = new StackLayout();
@@ -262,7 +355,7 @@ namespace DistribuidoraFabio.Finanzas
 			}
 			_yearQuery = Convert.ToInt32(_yearElegido);
 		}
-		private void btnBuscar_Clicked(object sender, EventArgs e)
+		private async void btnBuscar_Clicked(object sender, EventArgs e)
 		{
 			stkCV.Children.Clear();
 			stkCF.Children.Clear();
@@ -270,8 +363,9 @@ namespace DistribuidoraFabio.Finanzas
 			txtTotalCV.Text = "0";
 			_totalCF = 0;
 			_totalCV = 0;
+			GetAltura();
 			GetCostoVariable();
-			Task.Delay(200);
+			await Task.Delay(400);
 			GetCostoFijo();
 		}
 	}
