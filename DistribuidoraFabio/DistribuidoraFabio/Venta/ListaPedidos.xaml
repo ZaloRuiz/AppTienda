@@ -36,7 +36,7 @@
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="Cliente: "/>
-                                        <Span Text="{Binding nombre_cliente}"/>
+                                        <Span Text="{Binding razon_social}"/>
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>

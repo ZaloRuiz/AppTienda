@@ -73,6 +73,7 @@ namespace DistribuidoraFabio.Reportes
 		private int _idProducto = 0;
 		private int _idTipoProducto = 0;
 		private string _filtroProd = "Todos";
+		private string _tipoResultado;
 		List<string> ListSemanas = new List<string>();
 		private int idVendedorSelected = 0;
 		ObservableCollection<GraficoVentaDiaria> _listaVentasDia = new ObservableCollection<GraficoVentaDiaria>();
@@ -770,7 +771,7 @@ namespace DistribuidoraFabio.Reportes
 				_filtroProd = "TipoProducto";
 			}
 		}
-		private async void RB_Producto_CheckedChanged(object sender, CheckedChangedEventArgs e)
+		private void RB_Producto_CheckedChanged(object sender, CheckedChangedEventArgs e)
 		{
 			if (RB_Producto.IsChecked)
 			{
@@ -827,57 +828,120 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
+							
+							//await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if(RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if(_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
-
-							var startDate = fechaInicioDiaria.Date.AddDays(-2);
-							var endDate = fechaFinalDiaria.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if(RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if(_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							
 						}
 						catch (Exception err)
 						{
@@ -907,57 +971,117 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
+							
 							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
-
-							var startDate = fechaInicioDiaria.Date.AddDays(-2);
-							var endDate = fechaFinalDiaria.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -986,57 +1110,115 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentasDia.Add(item);
 							}
-							foreach (var item in _listaVentasDia)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentasDia.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentasDia)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
-
-							var startDate = fechaInicioDiaria.Date.AddDays(-2);
-							var endDate = fechaFinalDiaria.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1080,57 +1262,115 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioSemana.Date.AddDays(-2);
+									var endDate = _FinalSemana.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioSemana.Date.AddDays(-2);
-							var endDate = _FinalSemana.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioSemana.Date.AddDays(-2);
+									var endDate = _FinalSemana.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1160,57 +1400,115 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioSemana.Date.AddDays(-2);
+									var endDate = _FinalSemana.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioSemana.Date.AddDays(-2);
-							var endDate = _FinalSemana.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioSemana.Date.AddDays(-2);
+									var endDate = _FinalSemana.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1239,57 +1537,116 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentasDia.Add(item);
 							}
-							foreach (var item in _listaVentasDia)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentasDia.Count.ToString(), "OK");
+							
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentasDia)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioSemana.Date.AddDays(-2);
+									var endDate = _FinalSemana.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioSemana.Date.AddDays(-2);
-							var endDate = _FinalSemana.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioSemana.Date.AddDays(-2);
+									var endDate = _FinalSemana.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1332,57 +1689,115 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioMes.Date.AddDays(-2);
-							var endDate = _FinMes.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1412,57 +1827,115 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioMes.Date.AddDays(-2);
-							var endDate = _FinMes.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1491,57 +1964,115 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentasDia.Add(item);
 							}
-							foreach (var item in _listaVentasDia)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentasDia.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
-							foreach (var item in _listaVentasDia)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioMes.Date.AddDays(-2);
-							var endDate = _FinMes.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1584,58 +2115,116 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							Points.Clear();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioYear.Date.AddDays(-2);
+									var endDate = _FinalYear.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioYear.Date.AddDays(-2);
-							var endDate = _FinalYear.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioYear.Date.AddDays(-2);
+									var endDate = _FinalYear.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1665,58 +2254,116 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentaDiaXProducto.Add(item);
 							}
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentaDiaXProducto.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							Points.Clear();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioYear.Date.AddDays(-2);
+									var endDate = _FinalYear.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioYear.Date.AddDays(-2);
-							var endDate = _FinalYear.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioYear.Date.AddDays(-2);
+									var endDate = _FinalYear.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1745,58 +2392,116 @@ namespace DistribuidoraFabio.Reportes
 							{
 								_listaVentasDia.Add(item);
 							}
-							foreach (var item in _listaVentasDia)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							await DisplayAlert("Valores", _listaVentasDia.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							Points.Clear();
-							foreach (var item in _listaVentasDia)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioYear.Date.AddDays(-2);
+									var endDate = _FinalYear.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
 							}
-
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
-
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
-
-							var startDate = _InicioYear.Date.AddDays(-2);
-							var endDate = _FinalYear.Date.AddDays(2);
-
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = Convert.ToDouble(_montoMinimo) - 50;
-							double _maximum = Convert.ToDouble(_montoMaximo) + 100;
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
-
-							var ls1 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-
-							m.Series.Add(ls1);
-							_opv = new PlotView
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentasDia)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentasDia)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioYear.Date.AddDays(-2);
+									var endDate = _FinalYear.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = Convert.ToDouble(_montoMinimo) - 50;
+									double _maximum = Convert.ToDouble(_montoMaximo) + 100;
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+
+									m.Series.Add(ls1);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -1884,92 +2589,184 @@ namespace DistribuidoraFabio.Reportes
 						}
 						try
 						{
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								if (item.total < _montoMinimoComp)
-								{
-									_montoMinimoComp = item.total;
-								}
-								if (item.total > _montoMaximoComp)
-								{
-									_montoMaximoComp = item.total;
-								}
-							}
-							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							List<DataPoint> PointsComp = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.cantidad < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
 
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
 
-							var startDate = fechaInicioDiaria.Date.AddDays(-2);
-							var endDate = fechaFinalDiaria.Date.AddDays(2);
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
 
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = 0;
-							double _maximum = 0;
-							if (_montoMinimo > _montoMinimoComp)
-							{
-								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-							}
-							else
-							{
-								_minimum = Convert.ToDouble(_montoMinimo) - 50;
-							}
-							if (_montoMaximo > _montoMaximoComp)
-							{
-								_maximum = Convert.ToDouble(_montoMaximo) + 50;
-							}
-							else
-							{
-								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-							}
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
 
-							var ls1 = new LineSeries();
-							var ls2 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls2.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-							ls2.ItemsSource = PointsComp;
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
 
-							m.Series.Add(ls1);
-							m.Series.Add(ls2);
-							_opv = new PlotView
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.total < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.total;
+										}
+										if (item.total > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
+
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -2034,92 +2831,185 @@ namespace DistribuidoraFabio.Reportes
 						}
 						try
 						{
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								if (item.total < _montoMinimoComp)
-								{
-									_montoMinimoComp = item.total;
-								}
-								if (item.total > _montoMaximoComp)
-								{
-									_montoMaximoComp = item.total;
-								}
-							}
-							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
+							
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							List<DataPoint> PointsComp = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.cantidad < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
 
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
 
-							var startDate = fechaInicioDiaria.Date.AddDays(-2);
-							var endDate = fechaFinalDiaria.Date.AddDays(2);
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
 
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = 0;
-							double _maximum = 0;
-							if (_montoMinimo > _montoMinimoComp)
-							{
-								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-							}
-							else
-							{
-								_minimum = Convert.ToDouble(_montoMinimo) - 50;
-							}
-							if (_montoMaximo > _montoMaximoComp)
-							{
-								_maximum = Convert.ToDouble(_montoMaximo) + 50;
-							}
-							else
-							{
-								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-							}
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
 
-							var ls1 = new LineSeries();
-							var ls2 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls2.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-							ls2.ItemsSource = PointsComp;
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
 
-							m.Series.Add(ls1);
-							m.Series.Add(ls2);
-							_opv = new PlotView
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.total < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.total;
+										}
+										if (item.total > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
+
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -2180,94 +3070,188 @@ namespace DistribuidoraFabio.Reportes
 						{
 							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
 						}
-						foreach (var item in _listaVentasDia)
-						{
-							if (item.total < _montoMinimo)
-							{
-								_montoMinimo = item.total;
-							}
-							if (item.total > _montoMaximo)
-							{
-								_montoMaximo = item.total;
-							}
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							if (item.total < _montoMinimoComp)
-							{
-								_montoMinimoComp = item.total;
-							}
-							if (item.total > _montoMaximoComp)
-							{
-								_montoMaximoComp = item.total;
-							}
-						}
-						await DisplayAlert("Valores", "Presente año=" + _listaVentasDia.Count.ToString() + "Año anterior= " + _listaVentasDiaComparar.Count.ToString(), "OK");
 						//Crear grafico
 						stkGrafico.Children.Clear();
 						List<DataPoint> Points = new List<DataPoint>();
 						List<DataPoint> PointsComp = new List<DataPoint>();
-						foreach (var item in _listaVentasDia)
+						if (RB_Cajas.IsChecked)
 						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
+							if (_tipoResultado == "Cajas")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.total < _montoMinimo)
+									{
+										_montoMinimo = item.total;
+									}
+									if (item.total > _montoMaximo)
+									{
+										_montoMaximo = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.total < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.total;
+									}
+									if (item.total > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
 
-						var m = new PlotModel();
-						m.PlotType = PlotType.XY;
-						m.InvalidatePlot(false);
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " a " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " a " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
 
-						var startDate = fechaInicioDiaria.Date.AddDays(-2);
-						var endDate = fechaFinalDiaria.Date.AddDays(2);
+								var startDate = fechaInicioDiaria.Date.AddDays(-2);
+								var endDate = fechaFinalDiaria.Date.AddDays(2);
 
-						var minValue = DateTimeAxis.ToDouble(startDate);
-						var maxValue = DateTimeAxis.ToDouble(endDate);
-						m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-						double _minimum = 0;
-						double _maximum = 0;
-						if (_montoMinimo > _montoMinimoComp)
-						{
-							_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 50;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
 						}
-						else
+						else if (RB_Bolivianos.IsChecked)
 						{
-							_minimum = Convert.ToDouble(_montoMinimo) - 50;
-						}
-						if (_montoMaximo > _montoMaximoComp)
-						{
-							_maximum = Convert.ToDouble(_montoMaximo) + 50;
-						}
-						else
-						{
-							_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-						}
-						m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-						m.ResetAllAxes();
+							if (_tipoResultado == "Bolivianos")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.total < _montoMinimo)
+									{
+										_montoMinimo = item.total;
+									}
+									if (item.total > _montoMaximo)
+									{
+										_montoMaximo = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.total < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.total;
+									}
+									if (item.total > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
 
-						var ls1 = new LineSeries();
-						var ls2 = new LineSeries();
-						//MarkerType = OxyPlot.MarkerType.Circle,
-						ls1.MarkerType = OxyPlot.MarkerType.Circle;
-						ls2.MarkerType = OxyPlot.MarkerType.Circle;
-						ls1.ItemsSource = Points;
-						ls2.ItemsSource = PointsComp;
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Series.Add(ls1);
-						m.Series.Add(ls2);
-						_opv = new PlotView
-						{
-							WidthRequest = 300,
-							HeightRequest = 340,
-							BackgroundColor = Color.White,
-						};
-						_opv.Model = m;
-						stkGrafico.Children.Add(_opv);
-						await PopupNavigation.Instance.PopAsync();
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " a " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+								var startDate = fechaInicioDiaria.Date.AddDays(-2);
+								var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 50;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
 					}
 					else
 					{
@@ -2339,94 +3323,190 @@ namespace DistribuidoraFabio.Reportes
 						{
 							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
 						}
-						foreach (var item in _listaVentasDia)
-						{
-							if (item.total < _montoMinimo)
-							{
-								_montoMinimo = item.total;
-							}
-							if (item.total > _montoMaximo)
-							{
-								_montoMaximo = item.total;
-							}
-						}
-						foreach (var item in _listaVentaDiaXProductoComparar)
-						{
-							if (item.total < _montoMinimoComp)
-							{
-								_montoMinimoComp = item.total;
-							}
-							if (item.total > _montoMaximoComp)
-							{
-								_montoMaximoComp = item.total;
-							}
-						}
-						await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
+						
 						//Crear grafico
 						stkGrafico.Children.Clear();
 						List<DataPoint> Points = new List<DataPoint>();
 						List<DataPoint> PointsComp = new List<DataPoint>();
-						foreach (var item in _listaVentasDia)
+						if (RB_Cajas.IsChecked)
 						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						foreach (var item in _listaVentaDiaXProductoComparar)
-						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
+							if (_tipoResultado == "Cajas")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.cantidad < _montoMinimo)
+									{
+										_montoMinimo = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximo)
+									{
+										_montoMaximo = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									if (item.cantidad < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
 
-						var m = new PlotModel();
-						m.PlotType = PlotType.XY;
-						m.InvalidatePlot(false);
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
 
-						var startDate = _InicioSemana.Date.AddDays(-2);
-						var endDate = _FinalSemana.Date.AddDays(2);
+								var startDate = _InicioSemana.Date.AddDays(-2);
+								var endDate = _FinalSemana.Date.AddDays(2);
 
-						var minValue = DateTimeAxis.ToDouble(startDate);
-						var maxValue = DateTimeAxis.ToDouble(endDate);
-						m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-						double _minimum = 0;
-						double _maximum = 0;
-						if (_montoMinimo > _montoMinimoComp)
-						{
-							_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
 						}
-						else
+						else if (RB_Bolivianos.IsChecked)
 						{
-							_minimum = Convert.ToDouble(_montoMinimo) - 50;
-						}
-						if (_montoMaximo > _montoMaximoComp)
-						{
-							_maximum = Convert.ToDouble(_montoMaximo) + 100;
-						}
-						else
-						{
-							_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
-						}
-						m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-						m.ResetAllAxes();
+							if (_tipoResultado == "Bolivianos")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.total < _montoMinimo)
+									{
+										_montoMinimo = item.total;
+									}
+									if (item.total > _montoMaximo)
+									{
+										_montoMaximo = item.total;
+									}
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									if (item.total < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.total;
+									}
+									if (item.total > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
 
-						var ls1 = new LineSeries();
-						var ls2 = new LineSeries();
-						//MarkerType = OxyPlot.MarkerType.Circle,
-						ls1.MarkerType = OxyPlot.MarkerType.Circle;
-						ls2.MarkerType = OxyPlot.MarkerType.Circle;
-						ls1.ItemsSource = Points;
-						ls2.ItemsSource = PointsComp;
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Series.Add(ls1);
-						m.Series.Add(ls2);
-						_opv = new PlotView
-						{
-							WidthRequest = 300,
-							HeightRequest = 340,
-							BackgroundColor = Color.White,
-						};
-						_opv.Model = m;
-						stkGrafico.Children.Add(_opv);
-						await PopupNavigation.Instance.PopAsync();
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+								var startDate = _InicioSemana.Date.AddDays(-2);
+								var endDate = _FinalSemana.Date.AddDays(2);
+
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
+						
 					}
 					else if (_filtroProd == "TipoProducto")
 					{
@@ -2484,94 +3564,190 @@ namespace DistribuidoraFabio.Reportes
 						{
 							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
 						}
-						foreach (var item in _listaVentasDia)
-						{
-							if (item.total < _montoMinimo)
-							{
-								_montoMinimo = item.total;
-							}
-							if (item.total > _montoMaximo)
-							{
-								_montoMaximo = item.total;
-							}
-						}
-						foreach (var item in _listaVentaDiaXProductoComparar)
-						{
-							if (item.total < _montoMinimoComp)
-							{
-								_montoMinimoComp = item.total;
-							}
-							if (item.total > _montoMaximoComp)
-							{
-								_montoMaximoComp = item.total;
-							}
-						}
-						await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
+						
 						//Crear grafico
 						stkGrafico.Children.Clear();
 						List<DataPoint> Points = new List<DataPoint>();
 						List<DataPoint> PointsComp = new List<DataPoint>();
-						foreach (var item in _listaVentasDia)
+						if (RB_Cajas.IsChecked)
 						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						foreach (var item in _listaVentaDiaXProductoComparar)
-						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
+							if (_tipoResultado == "Cajas")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.cantidad < _montoMinimo)
+									{
+										_montoMinimo = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximo)
+									{
+										_montoMaximo = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									if (item.cantidad < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
 
-						var m = new PlotModel();
-						m.PlotType = PlotType.XY;
-						m.InvalidatePlot(false);
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
 
-						var startDate = _InicioSemana.Date.AddDays(-2);
-						var endDate = _FinalSemana.Date.AddDays(2);
+								var startDate = _InicioSemana.Date.AddDays(-2);
+								var endDate = _FinalSemana.Date.AddDays(2);
 
-						var minValue = DateTimeAxis.ToDouble(startDate);
-						var maxValue = DateTimeAxis.ToDouble(endDate);
-						m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-						double _minimum = 0;
-						double _maximum = 0;
-						if (_montoMinimo > _montoMinimoComp)
-						{
-							_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
 						}
-						else
+						else if (RB_Bolivianos.IsChecked)
 						{
-							_minimum = Convert.ToDouble(_montoMinimo) - 50;
-						}
-						if (_montoMaximo > _montoMaximoComp)
-						{
-							_maximum = Convert.ToDouble(_montoMaximo) + 100;
-						}
-						else
-						{
-							_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
-						}
-						m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-						m.ResetAllAxes();
+							if (_tipoResultado == "Bolivianos")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.total < _montoMinimo)
+									{
+										_montoMinimo = item.total;
+									}
+									if (item.total > _montoMaximo)
+									{
+										_montoMaximo = item.total;
+									}
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									if (item.total < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.total;
+									}
+									if (item.total > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								foreach (var item in _listaVentaDiaXProductoComparar)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
 
-						var ls1 = new LineSeries();
-						var ls2 = new LineSeries();
-						//MarkerType = OxyPlot.MarkerType.Circle,
-						ls1.MarkerType = OxyPlot.MarkerType.Circle;
-						ls2.MarkerType = OxyPlot.MarkerType.Circle;
-						ls1.ItemsSource = Points;
-						ls2.ItemsSource = PointsComp;
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Series.Add(ls1);
-						m.Series.Add(ls2);
-						_opv = new PlotView
-						{
-							WidthRequest = 300,
-							HeightRequest = 340,
-							BackgroundColor = Color.White,
-						};
-						_opv.Model = m;
-						stkGrafico.Children.Add(_opv);
-						await PopupNavigation.Instance.PopAsync();
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioSemana.Date.ToString("dd/MM/yyyy") + " a " + _FinalSemana.Date.ToString("dd/MM/yyyy");
+
+								var startDate = _InicioSemana.Date.AddDays(-2);
+								var endDate = _FinalSemana.Date.AddDays(2);
+
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
+						
 					}
 					else if (_filtroProd == "Todos")
 					{
@@ -2627,93 +3803,188 @@ namespace DistribuidoraFabio.Reportes
 						{
 							await DisplayAlert("Error", err.ToString(), "OK");
 						}
-						foreach (var item in _listaVentasDia)
-						{
-							if (item.total < _montoMinimo)
-							{
-								_montoMinimo = item.total;
-							}
-							if (item.total > _montoMaximo)
-							{
-								_montoMaximo = item.total;
-							}
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							if (item.total < _montoMinimoComp)
-							{
-								_montoMinimoComp = item.total;
-							}
-							if (item.total > _montoMaximoComp)
-							{
-								_montoMaximoComp = item.total;
-							}
-						}
-						await DisplayAlert("Valores", "Presente año=" + _listaVentasDia.Count.ToString() + "Año anterior= " + _listaVentasDiaComparar.Count.ToString(), "OK");
+						
 						//Crear grafico
 						stkGrafico.Children.Clear();
 						List<DataPoint> Points = new List<DataPoint>();
 						List<DataPoint> PointsComp = new List<DataPoint>();
-						foreach (var item in _listaVentasDia)
+						if (RB_Cajas.IsChecked)
 						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						var m = new PlotModel();
-						m.PlotType = PlotType.XY;
-						m.InvalidatePlot(false);
+							if (_tipoResultado == "Cajas")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.cantidad < _montoMinimo)
+									{
+										_montoMinimo = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximo)
+									{
+										_montoMaximo = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.cantidad < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
 
-						var startDate = _InicioYear.Date.AddDays(-2);
-						var endDate = _FinalYear.Date.AddDays(2);
+								var startDate = _InicioYear.Date.AddDays(-2);
+								var endDate = _FinalYear.Date.AddDays(2);
 
-						var minValue = DateTimeAxis.ToDouble(startDate);
-						var maxValue = DateTimeAxis.ToDouble(endDate);
-						m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-						double _minimum = 0;
-						double _maximum = 0;
-						if (_montoMinimo > _montoMinimoComp)
-						{
-							_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-						}
-						else
-						{
-							_minimum = Convert.ToDouble(_montoMinimo) - 50;
-						}
-						if (_montoMaximo > _montoMaximoComp)
-						{
-							_maximum = Convert.ToDouble(_montoMaximo) + 100;
-						}
-						else
-						{
-							_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
-						}
-						m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-						m.ResetAllAxes();
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
 
-						var ls1 = new LineSeries();
-						var ls2 = new LineSeries();
-						//MarkerType = OxyPlot.MarkerType.Circle,
-						ls1.MarkerType = OxyPlot.MarkerType.Circle;
-						ls2.MarkerType = OxyPlot.MarkerType.Circle;
-						ls1.ItemsSource = Points;
-						ls2.ItemsSource = PointsComp;
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
 
-						m.Series.Add(ls1);
-						m.Series.Add(ls2);
-						_opv = new PlotView
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
+						else if (RB_Bolivianos.IsChecked)
 						{
-							WidthRequest = 300,
-							HeightRequest = 340,
-							BackgroundColor = Color.White,
-						};
-						_opv.Model = m;
-						stkGrafico.Children.Add(_opv);
-						await PopupNavigation.Instance.PopAsync();
+							if (_tipoResultado == "Bolivianos")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.total < _montoMinimo)
+									{
+										_montoMinimo = item.total;
+									}
+									if (item.total > _montoMaximo)
+									{
+										_montoMaximo = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.total < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.total;
+									}
+									if (item.total > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
+
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+								var startDate = _InicioYear.Date.AddDays(-2);
+								var endDate = _FinalYear.Date.AddDays(2);
+
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
+						
 					}
 				}
 				else
@@ -2786,92 +4057,185 @@ namespace DistribuidoraFabio.Reportes
 						}
 						try
 						{
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								if (item.total < _montoMinimoComp)
-								{
-									_montoMinimoComp = item.total;
-								}
-								if (item.total > _montoMaximoComp)
-								{
-									_montoMaximoComp = item.total;
-								}
-							}
-							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							List<DataPoint> PointsComp = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.cantidad < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
 
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
 
-							var startDate = _InicioMes.Date.AddDays(-2);
-							var endDate = _FinMes.Date.AddDays(2);
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
 
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = 0;
-							double _maximum = 0;
-							if (_montoMinimo > _montoMinimoComp)
-							{
-								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-							}
-							else
-							{
-								_minimum = Convert.ToDouble(_montoMinimo) - 50;
-							}
-							if (_montoMaximo > _montoMaximoComp)
-							{
-								_maximum = Convert.ToDouble(_montoMaximo) + 50;
-							}
-							else
-							{
-								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-							}
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
 
-							var ls1 = new LineSeries();
-							var ls2 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls2.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-							ls2.ItemsSource = PointsComp;
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
 
-							m.Series.Add(ls1);
-							m.Series.Add(ls2);
-							_opv = new PlotView
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.total < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.total;
+										}
+										if (item.total > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
+
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							
 						}
 						catch (Exception err)
 						{
@@ -2936,92 +4300,184 @@ namespace DistribuidoraFabio.Reportes
 						}
 						try
 						{
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								if (item.total < _montoMinimoComp)
-								{
-									_montoMinimoComp = item.total;
-								}
-								if (item.total > _montoMaximoComp)
-								{
-									_montoMaximoComp = item.total;
-								}
-							}
-							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							List<DataPoint> PointsComp = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.cantidad < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
 
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
 
-							var startDate = _InicioMes.Date.AddDays(-2);
-							var endDate = _FinMes.Date.AddDays(2);
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
 
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = 0;
-							double _maximum = 0;
-							if (_montoMinimo > _montoMinimoComp)
-							{
-								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-							}
-							else
-							{
-								_minimum = Convert.ToDouble(_montoMinimo) - 50;
-							}
-							if (_montoMaximo > _montoMaximoComp)
-							{
-								_maximum = Convert.ToDouble(_montoMaximo) + 50;
-							}
-							else
-							{
-								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-							}
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
 
-							var ls1 = new LineSeries();
-							var ls2 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls2.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-							ls2.ItemsSource = PointsComp;
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
 
-							m.Series.Add(ls1);
-							m.Series.Add(ls2);
-							_opv = new PlotView
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.total < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.total;
+										}
+										if (item.total > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " al " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+									var startDate = _InicioMes.Date.AddDays(-2);
+									var endDate = _FinMes.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
+
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -3082,94 +4538,189 @@ namespace DistribuidoraFabio.Reportes
 						{
 							await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo por favor", "OK");
 						}
-						foreach (var item in _listaVentasDia)
-						{
-							if (item.total < _montoMinimo)
-							{
-								_montoMinimo = item.total;
-							}
-							if (item.total > _montoMaximo)
-							{
-								_montoMaximo = item.total;
-							}
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							if (item.total < _montoMinimoComp)
-							{
-								_montoMinimoComp = item.total;
-							}
-							if (item.total > _montoMaximoComp)
-							{
-								_montoMaximoComp = item.total;
-							}
-						}
-						await DisplayAlert("Valores", "Presente año=" + _listaVentasDia.Count.ToString() + "Año anterior= " + _listaVentasDiaComparar.Count.ToString(), "OK");
+						
 						//Crear grafico
 						stkGrafico.Children.Clear();
 						List<DataPoint> Points = new List<DataPoint>();
 						List<DataPoint> PointsComp = new List<DataPoint>();
-						foreach (var item in _listaVentasDia)
+						if (RB_Cajas.IsChecked)
 						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
+							if (_tipoResultado == "Cajas")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.cantidad < _montoMinimo)
+									{
+										_montoMinimo = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximo)
+									{
+										_montoMaximo = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.cantidad < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
 
-						var m = new PlotModel();
-						m.PlotType = PlotType.XY;
-						m.InvalidatePlot(false);
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " a " + _FinMes.Date.ToString("dd/MM/yyyy");
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " a " + _FinMes.Date.ToString("dd/MM/yyyy");
 
-						var startDate = _InicioMes.Date.AddDays(-2);
-						var endDate = _FinMes.Date.AddDays(2);
+								var startDate = _InicioMes.Date.AddDays(-2);
+								var endDate = _FinMes.Date.AddDays(2);
 
-						var minValue = DateTimeAxis.ToDouble(startDate);
-						var maxValue = DateTimeAxis.ToDouble(endDate);
-						m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-						double _minimum = 0;
-						double _maximum = 0;
-						if (_montoMinimo > _montoMinimoComp)
-						{
-							_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 50;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
 						}
-						else
+						else if (RB_Bolivianos.IsChecked)
 						{
-							_minimum = Convert.ToDouble(_montoMinimo) - 50;
-						}
-						if (_montoMaximo > _montoMaximoComp)
-						{
-							_maximum = Convert.ToDouble(_montoMaximo) + 50;
-						}
-						else
-						{
-							_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-						}
-						m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-						m.ResetAllAxes();
+							if (_tipoResultado == "Bolivianos")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.total < _montoMinimo)
+									{
+										_montoMinimo = item.total;
+									}
+									if (item.total > _montoMaximo)
+									{
+										_montoMaximo = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.total < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.total;
+									}
+									if (item.total > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
 
-						var ls1 = new LineSeries();
-						var ls2 = new LineSeries();
-						//MarkerType = OxyPlot.MarkerType.Circle,
-						ls1.MarkerType = OxyPlot.MarkerType.Circle;
-						ls2.MarkerType = OxyPlot.MarkerType.Circle;
-						ls1.ItemsSource = Points;
-						ls2.ItemsSource = PointsComp;
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Series.Add(ls1);
-						m.Series.Add(ls2);
-						_opv = new PlotView
-						{
-							WidthRequest = 300,
-							HeightRequest = 340,
-							BackgroundColor = Color.White,
-						};
-						_opv.Model = m;
-						stkGrafico.Children.Add(_opv);
-						await PopupNavigation.Instance.PopAsync();
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioMes.Date.ToString("dd/MM/yyyy") + " a " + _FinMes.Date.ToString("dd/MM/yyyy");
+
+								var startDate = _InicioMes.Date.AddDays(-2);
+								var endDate = _FinMes.Date.AddDays(2);
+
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 50;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
 					}
 					else
 					{
@@ -3242,92 +4793,184 @@ namespace DistribuidoraFabio.Reportes
 						}
 						try
 						{
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								if (item.total < _montoMinimoComp)
-								{
-									_montoMinimoComp = item.total;
-								}
-								if (item.total > _montoMaximoComp)
-								{
-									_montoMaximoComp = item.total;
-								}
-							}
-							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							List<DataPoint> PointsComp = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.cantidad < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
 
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
 
-							var startDate = fechaInicioDiaria.Date.AddDays(-2);
-							var endDate = fechaFinalDiaria.Date.AddDays(2);
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
 
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = 0;
-							double _maximum = 0;
-							if (_montoMinimo > _montoMinimoComp)
-							{
-								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-							}
-							else
-							{
-								_minimum = Convert.ToDouble(_montoMinimo) - 50;
-							}
-							if (_montoMaximo > _montoMaximoComp)
-							{
-								_maximum = Convert.ToDouble(_montoMaximo) + 50;
-							}
-							else
-							{
-								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-							}
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
 
-							var ls1 = new LineSeries();
-							var ls2 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls2.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-							ls2.ItemsSource = PointsComp;
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
 
-							m.Series.Add(ls1);
-							m.Series.Add(ls2);
-							_opv = new PlotView
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.total < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.total;
+										}
+										if (item.total > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
+
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -3392,92 +5035,184 @@ namespace DistribuidoraFabio.Reportes
 						}
 						try
 						{
-							foreach (var item in _listaVentaDiaXProducto)
-							{
-								if (item.total < _montoMinimo)
-								{
-									_montoMinimo = item.total;
-								}
-								if (item.total > _montoMaximo)
-								{
-									_montoMaximo = item.total;
-								}
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								if (item.total < _montoMinimoComp)
-								{
-									_montoMinimoComp = item.total;
-								}
-								if (item.total > _montoMaximoComp)
-								{
-									_montoMaximoComp = item.total;
-								}
-							}
-							await DisplayAlert("Valores", "Presente año=" + _listaVentaDiaXProducto.Count.ToString() + "Año anterior= " + _listaVentaDiaXProductoComparar.Count.ToString(), "OK");
 							//Crear grafico
 							stkGrafico.Children.Clear();
 							List<DataPoint> Points = new List<DataPoint>();
 							List<DataPoint> PointsComp = new List<DataPoint>();
-							foreach (var item in _listaVentaDiaXProducto)
+							if (RB_Cajas.IsChecked)
 							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							foreach (var item in _listaVentaDiaXProductoComparar)
-							{
-								Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-							}
-							var m = new PlotModel();
-							m.PlotType = PlotType.XY;
-							m.InvalidatePlot(false);
+								if (_tipoResultado == "Cajas")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.cantidad < _montoMinimo)
+										{
+											_montoMinimo = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximo)
+										{
+											_montoMaximo = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.cantidad < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.cantidad;
+										}
+										if (item.cantidad > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.cantidad;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
 
-							m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
 
-							var startDate = fechaInicioDiaria.Date.AddDays(-2);
-							var endDate = fechaFinalDiaria.Date.AddDays(2);
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
 
-							var minValue = DateTimeAxis.ToDouble(startDate);
-							var maxValue = DateTimeAxis.ToDouble(endDate);
-							m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-							double _minimum = 0;
-							double _maximum = 0;
-							if (_montoMinimo > _montoMinimoComp)
-							{
-								_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-							}
-							else
-							{
-								_minimum = Convert.ToDouble(_montoMinimo) - 50;
-							}
-							if (_montoMaximo > _montoMaximoComp)
-							{
-								_maximum = Convert.ToDouble(_montoMaximo) + 50;
-							}
-							else
-							{
-								_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
-							}
-							m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-							m.ResetAllAxes();
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
 
-							var ls1 = new LineSeries();
-							var ls2 = new LineSeries();
-							ls1.MarkerType = OxyPlot.MarkerType.Circle;
-							ls2.MarkerType = OxyPlot.MarkerType.Circle;
-							ls1.ItemsSource = Points;
-							ls2.ItemsSource = PointsComp;
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
 
-							m.Series.Add(ls1);
-							m.Series.Add(ls2);
-							_opv = new PlotView
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
+							else if (RB_Bolivianos.IsChecked)
 							{
-								WidthRequest = 300,
-								HeightRequest = 340,
-								BackgroundColor = Color.White,
-							};
-							_opv.Model = m;
-							stkGrafico.Children.Add(_opv);
-							await PopupNavigation.Instance.PopAsync();
+								if (_tipoResultado == "Bolivianos")
+								{
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										if (item.total < _montoMinimo)
+										{
+											_montoMinimo = item.total;
+										}
+										if (item.total > _montoMaximo)
+										{
+											_montoMaximo = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										if (item.total < _montoMinimoComp)
+										{
+											_montoMinimoComp = item.total;
+										}
+										if (item.total > _montoMaximoComp)
+										{
+											_montoMaximoComp = item.total;
+										}
+									}
+									foreach (var item in _listaVentaDiaXProducto)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									foreach (var item in _listaVentaDiaXProductoComparar)
+									{
+										Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+									}
+									var m = new PlotModel();
+									m.PlotType = PlotType.XY;
+									m.InvalidatePlot(false);
+
+									m.Title = "Ventas de " + vendedorPick + " de fechas " + fechaInicioDiaria.Date.ToString("dd/MM/yyyy") + " al " + fechaFinalDiaria.Date.ToString("dd/MM/yyyy");
+
+									var startDate = fechaInicioDiaria.Date.AddDays(-2);
+									var endDate = fechaFinalDiaria.Date.AddDays(2);
+
+									var minValue = DateTimeAxis.ToDouble(startDate);
+									var maxValue = DateTimeAxis.ToDouble(endDate);
+									m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+									double _minimum = 0;
+									double _maximum = 0;
+									if (_montoMinimo > _montoMinimoComp)
+									{
+										_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+									}
+									else
+									{
+										_minimum = Convert.ToDouble(_montoMinimo) - 50;
+									}
+									if (_montoMaximo > _montoMaximoComp)
+									{
+										_maximum = Convert.ToDouble(_montoMaximo) + 50;
+									}
+									else
+									{
+										_maximum = Convert.ToDouble(_montoMaximoComp) + 50;
+									}
+									m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+									m.ResetAllAxes();
+
+									var ls1 = new LineSeries();
+									var ls2 = new LineSeries();
+									ls1.MarkerType = OxyPlot.MarkerType.Circle;
+									ls2.MarkerType = OxyPlot.MarkerType.Circle;
+									ls1.ItemsSource = Points;
+									ls2.ItemsSource = PointsComp;
+
+									m.Series.Add(ls1);
+									m.Series.Add(ls2);
+									_opv = new PlotView
+									{
+										WidthRequest = 300,
+										HeightRequest = 340,
+										BackgroundColor = Color.White,
+									};
+									_opv.Model = m;
+									stkGrafico.Children.Add(_opv);
+									await PopupNavigation.Instance.PopAsync();
+								}
+							}
 						}
 						catch (Exception err)
 						{
@@ -3538,99 +5273,206 @@ namespace DistribuidoraFabio.Reportes
 						{
 							await DisplayAlert("Error", err.ToString(), "OK");
 						}
-						foreach (var item in _listaVentasDia)
-						{
-							if (item.total < _montoMinimo)
-							{
-								_montoMinimo = item.total;
-							}
-							if (item.total > _montoMaximo)
-							{
-								_montoMaximo = item.total;
-							}
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							if (item.total < _montoMinimoComp)
-							{
-								_montoMinimoComp = item.total;
-							}
-							if (item.total > _montoMaximoComp)
-							{
-								_montoMaximoComp = item.total;
-							}
-						}
-						await DisplayAlert("Valores", "Presente año=" + _listaVentasDia.Count.ToString() + "Año anterior= " + _listaVentasDiaComparar.Count.ToString(), "OK");
 						//Crear grafico
 						stkGrafico.Children.Clear();
 						List<DataPoint> Points = new List<DataPoint>();
 						List<DataPoint> PointsComp = new List<DataPoint>();
-						foreach (var item in _listaVentasDia)
+						if (RB_Cajas.IsChecked)
 						{
-							Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						foreach (var item in _listaVentasDiaComparar)
-						{
-							PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
-						}
-						var m = new PlotModel();
-						m.PlotType = PlotType.XY;
-						m.InvalidatePlot(false);
+							if (_tipoResultado == "Cajas")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.cantidad < _montoMinimo)
+									{
+										_montoMinimo = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximo)
+									{
+										_montoMaximo = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.cantidad < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.cantidad;
+									}
+									if (item.cantidad > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.cantidad;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.cantidad)));
+								}
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
 
-						m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
 
-						var startDate = _InicioYear.Date.AddDays(-2);
-						var endDate = _FinalYear.Date.AddDays(2);
+								var startDate = _InicioYear.Date.AddDays(-2);
+								var endDate = _FinalYear.Date.AddDays(2);
 
-						var minValue = DateTimeAxis.ToDouble(startDate);
-						var maxValue = DateTimeAxis.ToDouble(endDate);
-						m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
-						double _minimum = 0;
-						double _maximum = 0;
-						if (_montoMinimo > _montoMinimoComp)
-						{
-							_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
-						}
-						else
-						{
-							_minimum = Convert.ToDouble(_montoMinimo) - 50;
-						}
-						if (_montoMaximo > _montoMaximoComp)
-						{
-							_maximum = Convert.ToDouble(_montoMaximo) + 100;
-						}
-						else
-						{
-							_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
-						}
-						m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
-						m.ResetAllAxes();
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
 
-						var ls1 = new LineSeries();
-						var ls2 = new LineSeries();
-						//MarkerType = OxyPlot.MarkerType.Circle,
-						ls1.MarkerType = OxyPlot.MarkerType.Circle;
-						ls2.MarkerType = OxyPlot.MarkerType.Circle;
-						ls1.ItemsSource = Points;
-						ls2.ItemsSource = PointsComp;
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
 
-						m.Series.Add(ls1);
-						m.Series.Add(ls2);
-						_opv = new PlotView
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
+						else if (RB_Bolivianos.IsChecked)
 						{
-							WidthRequest = 300,
-							HeightRequest = 340,
-							BackgroundColor = Color.White,
-						};
-						_opv.Model = m;
-						stkGrafico.Children.Add(_opv);
-						await PopupNavigation.Instance.PopAsync();
+							if (_tipoResultado == "Bolivianos")
+							{
+								foreach (var item in _listaVentasDia)
+								{
+									if (item.total < _montoMinimo)
+									{
+										_montoMinimo = item.total;
+									}
+									if (item.total > _montoMaximo)
+									{
+										_montoMaximo = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									if (item.total < _montoMinimoComp)
+									{
+										_montoMinimoComp = item.total;
+									}
+									if (item.total > _montoMaximoComp)
+									{
+										_montoMaximoComp = item.total;
+									}
+								}
+								foreach (var item in _listaVentasDia)
+								{
+									Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								foreach (var item in _listaVentasDiaComparar)
+								{
+									PointsComp.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(item.fecha.AddYears(+1).Year, item.fecha.Month, item.fecha.Day)), Convert.ToDouble(item.total)));
+								}
+								var m = new PlotModel();
+								m.PlotType = PlotType.XY;
+								m.InvalidatePlot(false);
+
+								m.Title = "Ventas de " + vendedorPick + " de fechas " + _InicioYear.Date.ToString("dd/MM/yyyy") + " a " + _FinalYear.Date.ToString("dd/MM/yyyy");
+
+								var startDate = _InicioYear.Date.AddDays(-2);
+								var endDate = _FinalYear.Date.AddDays(2);
+
+								var minValue = DateTimeAxis.ToDouble(startDate);
+								var maxValue = DateTimeAxis.ToDouble(endDate);
+								m.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "dd/MMM/yyyy" });
+								double _minimum = 0;
+								double _maximum = 0;
+								if (_montoMinimo > _montoMinimoComp)
+								{
+									_minimum = Convert.ToDouble(_montoMinimoComp) - 50;
+								}
+								else
+								{
+									_minimum = Convert.ToDouble(_montoMinimo) - 50;
+								}
+								if (_montoMaximo > _montoMaximoComp)
+								{
+									_maximum = Convert.ToDouble(_montoMaximo) + 100;
+								}
+								else
+								{
+									_maximum = Convert.ToDouble(_montoMaximoComp) + 100;
+								}
+								m.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = _minimum, Maximum = _maximum });
+								m.ResetAllAxes();
+
+								var ls1 = new LineSeries();
+								var ls2 = new LineSeries();
+								//MarkerType = OxyPlot.MarkerType.Circle,
+								ls1.MarkerType = OxyPlot.MarkerType.Circle;
+								ls2.MarkerType = OxyPlot.MarkerType.Circle;
+								ls1.ItemsSource = Points;
+								ls2.ItemsSource = PointsComp;
+
+								m.Series.Add(ls1);
+								m.Series.Add(ls2);
+								_opv = new PlotView
+								{
+									WidthRequest = 300,
+									HeightRequest = 340,
+									BackgroundColor = Color.White,
+								};
+								_opv.Model = m;
+								stkGrafico.Children.Add(_opv);
+								await PopupNavigation.Instance.PopAsync();
+							}
+						}
 					}
 				}
 				else
 				{
 					await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
 				}
+			}
+		}
+		private void RB_Cajas_CheckedChanged(object sender, CheckedChangedEventArgs e)
+		{
+			if(RB_Cajas.IsChecked)
+			{
+				_tipoResultado = "Cajas";
+			}
+		}
+		private void RB_Bolivianos_CheckedChanged(object sender, CheckedChangedEventArgs e)
+		{
+			if(RB_Bolivianos.IsChecked)
+			{
+				_tipoResultado = "Bolivianos";
 			}
 		}
 	}

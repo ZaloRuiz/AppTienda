@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DistribuidoraFabio.Venta.MostrarVentaPendiente"
              Visual="Material"
-             BackgroundColor="#324A51">
+             BackgroundColor="White">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="toolbarComp" Text="Completar pedido" Clicked="ToolbarItemComp_Clicked"/>
         <ToolbarItem x:Name="toolbarCanc" Text="Cancelar pedido" Clicked="toolbarCanc_Clicked"/>

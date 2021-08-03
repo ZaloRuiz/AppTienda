@@ -14,7 +14,7 @@
                         <ColumnDefinition Width="5*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="320"></RowDefinition>
+                        <RowDefinition Height="350"></RowDefinition>
                         <RowDefinition Height="350"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
@@ -81,6 +81,11 @@
                                 <Picker x:Name="pickYear" Grid.Column="1" VerticalOptions="Start" BackgroundColor="White" HorizontalOptions="StartAndExpand" 
                                         WidthRequest="200" SelectedIndexChanged="pickYear_SelectedIndexChanged"/>
                             </Grid>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Mostrar resultados en: " TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                            <RadioButton x:Name="RB_Cajas" Content="Cajas" IsChecked="True" HorizontalOptions="CenterAndExpand" CheckedChanged="RB_Cajas_CheckedChanged"/>
+                            <RadioButton x:Name="RB_Bolivianos" Content="Bolivianos" IsChecked="False" HorizontalOptions="CenterAndExpand" CheckedChanged="RB_Bolivianos_CheckedChanged"/>
                         </StackLayout>
                         <Button x:Name="btnFiltrar" Text="Mostrar" BackgroundColor="Black" TextColor="White" CornerRadius="5" Margin="10" Clicked="btnFiltrar_Clicked"/>
                     </StackLayout>

@@ -46,233 +46,38 @@ namespace DistribuidoraFabio.Venta
             _estado_edit = _estado;
             _fecha_entrega_edit = _fecha_entrega;
             _observacion_edit = _observacion;
-            EditarVenta();
+            GetLista();
+            txtFactura.Text = _numero_factura.ToString();
+            txtFecha.Date = _fecha;
+            txtCliente.Text = _cliente;
+            txtVendedor.Text = _nombre_vendedor;
+            txtTipoVenta.Text = _tipo_venta;
+            txtSaldo.Text = _saldo.ToString();
+            txtFechaEntrega.Date = _fecha_entrega;
+            txtTotal.Text = _total.ToString();
+            txtEstado.Text = _estado;
+            txtObservaciones.Text = _observacion;
         }
-        private async void EditarVenta()
-        {
-            int numProd = 0;
-            try
-            {
-                // ************* FACTURA***************
-                StackLayout stk1 = new StackLayout();
-                stk1.Orientation = StackOrientation.Horizontal;
-                stkDatos.Children.Add(stk1);
-                Entry entFac = new Entry();
-                entFac.Text = _numero_factura_edit.ToString();
-                entFac.Placeholder = "FACTURA";
-                entFac.IsEnabled = false;
-                entFac.FontSize = 18;
-                entFac.TextColor = Color.FromHex("#000000");
-                entFac.HorizontalOptions = LayoutOptions.FillAndExpand;
-                stk1.Children.Add(entFac);
-                // ************* FIN FACTURA***************
-                Entry entryFecha = new Entry();
-                entryFecha.Placeholder = "Fecha";
-                entryFecha.Text = _fecha_edit.ToString("d");
-                entryFecha.FontSize = 18;
-                entryFecha.TextColor = Color.FromHex("#000000");
-                entryFecha.HorizontalOptions = LayoutOptions.FillAndExpand;
-                entryFecha.Completed += entryFecha_completed;
-                stk1.Children.Add(entryFecha);
-                void entryFecha_completed(object sender, EventArgs e)
-                {
-                    _fecha_edit = Convert.ToDateTime(entryFecha.Text);
-                }
-                // *** fin fecha **********                
-                StackLayout stk3 = new StackLayout();
-                stk3.Orientation = StackOrientation.Horizontal;
-                stkDatos.Children.Add(stk3);
-                Entry entryCliente = new Entry();
-                entryCliente.Text = _cliente_edit;
-                entryCliente.Placeholder = "Cliente";
-                entryCliente.IsEnabled = false;
-                entryCliente.FontSize = 18;
-                entryCliente.TextColor = Color.FromHex("#000000");
-                entryCliente.HorizontalOptions = LayoutOptions.FillAndExpand;
-                entryCliente.WidthRequest = 200;
-                stk3.Children.Add(entryCliente);
-                //**** FIN CLIENTE*****
-
-                Entry entryVendedor = new Entry();
-                entryVendedor.Placeholder = "Vendedor";
-                entryVendedor.Text = _vendedor_edit;
-                entryVendedor.IsEnabled = false;
-                entryVendedor.FontSize = 18;
-                entryVendedor.TextColor = Color.FromHex("#000000");
-                entryVendedor.HorizontalOptions = LayoutOptions.FillAndExpand;
-                entryVendedor.WidthRequest = 200;
-                stk3.Children.Add(entryVendedor);
-                //Fin Vendedor
-                
-                DetalleVenta _detaVenta = new DetalleVenta()
-                {
-                    factura = _numero_factura_edit
-                };
-                var json = JsonConvert.SerializeObject(_detaVenta);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                HttpClient client = new HttpClient();
-                var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaDetalleVentaNombre.php", content);
-
-                var jsonR = await result.Content.ReadAsStringAsync();
-                var dv_lista = JsonConvert.DeserializeObject<List<DetalleVentaNombre>>(jsonR);
-
-                await Task.Delay(1000);
-                foreach (var item in dv_lista)
-                {
-                    BoxView boxViewI = new BoxView();
-                    boxViewI.HeightRequest = 1;
-                    boxViewI.BackgroundColor = Color.FromHex("#95B0B7");
-                    stkPrd.Children.Add(boxViewI);
-
-                    numProd = numProd + 1;
-                    StackLayout stkP1 = new StackLayout();
-                    stkP1.Orientation = StackOrientation.Horizontal;
-                    stkPrd.Children.Add(stkP1);
-
-                    Entry entryProducto = new Entry();
-                    entryProducto.Text = item.display_text_nombre;
-                    entryProducto.Placeholder = "Producto";
-                    entryProducto.IsEnabled = false;
-                    entryProducto.FontSize = 18;
-                    entryProducto.TextColor = Color.FromHex("#000000");
-                    entryProducto.HorizontalOptions = LayoutOptions.FillAndExpand;
-                    stkP1.Children.Add(entryProducto);
-
-                    _detalle_venta = item.id_dv;
-                    App._detalleventaguardar.Add(new DetalleVentaNombre
-                    {
-                        id_dv = _detalle_venta,
-                        cantidad = item.cantidad,
-                        nombre_producto = item.nombre_producto,
-                        nombre_sub_producto = item.nombre_sub_producto,
-                        precio_producto = item.precio_producto,
-                        descuento = item.descuento,
-                        sub_total = item.sub_total,
-                        envases = item.envases,
-                        factura = item.factura,
-                    });
-                }
-                //total
-                await Task.Delay(1000);
-                BoxView boxfinal = new BoxView();
-                boxfinal.HeightRequest = 1;
-                boxfinal.BackgroundColor = Color.FromHex("#95B0B7");
-                stkFinal.Children.Add(boxfinal);
-
-                StackLayout stack1 = new StackLayout();
-                stack1.Orientation = StackOrientation.Horizontal;
-                stkFinal.Children.Add(stack1);
-
-                Entry entryTpVenta = new Entry();
-                entryTpVenta.Placeholder = "Saldo";
-                entryTpVenta.Text = _saldo_edit.ToString() + " Bs.";
-                entryTpVenta.FontSize = 18;
-                entryTpVenta.TextColor = Color.FromHex("#000000");
-                entryTpVenta.HorizontalOptions = LayoutOptions.FillAndExpand;
-                entryTpVenta.Completed += entryTpVenta_completed;
-                stack1.Children.Add(entryTpVenta);
-                void entryTpVenta_completed(object sender, EventArgs e)
-                {
-                    _saldo_edit = Convert.ToDecimal(entryTpVenta.Text);
-                }
-
-                Entry entryEstado = new Entry();
-                entryEstado.Placeholder = "Estado";
-                entryEstado.Text = _estado_edit;
-                entryEstado.IsEnabled = false;
-                entryEstado.FontSize = 18;
-                entryEstado.TextColor = Color.FromHex("#000000");
-                entryEstado.HorizontalOptions = LayoutOptions.FillAndExpand;
-                entryEstado.Completed += entryEstado_completed;
-                stack1.Children.Add(entryEstado);
-                void entryEstado_completed(object sender, EventArgs e)
-                {
-                    _estado_edit = entryEstado.Text;
-                }
-
-                StackLayout stack3 = new StackLayout();
-                stack3.Orientation = StackOrientation.Horizontal;
-                stkFinal.Children.Add(stack3);
-                Entry entryFechaE = new Entry();
-                entryFechaE.Text = _fecha_entrega_edit.ToString("d");
-                entryFechaE.Placeholder = "Fecha de Entrega";
-                entryFechaE.TextColor = Color.FromHex("#000000");
-                entryFechaE.HorizontalOptions = LayoutOptions.FillAndExpand;
-                entryFechaE.Completed += entryFechaE_completed;
-                stack3.Children.Add(entryFechaE);
-                void entryFechaE_completed(object sender, EventArgs e)
-                {
-                    _fecha_entrega_edit = Convert.ToDateTime(entryFechaE.Text);
-                }
-                StackLayout stack4 = new StackLayout();
-                stack4.Orientation = StackOrientation.Horizontal;
-                stkFinal.Children.Add(stack4);
-                Entry entryObser = new Entry();
-                entryObser.Placeholder = "Observaciones";
-                entryObser.Text = _observacion_edit;
-                entryObser.FontSize = 18;
-                entryObser.TextColor = Color.FromHex("#000000");
-                entryObser.HorizontalOptions = LayoutOptions.FillAndExpand;
-                entryObser.Completed += entryObser_completed;
-                stack4.Children.Add(entryObser);
-                void entryObser_completed(object sender, EventArgs e)
-                {
-                    _observacion_edit = entryObser.Text;
-                }
-            }
-            catch (Exception err)
-            {
-                await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-            }
-        }
-        private async void btnEditar_Clicked(object sender, EventArgs e)
+        private async void GetLista()
         {
             if (CrossConnectivity.Current.IsConnected)
-            {
+			{
                 try
                 {
-                    foreach (var item in App._detalleventaguardar)
+                    DetalleVenta _detaVenta = new DetalleVenta()
                     {
-                        DetalleVenta detalleVenta = new DetalleVenta()
-                        {
-                            id_dv = item.id_dv,
-                            cantidad = item.cantidad,
-                            precio_producto = item.precio_producto,
-                            descuento = item.descuento,
-                            envases = item.envases,
-                        };
-
-                        var json1 = JsonConvert.SerializeObject(detalleVenta);
-                        var content1 = new StringContent(json1, Encoding.UTF8, "application/json");
-                        HttpClient client1 = new HttpClient();
-                        var result1 = await client1.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarDetalleVenta.php", content1);
-                    }
-                    Ventas ventas = new Ventas()
-                    {
-                        id_venta = _id_venta_edit,
-                        fecha = _fecha_edit,
-                        numero_factura = _numero_factura_edit,
-                        fecha_entrega = _fecha_entrega_edit,
-                        estado = _estado_edit,
-                        saldo = _saldo_edit,
-                        observacion = _observacion_edit,
+                        factura = _numero_factura_edit
                     };
-
-                    var json = JsonConvert.SerializeObject(ventas);
+                    var json = JsonConvert.SerializeObject(_detaVenta);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
                     HttpClient client = new HttpClient();
-                    var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarVenta.php", content);
-                    if (result.StatusCode == HttpStatusCode.OK)
-                    {
-                        await DisplayAlert("OK", "Se Agrego correctamente", "OK");
-                        App._detalleventaguardar.Clear();
-                        await Shell.Current.Navigation.PopAsync();
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
-                        await Shell.Current.Navigation.PopAsync();
-                    }
+                    var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaDetalleVentaNombre.php", content);
+
+                    var jsonR = await result.Content.ReadAsStringAsync();
+                    var dv_lista = JsonConvert.DeserializeObject<List<DetalleVentaNombre>>(jsonR);
+                    int medida_lista = dv_lista.Count();
+                    stkPrd.HeightRequest = medida_lista * 50;
+                    listProductos.ItemsSource = dv_lista;
                 }
                 catch (Exception err)
                 {
@@ -283,6 +88,121 @@ namespace DistribuidoraFabio.Venta
             {
                 await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
             }
+            
+        }
+        private async void btnEditar_Clicked(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtFactura.Text) || (!string.IsNullOrEmpty(txtFactura.Text)))
+			{
+                if (txtFecha.Date != null) 
+				{
+                    if (!string.IsNullOrWhiteSpace(txtCliente.Text) || (!string.IsNullOrEmpty(txtCliente.Text)))
+					{
+                        if (!string.IsNullOrWhiteSpace(txtVendedor.Text) || (!string.IsNullOrEmpty(txtVendedor.Text)))
+						{
+                            if (!string.IsNullOrWhiteSpace(txtTipoVenta.Text) || (!string.IsNullOrEmpty(txtTipoVenta.Text)))
+							{
+                                if (!string.IsNullOrWhiteSpace(txtSaldo.Text) || (!string.IsNullOrEmpty(txtSaldo.Text)))
+                                {
+                                    if (txtFechaEntrega.Date != null)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(txtTotal.Text) || (!string.IsNullOrEmpty(txtTotal.Text)))
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(txtEstado.Text) || (!string.IsNullOrEmpty(txtEstado.Text)))
+                                            {
+                                                if (!string.IsNullOrWhiteSpace(txtObservaciones.Text) || (!string.IsNullOrEmpty(txtObservaciones.Text)))
+                                                {
+                                                    if (CrossConnectivity.Current.IsConnected)
+                                                    {
+                                                        try
+                                                        {
+                                                            Ventas ventas = new Ventas()
+                                                            {
+                                                                id_venta = _id_venta_edit,
+                                                                fecha = txtFecha.Date,
+                                                                numero_factura = Convert.ToInt32(txtFactura.Text),
+                                                                fecha_entrega = txtFechaEntrega.Date,
+                                                                estado = txtEstado.Text,
+                                                                saldo = Convert.ToDecimal(txtSaldo.Text),
+                                                                observacion = txtObservaciones.Text,
+                                                            };
+
+                                                            var json = JsonConvert.SerializeObject(ventas);
+                                                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                                                            HttpClient client = new HttpClient();
+                                                            var result = await client.PostAsync("https://dmrbolivia.com/api_distribuidora/ventas/editarVenta.php", content);
+                                                            if (result.StatusCode == HttpStatusCode.OK)
+                                                            {
+                                                                await DisplayAlert("OK", "Se edito correctamente", "OK");
+                                                                App._detalleventaguardar.Clear();
+                                                                await Shell.Current.Navigation.PopAsync();
+                                                            }
+                                                            else
+                                                            {
+                                                                await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+                                                                await Shell.Current.Navigation.PopAsync();
+                                                            }
+                                                        }
+                                                        catch (Exception err)
+                                                        {
+                                                            await DisplayAlert("Error", "Algo salio mal, intentelo de nuevo", "OK");
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+                                                    }
+                                                }
+                                                else
+												{
+                                                    await DisplayAlert("Error", "El campo de Observacion esta vacio", "OK");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                await DisplayAlert("Error", "El campo de Estado esta vacio", "OK");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            await DisplayAlert("Error", "El campo de Total esta vacio", "OK");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        await DisplayAlert("Error", "El campo de Fecha de entrega esta vacio", "OK");
+                                    }
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Error", "El campo de Saldo esta vacio", "OK");
+                                }
+                            }
+                            else
+                            {
+                                await DisplayAlert("Error", "El campo de Tipo de venta esta vacio", "OK");
+                            }
+                        }
+                        else
+                        {
+                            await DisplayAlert("Error", "El campo de Vendedor esta vacio", "OK");
+                        }
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "El campo de Cliente esta vacio", "OK");
+                    }
+                }
+                else
+                {
+                    await DisplayAlert("Error", "El campo de Fecha esta vacio", "OK");
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "El campo de Factura esta vacio", "OK");
+            }
+            
         }
     }
 }

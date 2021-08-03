@@ -18,12 +18,87 @@
                             <RowDefinition Height="*"></RowDefinition>
                             <RowDefinition Height="100"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <StackLayout x:Name="stkDatos" Grid.Row="0"/>
-                        <StackLayout x:Name="stkPrd" Grid.Row="1" Padding="10"/>
-                        <StackLayout x:Name="stkFinal" Grid.Row="2"/>
+                        <StackLayout x:Name="stkDatos" Grid.Row="0">
+                            <StackLayout Orientation="Horizontal">
+                                <Entry x:Name="txtFactura" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" Placeholder="Factura"
+                                       BackgroundColor="White" TextColor="Black"/>
+                                <DatePicker x:Name="txtFecha" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand"
+                                       BackgroundColor="White" TextColor="Black"/>
+                                <Entry x:Name="txtProveedor" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" Placeholder="Proveedor"
+                                       BackgroundColor="White" TextColor="Black" TextChanged="txtProveedor_TextChanged"/>
+                            </StackLayout>
+                        </StackLayout>
+                        <StackLayout x:Name="stkPrd" Grid.Row="1" Padding="10">
+                            <ListView x:Name="listProductos" HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always" 
+                                   Visual="Material" SeparatorColor="#4DCCE8" BackgroundColor="#fafafd">
+                                <ListView.Header>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Lista productos" TextColor="#4DCCE8"/>
+                                    </StackLayout>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <Grid Padding="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="40"></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="250"></ColumnDefinition>
+                                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" TextColor="Black" VerticalTextAlignment="Center" LineBreakMode="TailTruncation">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="Producto: " FontSize="13"/>
+                                                            <Span Text="{Binding nombre_producto}" FontSize="13"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" TextColor="Black" VerticalTextAlignment="Center" LineBreakMode="TailTruncation">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="   Cantidad: " FontSize="13"/>
+                                                            <Span Text="{Binding cantidad_compra}" FontSize="13"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label Grid.Row="0" Grid.Column="2" FontSize="Medium" TextColor="Black" VerticalTextAlignment="Center" LineBreakMode="TailTruncation">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="   Descuento: " FontSize="13"/>
+                                                            <Span Text="{Binding descuento_producto}" FontSize="13"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label Grid.Row="0" Grid.Column="3" FontSize="Medium" TextColor="Black" VerticalTextAlignment="Center" LineBreakMode="TailTruncation">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="   Subtotal: " FontSize="13"/>
+                                                            <Span Text="{Binding sub_total, StringFormat=' {0:0.00}'}" FontSize="13"/>
+                                                            <Span Text=" Bs." FontSize="13"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </Grid>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackLayout>
+                        <StackLayout x:Name="stkFinal" Grid.Row="2">
+                            <StackLayout Orientation="Horizontal">
+                                <Entry x:Name="txtSaldo" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" Placeholder="Saldo"
+                                       BackgroundColor="White" TextColor="Black"/>
+                                <Entry x:Name="txtTotal" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" Placeholder="Total"
+                                       BackgroundColor="White" TextColor="Black"/>
+                            </StackLayout>
+                        </StackLayout>
                     </Grid>
                 </StackLayout>
-                <Button x:Name="btnEditar" HeightRequest="40" Text="Editar" Clicked="btnEditar_Clicked"/>
+                <Button x:Name="btnEditar" HeightRequest="40" Text="Editar" Clicked="btnEditar_Clicked" Margin="20"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

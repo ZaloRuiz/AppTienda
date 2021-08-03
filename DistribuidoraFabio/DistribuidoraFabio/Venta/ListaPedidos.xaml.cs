@@ -201,13 +201,13 @@ namespace DistribuidoraFabio.Venta
 			{
 				foreach (var item in _listaPedidosPen)
 				{
-					list_C_P.Add(item.nombre_cliente);
+					list_C_P.Add(item.razon_social);
 				}
 				IEnumerable<string> array_C = list_C_P.Distinct<string>();
 				string _c_elegido = await DisplayActionSheet("Elija un cliente", null, null, array_C.ToArray());
 				if (_c_elegido != null)
 				{
-					listaPendientes.ItemsSource = _listaPedidosPen.Where(x => x.nombre_cliente.ToLower().Contains(_c_elegido.ToLower()));
+					listaPendientes.ItemsSource = _listaPedidosPen.Where(x => x.razon_social.ToLower().Contains(_c_elegido.ToLower()));
 				}
 				else
 				{
@@ -225,13 +225,13 @@ namespace DistribuidoraFabio.Venta
 			{
 				foreach (var item in _listaPedidosEnt)
 				{
-					list_C_E.Add(item.nombre_cliente);
+					list_C_E.Add(item.razon_social);
 				}
 				IEnumerable<string> array_C = list_C_E.Distinct<string>();
 				string _c_elegido = await DisplayActionSheet("Elija un cliente", null, null, array_C.ToArray());
 				if (_c_elegido != null)
 				{
-					listaEntregados.ItemsSource = _listaPedidosEnt.Where(x => x.nombre_cliente.ToLower().Contains(_c_elegido.ToLower()));
+					listaEntregados.ItemsSource = _listaPedidosEnt.Where(x => x.razon_social.ToLower().Contains(_c_elegido.ToLower()));
 				}
 				else
 				{
@@ -249,13 +249,13 @@ namespace DistribuidoraFabio.Venta
 			{
 				foreach (var item in _listaPedidosCanc)
 				{
-					list_C_C.Add(item.nombre_cliente);
+					list_C_C.Add(item.razon_social);
 				}
 				IEnumerable<string> array_C = list_C_C.Distinct<string>();
 				string _c_elegido = await DisplayActionSheet("Elija un cliente", null, null, array_C.ToArray());
 				if (_c_elegido != null)
 				{
-					listaCancelados.ItemsSource = _listaPedidosCanc.Where(x => x.nombre_cliente.ToLower().Contains(_c_elegido.ToLower()));
+					listaCancelados.ItemsSource = _listaPedidosCanc.Where(x => x.razon_social.ToLower().Contains(_c_elegido.ToLower()));
 				}
 				else
 				{
