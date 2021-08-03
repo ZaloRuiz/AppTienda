@@ -26,7 +26,7 @@ namespace DistribuidoraFabio.Venta
         List<Vendedores> vendedorList = new List<Vendedores>();
         List<Models.Cliente> clienteList = new List<Models.Cliente>();
         List<NumeroFactura> _numeroFacturaList = new List<NumeroFactura>();
-        private string _FacturaExistente;
+        private string _FacturaExistente = "No";
         private int idProductoSelected = 0;
         private decimal MontoTotal = 0;
         private int idClienteSelected = 0;
@@ -457,9 +457,9 @@ namespace DistribuidoraFabio.Venta
         }
         private async void BtnVentaGuardar_Clicked(object sender, EventArgs e)
         {
-            if(_FacturaExistente == "Nuevo")
+			if (_FacturaExistente == "No")
 			{
-                if (!string.IsNullOrWhiteSpace(numero_facturaVentaEntry.Text) || (!string.IsNullOrEmpty(numero_facturaVentaEntry.Text)))
+				if (!string.IsNullOrWhiteSpace(numero_facturaVentaEntry.Text) || (!string.IsNullOrEmpty(numero_facturaVentaEntry.Text)))
                 {
                     if (!string.IsNullOrWhiteSpace(saldo_VentaEntry.Text) || (!string.IsNullOrEmpty(saldo_VentaEntry.Text)))
                     {
@@ -642,12 +642,12 @@ namespace DistribuidoraFabio.Venta
                 {
                     await DisplayAlert("Campo vacio", "El campo de Numero de factura esta vacio", "Ok");
                 }
-            }
-            else if(_FacturaExistente == "Repetido")
+			}
+			else if (_FacturaExistente == "Si")
 			{
-                await DisplayAlert("Factura", "El numero de Factura que desea ingresar ya existe", "Ok");
-            }
-        }
+				await DisplayAlert("Factura", "El numero de Factura que desea ingresar ya existe", "Ok");
+			}
+		}
 		private async void entryClienteRS_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
             App.Current.On<Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
@@ -722,11 +722,11 @@ namespace DistribuidoraFabio.Venta
             {
                 if (numero_facturaVentaEntry.Text == item.numero_factura.ToString())
                 {
-                    _FacturaExistente = "Repetido";
+                    _FacturaExistente = "Si";
                 }
                 else
                 {
-                    _FacturaExistente = "Nuevo";
+                    _FacturaExistente = "No";
                 }
             }
         }
