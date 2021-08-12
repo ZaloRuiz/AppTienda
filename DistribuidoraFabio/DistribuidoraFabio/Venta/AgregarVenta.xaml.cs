@@ -31,6 +31,7 @@ namespace DistribuidoraFabio.Venta
         private decimal MontoTotal = 0;
         private int idClienteSelected = 0;
         private int idVendedorSelected = 0;
+        private int _ultimaFactura = 1;
         private DateTime _fechaHoy = DateTime.Now;
         public AgregarVenta()
         {
@@ -51,6 +52,8 @@ namespace DistribuidoraFabio.Venta
                     GetProductos();
                     listProductos.ItemsSource = App._detalleVData;
                     GetFacturas();
+                    GetUltimaFactura();
+                    
                 }
                 catch (Exception err)
                 {
@@ -102,6 +105,32 @@ namespace DistribuidoraFabio.Venta
                     }
                 }
                 catch (Exception error)
+                {
+                    await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
+            }
+        }
+        private async void GetUltimaFactura()
+		{
+            if (CrossConnectivity.Current.IsConnected)
+            {
+                try
+                {
+                    HttpClient client = new HttpClient();
+                    var response = await client.GetStringAsync("https://dmrbolivia.com/api_distribuidora/ventas/listaUltimaFactura.php");
+                    var _numeroFactura = JsonConvert.DeserializeObject<List<UltimaFactura>>(response).ToList();
+                    foreach (var item in _numeroFactura)
+                    {
+                        _ultimaFactura = _ultimaFactura + item.numero_factura;
+                    }
+                    numero_facturaVentaEntry.Text = string.Empty;
+                    numero_facturaVentaEntry.Text = _ultimaFactura.ToString();
+                }
+                catch (Exception)
                 {
                     await DisplayAlert("Error", "Necesitas estar conectado a internet", "OK");
                 }
