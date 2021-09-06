@@ -201,6 +201,25 @@ namespace DistribuidoraFabio.Compra
 		int stockSelected = 0;
 		decimal stockValoradoSelected = 0;
 		decimal promedioSelected = 0;
+		private async void txtCantidad_Completed(object sender, EventArgs e)
+		{
+			try
+			{
+				precioSelected = Convert.ToDecimal(txtPrecio.Text);
+				cantidaSelected = Convert.ToInt32(txtCantidad.Text);
+				descuentoSelected = Convert.ToDecimal(txtDescuento.Text);
+				stockSelected = Convert.ToInt32(txtStock.Text);
+				stockValoradoSelected = Convert.ToDecimal(txtStockValorado.Text);
+				promedioSelected = Convert.ToDecimal(txtPromedio.Text);
+				precioFinalSelected = precioSelected - descuentoSelected;
+				subTotalSelected = precioFinalSelected * cantidaSelected;
+				txtSubTotal.Text = subTotalSelected.ToString();
+			}
+			catch (Exception)
+			{
+				await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
+			}
+		}
 		private async void txtDescuento_Completed(object sender, EventArgs e)
 		{
 			try
@@ -215,7 +234,7 @@ namespace DistribuidoraFabio.Compra
 				subTotalSelected = precioFinalSelected * cantidaSelected;
 				txtSubTotal.Text = subTotalSelected.ToString();
 			}
-			catch (Exception err)
+			catch (Exception)
 			{
 				await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");
 			}
@@ -359,7 +378,7 @@ namespace DistribuidoraFabio.Compra
 											entrada_valorado = (item.precio_producto - item.descuento) * item.cantidad,
 											salida_valorado = 0,
 											saldo_valorado = item.stock_valorado + ((item.precio_producto - item.descuento) * item.cantidad),
-											promedio = ((item.stock_valorado + (item.precio_producto - item.descuento)) * item.cantidad) / item.stock + item.cantidad
+											promedio = ((item.stock_valorado + (item.precio_producto - item.descuento)) * item.cantidad) / (item.stock + item.cantidad)
 										};
 
 										var json2 = JsonConvert.SerializeObject(_inventario);
@@ -412,7 +431,7 @@ namespace DistribuidoraFabio.Compra
 									await DisplayAlert("ERROR", "Agregue productos a la lista", "OK");
 								}
 							}
-							catch (Exception error)
+							catch (Exception err)
 							{
 								await PopupNavigation.Instance.PopAsync();
 								await DisplayAlert("ERROR", "Algo salio mal, intentelo de nuevo", "OK");

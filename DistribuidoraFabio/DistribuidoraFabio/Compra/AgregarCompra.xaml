@@ -35,7 +35,7 @@
                             </StackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <Entry x:Name="txtCantidad" Placeholder="Cantidad" HorizontalOptions="FillAndExpand" VerticalOptions="Center"
-                                           Keyboard="Numeric" FontSize="14" BackgroundColor="White"/>
+                                           Keyboard="Numeric" FontSize="14" BackgroundColor="White" Completed="txtCantidad_Completed"/>
                                 <Entry x:Name="txtDescuento" Placeholder="Descuento" HorizontalOptions="FillAndExpand" VerticalOptions="Center"
                                         Keyboard="Numeric" Completed="txtDescuento_Completed" FontSize="14" BackgroundColor="White" Text="0"/>
                                 <Entry x:Name="txtSubTotal" Placeholder="Sub total" HorizontalOptions="FillAndExpand" VerticalOptions="Center" FontSize="14"
